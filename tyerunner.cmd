@@ -1,0 +1,2 @@
+tye run --dashboard
+pause

@@ -1,0 +1,16 @@
+﻿@page "/reset"
+@using Infrastructure.DataAccess.Read
+@using Authorization.Infrastructure.Init;
+@inject IDatabaseInitializer _databaseInitializer;
+
+
+<div>Delete all data from Database and refresh by gRPC from Role and Assignment services</div>
+
+<button @onclick="@OnClick">Reset</button>
+
+@code {
+    protected void OnClick(MouseEventArgs mouseEventArgs)
+    {
+        _databaseInitializer.Reset();
+    }
+}

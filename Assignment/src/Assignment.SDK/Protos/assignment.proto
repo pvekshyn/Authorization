@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+service GrpcAssignmentService {
+    rpc GetAssignments(GrpcAssignmentsRequest) returns(stream GrpcAssignment);
+}
+message GrpcAssignment {
+    string Id = 1;
+    string UserId = 2;
+    string RoleId = 3;
+}
+message GrpcAssignmentsRequest {}

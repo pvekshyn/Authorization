@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+service GrpcEventProcessingService {
+    rpc ProcessEvent(GrpcEventRequest) returns(GrpcResult);
+}
+message GrpcResult {
+    bool IsSuccess = 1;
+    string ErrorMessage = 2;
+    string StackTrace = 3;
+}
+message GrpcEventRequest {
+    string Event = 1;
+}

@@ -1,0 +1,15 @@
+﻿@page "/"
+@using Infrastructure.DataAccess.Read
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject IAuthorizationDbContext MyDbContext
+
+<QuickGrid Items="@MyDbContext.AssignmentViewEntries" Pagination="@pagination">
+    <PropertyColumn Property="@(r => r.UserName)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.RoleName)" Sortable="true" />
+</QuickGrid>
+
+<Paginator Value="@pagination" />
+
+@code {
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+}

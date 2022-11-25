@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+service GrpcRoleService {
+    rpc GetRoles(GrpcRolesRequest) returns(stream GrpcRole);
+    rpc GetPermissions(GrpcPermissionsRequest) returns(stream GrpcPermission);
+}
+message GrpcRole {
+    string Id = 1;
+    string Name = 2;
+    repeated GrpcPermission Permissions = 3;
+}
+message GrpcPermission {
+    string Id = 1;
+    string Name = 2;
+}
+message GrpcRolesRequest {}
+message GrpcPermissionsRequest {}
