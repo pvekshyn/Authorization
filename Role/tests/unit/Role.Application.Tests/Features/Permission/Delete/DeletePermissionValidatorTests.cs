@@ -1,5 +1,4 @@
-﻿using Role.Infrastructure;
-using AutoFixture;
+﻿using AutoFixture;
 using FluentValidation.TestHelper;
 using static Role.Application.Validation.Errors;
 using Role.Application.Features.Permission.DeletePermission;
@@ -8,25 +7,18 @@ namespace Role.Application.Tests.Features.Permission.Delete;
 public class DeletePermissionValidatorTests : ApplicationTestBase
 {
     [Fact]
-    public async Task Validate_IdAlreadyExist_ReturnError()
+    public async Task Validate_PermissionLinkedToRole_ReturnError()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var validator = new DeletePermissionValidator(context);
+        var request = _fixture.Create<DeletePermission>();
 
-            var permissionId = _fixture.Create<Guid>();
-            var request = new DeletePermission(permissionId);
+        var role = _fixture.CreateRole(Guid.NewGuid(), permissionIds: new List<Guid> { request.PermissionId });
+        _dbContext.Roles.Add(role);
+        _dbContext.SaveChanges();
 
-            var permission = _fixture.CreatePermission(permissionId);
-            var role = _fixture.CreateRole(Guid.NewGuid());
-            role.AddPermission(permission);
-            context.Roles.Add(role);
-            context.SaveChanges();
+        var sut = _fixture.Create<DeletePermissionValidator>();
+        var result = await sut.TestValidateAsync(request);
 
-            var result = await validator.TestValidateAsync(request);
-
-            result.ShouldHaveValidationErrorFor(x => x.PermissionId);
-            Assert.Equal(LINKED_TO_ROLE, result.Errors.Single().ErrorCode);
-        }
+        result.ShouldHaveValidationErrorFor(x => x.PermissionId);
+        Assert.Equal(LINKED_TO_ROLE, result.Errors.Single().ErrorCode);
     }
 }

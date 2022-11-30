@@ -1,43 +1,36 @@
-﻿using Role.Infrastructure;
-using AutoFixture;
-using Role.Application.Dependencies;
+﻿using AutoFixture;
 using Role.Application.Features.Permission.CreatePermission;
 
 namespace Role.Application.Tests.Features.Permission.Create;
 public class CreatePermissionIdempotencyCheckerTests : ApplicationTestBase
 {
+    private readonly CreatePermissionIdempotencyCheck _sut;
+
+    public CreatePermissionIdempotencyCheckerTests()
+    {
+        _sut = _fixture.Create<CreatePermissionIdempotencyCheck>();
+    }
+
     [Fact]
     public async Task IsOperationAlreadyApplied_True()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var request = _fixture.Create<CreatePermission>();
+        var request = _fixture.Create<CreatePermission>();
 
-            context.Permissions.Add(_fixture.CreatePermission(request.Permission.Id, request.Permission.Name));
-            context.SaveChanges();
+        _dbContext.Permissions.Add(_fixture.CreatePermission(request.Permission.Id, request.Permission.Name));
+        _dbContext.SaveChanges();
 
-            _fixture.Inject<IRoleDbContext>(context);
-            var sut = _fixture.Create<CreatePermissionIdempotencyCheck>();
+        var result = await _sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
 
-            var result = await sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
-
-            Assert.True(result);
-        }
+        Assert.True(result);
     }
 
     [Fact]
     public async Task IsOperationAlreadyApplied_False()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var request = _fixture.Create<CreatePermission>();
+        var request = _fixture.Create<CreatePermission>();
 
-            _fixture.Inject<IRoleDbContext>(context);
-            var sut = _fixture.Create<CreatePermissionIdempotencyCheck>();
+        var result = await _sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
 
-            var result = await sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
-
-            Assert.False(result);
-        }
+        Assert.False(result);
     }
 }

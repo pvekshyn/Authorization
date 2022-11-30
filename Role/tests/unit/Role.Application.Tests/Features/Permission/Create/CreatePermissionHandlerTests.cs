@@ -1,6 +1,4 @@
-﻿using Role.Infrastructure;
-using AutoFixture;
-using Role.Application.Dependencies;
+﻿using AutoFixture;
 using Role.Application.Features.Permission.CreatePermission;
 
 namespace Role.Application.Tests.Features.Permission.Create;
@@ -9,16 +7,13 @@ public class CreatePermissionHandlerTests : ApplicationTestBase
     [Fact]
     public async Task CreatePermission_Success()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var request = _fixture.Create<CreatePermission>();
+        var request = _fixture.Create<CreatePermission>();
 
-            _fixture.Inject<IRoleDbContext>(context);
-            var sut = _fixture.Create<CreatePermissionHandler>();
+        var sut = _fixture.Create<CreatePermissionHandler>();
 
-            var result = await sut.Handle(request, CancellationToken.None);
+        var result = await sut.Handle(request, CancellationToken.None);
 
-            Assert.True(result.IsSuccess);
-        }
+        Assert.True(result.IsSuccess);
+        Assert.Single(_dbContext.Permissions);
     }
 }

@@ -1,6 +1,4 @@
 ﻿using Role.Domain;
-using Role.Infrastructure;
-using Role.SDK.DTO;
 using AutoFixture;
 using FluentValidation.TestHelper;
 using static Role.Application.Validation.Errors;
@@ -9,123 +7,85 @@ using Role.Application.Features.Role.CreateRole;
 namespace Role.Application.Tests.Features.Role.Create;
 public class CreateRoleValidatorTests : ApplicationTestBase
 {
+    private readonly CreateRoleValidator _sut;
+
+    public CreateRoleValidatorTests()
+    {
+        _sut = _fixture.Create<CreateRoleValidator>();
+    }
+
     [Fact]
     public async Task Validate_IdAlreadyExist_ReturnError()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var validator = new CreateRoleValidator(context);
+        var request = _fixture.Create<CreateRole>();
 
-            var dto = _fixture.Create<CreateRoleDto>();
-            var request = new CreateRole(dto);
+        var role = _fixture.CreateRole(request.Role.Id, request.Role.PermissionIds);
+        _dbContext.Permissions.AddRange(role.Permissions);
+        _dbContext.Roles.Add(role);
+        _dbContext.SaveChanges();
 
-            foreach (var permissionId in dto.PermissionIds)
-            {
-                context.Permissions.Add(_fixture.CreatePermission(permissionId));
-            }
-            context.Roles.Add(_fixture.CreateRole(dto.Id));
-            context.SaveChanges();
+        var result = await _sut.TestValidateAsync(request);
 
-            var result = await validator.TestValidateAsync(request);
-
-            result.ShouldHaveValidationErrorFor(x => x.Role.Id);
-            Assert.Equal(ALREADY_EXIST, result.Errors.Single().ErrorCode);
-        }
+        result.ShouldHaveValidationErrorFor(x => x.Role.Id);
+        Assert.Equal(ALREADY_EXIST, result.Errors.Single().ErrorCode);
     }
 
     [Fact]
     public async Task Validate_NameEmpty_ReturnError()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var validator = new CreateRoleValidator(context);
+        var request = _fixture.Create<CreateRole>();
+        request.Role.Name = string.Empty;
 
-            var dto = _fixture.Build<CreateRoleDto>()
-                .With(x => x.Name, string.Empty)
-                .Create();
+        var permissions = _fixture.CreatePermissions(request.Role.PermissionIds);
+        _dbContext.Permissions.AddRange(permissions);
+        _dbContext.SaveChanges();
 
-            var request = new CreateRole(dto);
+        var result = await _sut.TestValidateAsync(request);
 
-            foreach (var permissionId in dto.PermissionIds)
-            {
-                context.Permissions.Add(_fixture.CreatePermission(permissionId));
-            }
-            context.SaveChanges();
-
-            var result = await validator.TestValidateAsync(request);
-
-            result.ShouldHaveValidationErrorFor(x => x.Role.Name);
-            Assert.Equal(EMPTY, result.Errors.Single().ErrorCode);
-        }
+        result.ShouldHaveValidationErrorFor(x => x.Role.Name);
+        Assert.Equal(EMPTY, result.Errors.Single().ErrorCode);
     }
 
     [Fact]
     public async Task Validate_NameTooLong_ReturnError()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var validator = new CreateRoleValidator(context);
+        var request = _fixture.Create<CreateRole>();
+        request.Role.Name = new string('*', Constants.MaxRoleNameLength + 1);
 
-            var dto = _fixture.Build<CreateRoleDto>()
-                .With(x => x.Name, new string('*', Constants.MaxRoleNameLength + 1))
-                .Create();
+        var permissions = _fixture.CreatePermissions(request.Role.PermissionIds);
+        _dbContext.Permissions.AddRange(permissions);
+        _dbContext.SaveChanges();
 
-            var request = new CreateRole(dto);
+        var result = await _sut.TestValidateAsync(request);
 
-            foreach (var permissionId in dto.PermissionIds)
-            {
-                context.Permissions.Add(_fixture.CreatePermission(permissionId));
-            }
-            context.SaveChanges();
-
-            var result = await validator.TestValidateAsync(request);
-
-            result.ShouldHaveValidationErrorFor(x => x.Role.Name);
-            Assert.Equal(TOO_LONG, result.Errors.Single().ErrorCode);
-        }
+        result.ShouldHaveValidationErrorFor(x => x.Role.Name);
+        Assert.Equal(TOO_LONG, result.Errors.Single().ErrorCode);
     }
 
     [Fact]
     public async Task Validate_NameAlreadyExist_ReturnError()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var validator = new CreateRoleValidator(context);
+        var request = _fixture.Create<CreateRole>();
 
-            var dto = _fixture.Create<CreateRoleDto>();
-            var request = new CreateRole(dto);
+        var role = _fixture.CreateRole(_fixture.Create<Guid>(), request.Role.PermissionIds, request.Role.Name);
+        _dbContext.Permissions.AddRange(role.Permissions);
+        _dbContext.Roles.Add(role);
+        _dbContext.SaveChanges();
 
-            foreach (var permissionId in dto.PermissionIds)
-            {
-                context.Permissions.Add(_fixture.CreatePermission(permissionId));
-            }
+        var result = await _sut.TestValidateAsync(request);
 
-            context.Roles.Add(_fixture.CreateRole(
-                _fixture.Create<Guid>(),
-                dto.Name));
-            context.SaveChanges();
-
-            var result = await validator.TestValidateAsync(request);
-
-            result.ShouldHaveValidationErrorFor(x => x.Role.Name);
-            Assert.Equal(ALREADY_EXIST, result.Errors.Single().ErrorCode);
-        }
+        result.ShouldHaveValidationErrorFor(x => x.Role.Name);
+        Assert.Equal(ALREADY_EXIST, result.Errors.Single().ErrorCode);
     }
 
     [Fact]
     public async Task Validate_PermissionIdsNotFound_ReturnError()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var validator = new CreateRoleValidator(context);
+        var request = _fixture.Create<CreateRole>();
 
-            var dto = _fixture.Create<CreateRoleDto>();
-            var request = new CreateRole(dto);
+        var result = await _sut.TestValidateAsync(request);
 
-            var result = await validator.TestValidateAsync(request);
-
-            result.ShouldHaveValidationErrorFor(x => x.Role.PermissionIds);
-            Assert.Equal(NOT_FOUND, result.Errors.Single().ErrorCode);
-        }
+        result.ShouldHaveValidationErrorFor(x => x.Role.PermissionIds);
+        Assert.Equal(NOT_FOUND, result.Errors.Single().ErrorCode);
     }
 }

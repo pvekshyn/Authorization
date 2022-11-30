@@ -1,43 +1,36 @@
-﻿using Role.Infrastructure;
-using AutoFixture;
-using Role.Application.Dependencies;
+﻿using AutoFixture;
 using Role.Application.Features.Role.DeleteRole;
 
 namespace Role.Application.Tests.Features.Role.Delete;
 public class DeleteRoleIdempotencyCheckerTests : ApplicationTestBase
 {
+    private readonly DeleteRoleIdempotencyCheck _sut;
+
+    public DeleteRoleIdempotencyCheckerTests()
+    {
+        _sut = _fixture.Create<DeleteRoleIdempotencyCheck>();
+    }
+
     [Fact]
     public async Task IsOperationAlreadyApplied_True()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var request = _fixture.Create<DeleteRole>();
+        var request = _fixture.Create<DeleteRole>();
 
-            _fixture.Inject<IRoleDbContext>(context);
-            var sut = _fixture.Create<DeleteRoleIdempotencyCheck>();
+        var result = await _sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
 
-            var result = await sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
-
-            Assert.True(result);
-        }
+        Assert.True(result);
     }
 
     [Fact]
     public async Task IsOperationAlreadyApplied_False()
     {
-        using (var context = new RoleDbContext(_dbContextOptions))
-        {
-            var request = _fixture.Create<DeleteRole>();
+        var request = _fixture.Create<DeleteRole>();
 
-            context.Roles.Add(_fixture.CreateRole(request.Id));
-            context.SaveChanges();
+        _dbContext.Roles.Add(_fixture.CreateRole(request.Id));
+        _dbContext.SaveChanges();
 
-            _fixture.Inject<IRoleDbContext>(context);
-            var sut = _fixture.Create<DeleteRoleIdempotencyCheck>();
+        var result = await _sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
 
-            var result = await sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
-
-            Assert.False(result);
-        }
+        Assert.False(result);
     }
 }

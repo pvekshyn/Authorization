@@ -7,29 +7,36 @@ namespace Role.Application.Tests;
 
 public static class TestExtensions
 {
-    public static Permission CreatePermission(this IFixture fixture, Guid permissionId, string? permissionName = null)
+    public static Permission CreatePermission(this IFixture fixture, Guid id, string? name = null)
     {
-        if (permissionName == null)
+        if (name == null)
         {
-            permissionName = fixture.Create<string>();
+            name = fixture.Create<string>();
         }
 
         return new Permission(
-            new PermissionId(permissionId),
-            new PermissionName(permissionName));
+            new PermissionId(id),
+            new PermissionName(name));
     }
 
-    public static Domain.Role CreateRole(this IFixture fixture, Guid roleId, string? roleName = null)
+    public static IReadOnlyCollection<Permission> CreatePermissions(this IFixture fixture, IReadOnlyCollection<Guid> permissionIds)
+    {
+        return permissionIds.Select(x => fixture.CreatePermission(x)).ToList();
+    }
+
+    public static Domain.Role CreateRole(this IFixture fixture, Guid roleId, IReadOnlyCollection<Guid> permissionIds = null, string? roleName = null)
     {
         if (roleName == null)
         {
             roleName = fixture.Create<string>().Substring(0, Constants.MaxRoleNameLength);
         }
-        var permission = fixture.CreatePermission(Guid.NewGuid());
+
+        var permissions = permissionIds?.Select(x => fixture.CreatePermission(x)).ToList()
+            ?? new List<Permission> { fixture.CreatePermission(Guid.NewGuid()) };
 
         return new Domain.Role(
             new RoleId(roleId),
             new RoleName(roleName),
-            new List<Permission> { permission });
+            permissions);
     }
 }
