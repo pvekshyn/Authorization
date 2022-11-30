@@ -17,7 +17,7 @@ public class Role : IAggregateRoot
 
     public Role(RoleId id, RoleName name, ICollection<Permission> permissions)
     {
-        if (!permissions.Any())
+        if (permissions is null || !permissions.Any())
             throw new ArgumentException("Permissions should not be empty");
 
         Id = id;
@@ -37,7 +37,7 @@ public class Role : IAggregateRoot
 
     public void ReplacePermissions(ICollection<Permission> permissions)
     {
-        if (!permissions.Any())
+        if (permissions is null || !permissions.Any())
             throw new ArgumentException("Permissions should not be empty");
 
         Permissions = permissions;

@@ -26,5 +26,9 @@ public class ApplicationTestBase
         _fixture.Customize<CreateRoleDto>(c => c
             .With(x => x.Name,
             () => _fixture.Create<string>().Substring(0, Constants.MaxRoleNameLength)));
+
+        _fixture.Customize<RenameRoleDto>(c => c
+            .With(x => x.Name,
+            () => _fixture.Create<string>().Substring(0, Constants.MaxRoleNameLength)));
     }
 }
