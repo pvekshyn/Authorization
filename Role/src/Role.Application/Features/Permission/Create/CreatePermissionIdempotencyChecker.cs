@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 
-namespace Role.Application.Features.Permission.CreatePermission;
+namespace Role.Application.Features.Permission.Create;
 
 public class CreatePermissionIdempotencyCheck : IIdempotencyCheck<CreatePermission>
 {

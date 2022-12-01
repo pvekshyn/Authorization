@@ -10,7 +10,6 @@ namespace Role.Infrastructure;
 
 public class RoleDbContext : DbContext, IRoleDbContext
 {
-
     public RoleDbContext(DbContextOptions<RoleDbContext> options) : base(options) { }
 
     public DbSet<Domain.Role> Roles { get; set; }

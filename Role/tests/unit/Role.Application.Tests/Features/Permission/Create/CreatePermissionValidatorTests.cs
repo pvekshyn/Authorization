@@ -2,7 +2,7 @@
 using AutoFixture;
 using FluentValidation.TestHelper;
 using static Role.Application.Validation.Errors;
-using Role.Application.Features.Permission.CreatePermission;
+using Role.Application.Features.Permission.Create;
 
 namespace Role.Application.Tests.Features.Permission.Create;
 public class CreatePermissionValidatorTests : ApplicationTestBase

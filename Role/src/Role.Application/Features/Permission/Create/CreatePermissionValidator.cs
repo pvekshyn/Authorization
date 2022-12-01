@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using static Role.Application.Validation.Errors;
 using Role.Application.Dependencies;
 
-namespace Role.Application.Features.Permission.CreatePermission;
+namespace Role.Application.Features.Permission.Create;
 
 public class CreatePermissionValidator : AbstractValidator<CreatePermission>
 {

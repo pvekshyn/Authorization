@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using Role.Application.Features.Permission.CreatePermission;
+using Role.Application.Features.Permission.Create;
 
 namespace Role.Application.Tests.Features.Permission.Create;
 public class CreatePermissionHandlerTests : ApplicationTestBase

@@ -17,7 +17,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddMediatR(typeof(IApiAssemblyMarker), typeof(IApplicationAssemblyMarker), typeof(IInfrastructureAssemblyMarker));
-builder.Services.AddApplicationDependencies<IApplicationAssemblyMarker>();
+builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>();
 builder.Services.AddInfrastructureDependencies(builder.Configuration);
 
 builder.Services.Configure<RoleSettings>(builder.Configuration);
@@ -30,3 +30,5 @@ app.UseSwaggerUI();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

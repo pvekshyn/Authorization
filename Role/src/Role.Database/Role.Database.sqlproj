@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="local.publish.xml" />
+    <None Include="integration.test.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Permission.sql" />

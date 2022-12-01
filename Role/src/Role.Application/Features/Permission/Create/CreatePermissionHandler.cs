@@ -5,7 +5,7 @@ using MediatR;
 using Role.Application.Dependencies;
 using Role.SDK.Events;
 
-namespace Role.Application.Features.Permission.CreatePermission;
+namespace Role.Application.Features.Permission.Create;
 
 public class CreatePermission : IRequest<Result>
 {
