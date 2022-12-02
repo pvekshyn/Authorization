@@ -5,8 +5,6 @@ namespace Role.Integration.Tests.Permission
 {
     public class CreatePermissionTests : IntegrationTestBase
     {
-        private const string _permissionName = "Test Create Permission";
-
         public CreatePermissionTests(CustomWebApplicationFactory<Program> apiFactory) : base(apiFactory)
         {
         }
@@ -15,11 +13,7 @@ namespace Role.Integration.Tests.Permission
         public async Task CreatePermission_EmptyName_Validation()
         {
             // Arrange
-            var permissionDto = new PermissionDto()
-            {
-                Id = Guid.NewGuid(),
-                Name = string.Empty,
-            };
+            var permissionDto = GetPermissionDto(string.Empty);
 
             // Act
             var result = await _permissionApiClient.CreateAsync(permissionDto, CancellationToken.None);
@@ -32,11 +26,7 @@ namespace Role.Integration.Tests.Permission
         public async Task CreatePermission_Success()
         {
             // Arrange
-            var permissionDto = new PermissionDto()
-            {
-                Id = Guid.NewGuid(),
-                Name = _permissionName,
-            };
+            var permissionDto = GetPermissionDto();
 
             // Act
             var result = await _permissionApiClient.CreateAsync(permissionDto, CancellationToken.None);
@@ -49,61 +39,37 @@ namespace Role.Integration.Tests.Permission
 
             var outboxMessageExists = OutboxMessageExists(permissionDto.Id);
             Assert.True(outboxMessageExists);
-
-            //Cleanup
-            _dbContext.Permissions.Remove(permission);
-            await _dbContext.SaveChangesAsync();
-
-            DeleteOutboxMessages(permissionDto.Id);
         }
 
         [Fact]
-        public async Task CreatePermissionConcurrent_Samepermission_OneSuccessOtherIdempotent()
+        public async Task CreatePermissionConcurrent_SamePermission_OneSuccessOtherIdempotent()
         {
             // Arrange
-            var permissionDto = new PermissionDto()
-            {
-                Id = Guid.NewGuid(),
-                Name = _permissionName,
-            };
+            var permissionDto = GetPermissionDto();
 
-            // Act
             var task1 = _permissionApiClient.CreateAsync(permissionDto, CancellationToken.None);
             var task2 = _permissionApiClient.CreateAsync(permissionDto, CancellationToken.None);
 
+            // Act
             var results = await Task.WhenAll(task1, task2);
 
             // Assert
             Assert.Single(results.Where(x => x.Status == 200));
             Assert.Single(results.Where(x => x.Status == 204));
 
-            var permission = await _dbContext.Permissions.SingleOrDefaultAsync(x => x.Name == _permissionName);
+            var permission = await _dbContext.Permissions.SingleOrDefaultAsync(x => x.Name == permissionDto.Name);
             Assert.NotNull(permission);
 
             var outboxMessageExists = OutboxMessageExists(permissionDto.Id);
             Assert.True(outboxMessageExists);
-
-            //Cleanup
-            _dbContext.Permissions.Remove(permission);
-            await _dbContext.SaveChangesAsync();
-
-            DeleteOutboxMessages(permissionDto.Id);
         }
 
         [Fact]
         public async Task CreatePermissionConcurrent_SameName_OneSuccessOthersValidation()
         {
             // Arrange
-            var permissionDto1 = new PermissionDto()
-            {
-                Id = Guid.NewGuid(),
-                Name = _permissionName,
-            };
-            var permissionDto2 = new PermissionDto()
-            {
-                Id = Guid.NewGuid(),
-                Name = _permissionName,
-            };
+            var permissionDto1 = GetPermissionDto();
+            var permissionDto2 = GetPermissionDto(permissionDto1.Name);
 
             var task1 = _permissionApiClient.CreateAsync(permissionDto1, CancellationToken.None);
             var task2 = _permissionApiClient.CreateAsync(permissionDto2, CancellationToken.None);
@@ -115,17 +81,21 @@ namespace Role.Integration.Tests.Permission
             Assert.Single(results.Where(x => x.Status == 200));
             Assert.Single(results.Where(x => x.Status == 422));
 
-            var permission = await _dbContext.Permissions.SingleOrDefaultAsync(x => x.Name == _permissionName);
+            var permission = await _dbContext.Permissions.SingleOrDefaultAsync(x => x.Name == permissionDto1.Name);
             Assert.NotNull(permission);
 
             var outboxMessageExists = OutboxMessageExists(permission.Id);
             Assert.True(outboxMessageExists);
+        }
 
-            //Cleanup
-            _dbContext.Permissions.Remove(permission);
-            await _dbContext.SaveChangesAsync();
-
-            DeleteOutboxMessages(permission.Id);
+        private PermissionDto GetPermissionDto(string? name = null)
+        {
+            var permissionId = Guid.NewGuid();
+            return new PermissionDto()
+            {
+                Id = permissionId,
+                Name = name ?? $"Test {permissionId}",
+            };
         }
     }
 }

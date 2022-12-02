@@ -5,7 +5,7 @@ using Role.Domain.ValueObjects.Role;
 
 namespace Role.Application.Tests;
 
-public static class TestExtensions
+internal static class TestExtensions
 {
     public static Permission CreatePermission(this IFixture fixture, Guid id, string? name = null)
     {

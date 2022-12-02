@@ -27,9 +27,7 @@ namespace Role.Integration.Tests.Permission
         public async Task DeletePermission_Success()
         {
             // Arrange
-            var permission = new Domain.Permission(
-                new PermissionId(Guid.NewGuid()),
-                new PermissionName(_permissionName));
+            var permission = CreatePermission();
             _dbContext.Permissions.Add(permission);
             await _dbContext.SaveChangesAsync();
 
@@ -44,9 +42,14 @@ namespace Role.Integration.Tests.Permission
 
             var outboxMessageExists = OutboxMessageExists(permission.Id);
             Assert.True(outboxMessageExists);
+        }
 
-            //Cleanup
-            DeleteOutboxMessages(permission.Id);
+        private Domain.Permission CreatePermission()
+        {
+            var permissionId = Guid.NewGuid();
+            return new Domain.Permission(
+                new PermissionId(permissionId),
+                new PermissionName($"Test {permissionId}"));
         }
     }
 }

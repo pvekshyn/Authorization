@@ -6,42 +6,41 @@ using Role.Application.Features.Role.CreateRole;
 using Role.Application.Features.Role.UpdateRolePermissions;
 using Role.Application.Features.Role.RenameRole;
 using Role.Application.Features.Role.DeleteRole;
+using Role.SDK.Features;
 
-namespace Role.API.Controllers;
+namespace Role.Host.API.Controllers;
 
 [ApiController]
-public class RoleController : ControllerBase
+public class RoleController : ControllerBase, IRoleApi
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<RoleController> _logger;
 
-    public RoleController(IMediator mediator, ILogger<RoleController> logger)
+    public RoleController(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
     [HttpPost("/role")]
-    public async Task<Result> CreateAsync(CreateRoleDto roleDto)
+    public async Task<Result> CreateAsync(CreateRoleDto roleDto, CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new CreateRole(roleDto));
+        return await _mediator.Send(new CreateRole(roleDto), cancellationToken);
     }
 
     [HttpPut("/role/permissions")]
-    public async Task<Result> UpdateRolePermissionsAsync(UpdateRolePermissionsDto dto)
+    public async Task<Result> UpdateRolePermissionsAsync(UpdateRolePermissionsDto dto, CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new UpdateRolePermissions(dto));
+        return await _mediator.Send(new UpdateRolePermissions(dto), cancellationToken);
     }
 
     [HttpPut("/role/name")]
-    public async Task<Result> RenameRoleAsync(RenameRoleDto dto)
+    public async Task<Result> RenameRoleAsync(RenameRoleDto dto, CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new RenameRole(dto));
+        return await _mediator.Send(new RenameRole(dto), cancellationToken);
     }
 
-    [HttpDelete("/role")]
-    public async Task<Result> DeleteRoleAsync(Guid id)
+    [HttpDelete("/role/{id}")]
+    public async Task<Result> DeleteRoleAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _mediator.Send(new DeleteRole(id));
+        return await _mediator.Send(new DeleteRole(id), cancellationToken);
     }
 }

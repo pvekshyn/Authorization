@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Role.Domain.Tests", "tests\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "integration", "{0501FF4C-B602-46FD-BD45-B38FF0FA9B7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Role.Integration.Tests", "tests\integration\Role.Integration.Tests\Role.Integration.Tests.csproj", "{38903A20-00D3-425B-8EFA-08485BA30AC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Role.Integration.Tests", "tests\integration\Role.Integration.Tests\Role.Integration.Tests.csproj", "{38903A20-00D3-425B-8EFA-08485BA30AC6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

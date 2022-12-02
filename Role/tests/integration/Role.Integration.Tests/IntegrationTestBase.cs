@@ -10,6 +10,7 @@ public class IntegrationTestBase : IDisposable, IClassFixture<CustomWebApplicati
 {
     protected readonly RoleDbContext _dbContext;
     protected readonly IPermissionApi _permissionApiClient;
+    protected readonly IRoleApi _roleApiClient;
 
     public IntegrationTestBase(CustomWebApplicationFactory<Program> apiFactory)
     {
@@ -20,7 +21,14 @@ public class IntegrationTestBase : IDisposable, IClassFixture<CustomWebApplicati
         _dbContext = new RoleDbContext(dbContextOptions);
 
         var httpClient = apiFactory.CreateClient();
+
         _permissionApiClient = RestService.For<IPermissionApi>(httpClient,
+        new RefitSettings
+        {
+            ExceptionFactory = httpResponse => Task.FromResult<Exception>(null)
+        });
+
+        _roleApiClient = RestService.For<IRoleApi>(httpClient,
         new RefitSettings
         {
             ExceptionFactory = httpResponse => Task.FromResult<Exception>(null)
@@ -36,16 +44,6 @@ public class IntegrationTestBase : IDisposable, IClassFixture<CustomWebApplicati
         using (var connection = new SqlConnection(Constants.ConnectionString))
         {
             return connection.QueryFirstOrDefault<bool>(sql, new { entityId = entityId });
-        }
-    }
-
-    protected void DeleteOutboxMessages(Guid entityId)
-    {
-        var sql = "DELETE FROM OutboxMessage WHERE EntityId= @entityId";
-
-        using (var connection = new SqlConnection(Constants.ConnectionString))
-        {
-            connection.Execute(sql, new { entityId = entityId });
         }
     }
 
