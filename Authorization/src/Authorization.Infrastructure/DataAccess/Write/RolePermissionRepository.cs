@@ -100,7 +100,7 @@ namespace Authorization.Infrastructure.DataAccess.Write
                     dt.Rows.Add(role.Id, role.Name);
                 }
 
-                using var sqlBulk = new SqlBulkCopy(_connectionString);
+                using var sqlBulk = new SqlBulkCopy(_connectionString, SqlBulkCopyOptions.CheckConstraints);
                 sqlBulk.DestinationTableName = "Role";
                 sqlBulk.WriteToServer(dt);
             }
@@ -119,7 +119,7 @@ namespace Authorization.Infrastructure.DataAccess.Write
                     dt.Rows.Add(Guid.NewGuid(), rolePermission.roleId, rolePermission.permissionId);
                 }
 
-                using var sqlBulk = new SqlBulkCopy(_connectionString);
+                using var sqlBulk = new SqlBulkCopy(_connectionString, SqlBulkCopyOptions.CheckConstraints);
                 sqlBulk.DestinationTableName = "RolePermission";
                 sqlBulk.WriteToServer(dt);
             }
@@ -137,7 +137,7 @@ namespace Authorization.Infrastructure.DataAccess.Write
                     dt.Rows.Add(permission.Id, permission.Name);
                 }
 
-                using var sqlBulk = new SqlBulkCopy(_connectionString);
+                using var sqlBulk = new SqlBulkCopy(_connectionString, SqlBulkCopyOptions.CheckConstraints);
                 sqlBulk.DestinationTableName = "Permission";
                 sqlBulk.WriteToServer(dt);
             }

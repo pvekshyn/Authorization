@@ -58,7 +58,7 @@ namespace Authorization.Infrastructure.DataAccess.Write
                     dt.Rows.Add(assignment.Id, assignment.UserId, assignment.RoleId);
                 }
 
-                using var sqlBulk = new SqlBulkCopy(_connectionString);
+                using var sqlBulk = new SqlBulkCopy(_connectionString, SqlBulkCopyOptions.CheckConstraints);
                 sqlBulk.DestinationTableName = "Assignment";
                 sqlBulk.WriteToServer(dt);
             }
