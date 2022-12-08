@@ -4,7 +4,7 @@ using Inbox.SDK.EventToRequest;
 using MediatR;
 using Role.SDK.Events;
 
-namespace Authorization.Infrastructure.PubSub.EventToRequestMappers
+namespace Authorization.Infrastructure.PubSub.EventToRequestMappers.Role
 {
     public class RoleCreatedEventMapper : EventToRequestMapper<RoleCreatedEvent>
     {

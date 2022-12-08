@@ -4,6 +4,8 @@ namespace Authorization.Application.Dependencies
 {
     public interface IRolePermissionRepository
     {
+        void AddPermission(PermissionDto permission);
+        void DeletePermission(Guid id);
         void AddRole(CreateRoleDto role);
         void RenameRole(RenameRoleDto role);
         void UpdateRolePermissions(UpdateRolePermissionsDto role);

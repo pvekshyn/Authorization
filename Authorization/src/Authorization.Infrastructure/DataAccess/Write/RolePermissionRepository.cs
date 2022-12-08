@@ -16,6 +16,16 @@ namespace Authorization.Infrastructure.DataAccess.Write
             _connectionString = settings.Value.ConnectionStrings.Database;
         }
 
+        public void AddPermission(PermissionDto permission)
+        {
+            var sql = "INSERT INTO Permission (Id, Name) VALUES (@id, @name)";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Execute(sql, permission);
+            }
+        }
+
         public void AddRole(CreateRoleDto role)
         {
             var sql = "INSERT INTO Role (Id, Name) VALUES (@id, @name)";
@@ -75,6 +85,16 @@ namespace Authorization.Infrastructure.DataAccess.Write
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Execute(sql);
+            }
+        }
+
+        public void DeletePermission(Guid id)
+        {
+            var sql = "DELETE FROM Permission WHERE Id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Execute(sql, new { id = id });
             }
         }
 

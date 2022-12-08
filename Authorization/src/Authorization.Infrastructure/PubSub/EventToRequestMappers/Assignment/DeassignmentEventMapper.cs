@@ -4,9 +4,9 @@ using Common.SDK;
 using Inbox.SDK.EventToRequest;
 using MediatR;
 
-namespace Authorization.Infrastructure.PubSub.EventToRequestMappers
+namespace Authorization.Infrastructure.PubSub.EventToRequestMappers.Assignment
 {
-    public class DeassignEventMapper : EventToRequestMapper<DeassignmentEvent>
+    public class DeassignmentEventMapper : EventToRequestMapper<DeassignmentEvent>
     {
         public override IRequest<Result> Map(DeassignmentEvent @event)
         {
