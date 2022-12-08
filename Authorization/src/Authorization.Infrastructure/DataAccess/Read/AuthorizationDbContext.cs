@@ -5,6 +5,7 @@ namespace Authorization.Infrastructure.DataAccess.Read;
 
 public interface IAuthorizationDbContext
 {
+    DbSet<Permission> Permissions { get; set; }
     DbSet<Models.Role> Roles { get; set; }
     DbSet<AssignmentViewEntry> AssignmentViewEntries { get; set; }
 }
@@ -14,6 +15,7 @@ internal class AuthorizationDbContext : DbContext, IAuthorizationDbContext
 
     public AuthorizationDbContext(DbContextOptions<AuthorizationDbContext> options) : base(options) { }
 
+    public DbSet<Permission> Permissions { get; set; }
     public DbSet<Models.Role> Roles { get; set; }
     public DbSet<AssignmentViewEntry> AssignmentViewEntries { get; set; }
 

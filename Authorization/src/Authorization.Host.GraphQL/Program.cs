@@ -1,4 +1,4 @@
-using Authorization.GraphQL;
+using Authorization.Host.GraphQL;
 using Authorization.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
