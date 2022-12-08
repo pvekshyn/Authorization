@@ -45,7 +45,6 @@ services:
     value: Role.SDK.Events.RoleDeletedEvent
 - name: authorization-api
   project: Authorization/src/Authorization.Host.API/Authorization.Host.API.csproj
-  replicas: 2 
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=authorization_service;Password=authorization_password;Initial Catalog=Authorization;TrustServerCertificate=True
@@ -75,6 +74,10 @@ services:
     value: Assignment.SDK.Events.AssignmentEvent
   - name: PubSub__Subscriptions__5
     value: Assignment.SDK.Events.DeassignmentEvent
+  - name: PubSub__Subscriptions__6
+    value: Role.SDK.Events.PermissionCreatedEvent
+  - name: PubSub__Subscriptions__7
+    value: Role.SDK.Events.PermissionDeletedEvent
 - name: authorization-blazor
   project: Authorization\src\Authorization.Host.Blazor\Authorization.Host.Blazor.csproj
   env:
