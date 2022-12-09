@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Authorization.Application\Authorization.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DataAccess\Read\Models\" />
+  </ItemGroup>
+
 </Project>

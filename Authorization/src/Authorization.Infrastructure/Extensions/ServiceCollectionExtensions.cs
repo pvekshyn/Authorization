@@ -20,14 +20,10 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddAccessRepository(this IServiceCollection services)
-    {
-        return services.AddSingleton<IAccessRepository, AccessRepository>();
-    }
-
     public static IServiceCollection AddRepositories(this IServiceCollection services)
     {
         return services.AddSingleton<IAssignmentRepository, AssignmentRepository>()
-            .AddSingleton<IRolePermissionRepository, RolePermissionRepository>();
+            .AddSingleton<IRolePermissionRepository, RolePermissionRepository>()
+            .AddSingleton<IAccessRepository, AccessRepository>();
     }
 }

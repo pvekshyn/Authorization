@@ -1,5 +1,6 @@
-﻿using Authorization.Infrastructure.DataAccess.Read;
-using Authorization.Infrastructure.DataAccess.Read.Models;
+﻿using Authorization.Domain;
+using Authorization.Infrastructure.DataAccess.Read;
+using Microsoft.EntityFrameworkCore;
 
 namespace Authorization.Host.GraphQL
 {
@@ -9,18 +10,18 @@ namespace Authorization.Host.GraphQL
         [UseFiltering]
         [UseSorting]
         public IQueryable<AssignmentViewEntry> GetAssignments([Service] IAuthorizationDbContext context) =>
-            context.AssignmentViewEntries;
+            context.AssignmentViewEntries.AsNoTracking();
 
         [UseProjection]
         [UseFiltering]
         [UseSorting]
-        public IQueryable<Infrastructure.DataAccess.Read.Models.Role> GetRoles([Service] IAuthorizationDbContext context) =>
-            context.Roles;
+        public IQueryable<Domain.Role> GetRoles([Service] IAuthorizationDbContext context) =>
+            context.Roles.AsNoTracking();
 
         [UseProjection]
         [UseFiltering]
         [UseSorting]
         public IQueryable<Permission> GetPermissions([Service] IAuthorizationDbContext context) =>
-            context.Permissions;
+            context.Permissions.AsNoTracking();
     }
 }

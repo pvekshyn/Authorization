@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Authorization.Infrastructure\Authorization.Infrastructure.csproj" />
+    <ProjectReference Include="..\Authorization.SDK\Authorization.SDK.csproj" />
   </ItemGroup>
 
 </Project>

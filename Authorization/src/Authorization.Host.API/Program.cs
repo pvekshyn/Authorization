@@ -1,13 +1,19 @@
+using Assignment.Application;
 using Authorization.Infrastructure;
-using Authorization.Infrastructure.DataAccess.Read;
 using Authorization.Infrastructure.Extensions;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+builder.Services.AddMediatR(typeof(IApplicationAssemblyMarker));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAccessRepository();
+builder.Services.AddRepositories()
+    .AddInfrastructureDependencies(builder.Configuration);
 
 builder.Services.Configure<AuthorizationSettings>(builder.Configuration);
 
@@ -16,8 +22,6 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.MapGet("/checkaccess/userId/{userId}/permissionId/{permissionId}",
-    (Guid userId, Guid permissionId, IAccessRepository _repository) =>
-    _repository.CheckAccess(userId, permissionId));
+app.MapControllers();
 
 app.Run();

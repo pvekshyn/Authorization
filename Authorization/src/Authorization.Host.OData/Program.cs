@@ -31,6 +31,6 @@ static IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
     builder.EnableLowerCamelCase();
-    builder.EntitySet<Authorization.Infrastructure.DataAccess.Read.Models.Role>("Roles");
+    builder.EntitySet<Authorization.Domain.Role>("Roles");
     return builder.GetEdmModel();
 }

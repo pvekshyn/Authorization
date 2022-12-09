@@ -1,14 +1,7 @@
-﻿using Authorization.Infrastructure.DataAccess.Read.Models;
+﻿using Authorization.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Authorization.Infrastructure.DataAccess.Read;
-
-public interface IAuthorizationDbContext
-{
-    DbSet<Permission> Permissions { get; set; }
-    DbSet<Models.Role> Roles { get; set; }
-    DbSet<AssignmentViewEntry> AssignmentViewEntries { get; set; }
-}
 
 internal class AuthorizationDbContext : DbContext, IAuthorizationDbContext
 {
@@ -16,13 +9,13 @@ internal class AuthorizationDbContext : DbContext, IAuthorizationDbContext
     public AuthorizationDbContext(DbContextOptions<AuthorizationDbContext> options) : base(options) { }
 
     public DbSet<Permission> Permissions { get; set; }
-    public DbSet<Models.Role> Roles { get; set; }
+    public DbSet<Domain.Role> Roles { get; set; }
     public DbSet<AssignmentViewEntry> AssignmentViewEntries { get; set; }
 
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.Entity<Models.Role>(entity =>
+        builder.Entity<Domain.Role>(entity =>
         {
             entity.ToTable("Role");
             entity.HasKey(x => x.Id);
@@ -35,7 +28,7 @@ internal class AuthorizationDbContext : DbContext, IAuthorizationDbContext
                     .WithMany()
                     .HasForeignKey("PermissionId"),
                 j => j
-                    .HasOne<Models.Role>()
+                    .HasOne<Domain.Role>()
                     .WithMany()
                     .HasForeignKey("RoleId"));
         });

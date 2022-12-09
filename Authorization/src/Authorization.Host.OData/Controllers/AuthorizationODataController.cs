@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.OData.Routing.Attributes;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.EntityFrameworkCore;
 
-namespace Authorization.OData.Controllers
+namespace Authorization.Host.OData.Controllers
 {
     [ODataAttributeRouting]
     public class AuthorizationODataController : ODataController
@@ -19,7 +19,7 @@ namespace Authorization.OData.Controllers
 
         [EnableQuery]
         [HttpGet("odata/roles")]
-        public IQueryable<Infrastructure.DataAccess.Read.Models.Role> Get()
+        public IQueryable<Domain.Role> Get()
         {
             return _dbContext.Roles.AsNoTracking();
         }

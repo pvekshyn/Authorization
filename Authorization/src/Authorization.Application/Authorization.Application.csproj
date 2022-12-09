@@ -9,7 +9,12 @@
   <ItemGroup>
     <PackageReference Include="Assignment.SDK" Version="1.0.8" />
     <PackageReference Include="Common.Application" Version="1.0.7" />
-    <PackageReference Include="Role.SDK" Version="1.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Authorization.Domain\Authorization.Domain.csproj" />
+    <ProjectReference Include="..\Authorization.SDK\Authorization.SDK.csproj" />
   </ItemGroup>
 
 </Project>
