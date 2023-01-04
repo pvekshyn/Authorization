@@ -2,7 +2,7 @@
 using AutoFixture;
 using FluentValidation.TestHelper;
 using static Role.Application.Validation.Errors;
-using Role.Application.Features.Role.RenameRole;
+using Role.Application.Features.Role.Rename;
 
 namespace Role.Application.Tests.Features.Role.Rename;
 public class RenameRoleValidatorTests : ApplicationTestBase

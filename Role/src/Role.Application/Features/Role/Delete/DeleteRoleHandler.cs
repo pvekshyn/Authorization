@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 using Role.SDK.Events;
 
-namespace Role.Application.Features.Role.DeleteRole;
+namespace Role.Application.Features.Role.Delete;
 
 public class DeleteRole : IRequest<Result>
 {
@@ -25,8 +25,7 @@ public class DeleteRoleHandler : IRequestHandler<DeleteRole, Result>
         _dbContext = dbContext;
     }
 
-    public async Task<Result> Handle(
-        DeleteRole request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteRole request, CancellationToken cancellationToken)
     {
         var role = await _dbContext.Roles.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 

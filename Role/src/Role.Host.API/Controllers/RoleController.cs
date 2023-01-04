@@ -2,11 +2,11 @@
 using Role.SDK.DTO;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Role.Application.Features.Role.CreateRole;
-using Role.Application.Features.Role.UpdateRolePermissions;
-using Role.Application.Features.Role.RenameRole;
-using Role.Application.Features.Role.DeleteRole;
+using Role.Application.Features.Role.Create;
+using Role.Application.Features.Role.UpdatePermissions;
+using Role.Application.Features.Role.Rename;
 using Role.SDK.Features;
+using Role.Application.Features.Role.Delete;
 
 namespace Role.Host.API.Controllers;
 

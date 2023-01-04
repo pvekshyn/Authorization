@@ -6,7 +6,7 @@ using Role.Domain.ValueObjects.Role;
 using Role.SDK.Events;
 using Role.Application.Dependencies;
 
-namespace Role.Application.Features.Role.CreateRole;
+namespace Role.Application.Features.Role.Create;
 
 public class CreateRole : IRequest<Result>
 {

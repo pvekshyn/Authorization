@@ -6,7 +6,7 @@ using Role.SDK.Events;
 using Role.Application.Dependencies;
 using Role.Domain.ValueObjects.Role;
 
-namespace Role.Application.Features.Role.RenameRole;
+namespace Role.Application.Features.Role.Rename;
 
 public class RenameRole : IRequest<Result>
 {

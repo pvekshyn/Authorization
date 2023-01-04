@@ -4,7 +4,7 @@ using Role.Application.Dependencies;
 using Role.Domain;
 using static Role.Application.Validation.Errors;
 
-namespace Role.Application.Features.Role.CreateRole;
+namespace Role.Application.Features.Role.Create;
 
 public class CreateRoleValidator : AbstractValidator<CreateRole>
 {

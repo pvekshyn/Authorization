@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 
-namespace Role.Application.Features.Role.UpdateRolePermissions;
+namespace Role.Application.Features.Role.UpdatePermissions;
 
 public class UpdateRolePermissionsIdempotencyCheck : IIdempotencyCheck<UpdateRolePermissions>
 {

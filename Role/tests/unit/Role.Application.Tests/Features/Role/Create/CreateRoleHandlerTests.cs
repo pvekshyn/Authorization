@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using Role.Application.Features.Role.CreateRole;
+using Role.Application.Features.Role.Create;
 
 namespace Role.Application.Tests.Features.Role.Create;
 

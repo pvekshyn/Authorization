@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using Role.Application.Features.Role.RenameRole;
+using Role.Application.Features.Role.Rename;
 
 namespace Role.Application.Tests.Features.Role.Rename;
 public class RenameRoleIdempotencyCheckerTests : ApplicationTestBase

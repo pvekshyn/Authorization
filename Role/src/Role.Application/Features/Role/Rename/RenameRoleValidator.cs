@@ -4,7 +4,7 @@ using Role.Application.Dependencies;
 using Role.Domain;
 using static Role.Application.Validation.Errors;
 
-namespace Role.Application.Features.Role.RenameRole;
+namespace Role.Application.Features.Role.Rename;
 
 public class RenameRoleValidator : AbstractValidator<RenameRole>
 {

@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using Role.Application.Features.Role.DeleteRole;
+using Role.Application.Features.Role.Delete;
 
 namespace Role.Application.Tests.Features.Role.Delete;
 

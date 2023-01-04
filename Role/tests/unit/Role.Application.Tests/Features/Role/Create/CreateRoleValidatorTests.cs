@@ -2,7 +2,7 @@
 using AutoFixture;
 using FluentValidation.TestHelper;
 using static Role.Application.Validation.Errors;
-using Role.Application.Features.Role.CreateRole;
+using Role.Application.Features.Role.Create;
 
 namespace Role.Application.Tests.Features.Role.Create;
 public class CreateRoleValidatorTests : ApplicationTestBase

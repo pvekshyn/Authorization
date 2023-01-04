@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 
-namespace Role.Application.Features.Role.RenameRole;
+namespace Role.Application.Features.Role.Rename;
 public class RenameRoleIdempotencyCheck : IIdempotencyCheck<RenameRole>
 {
     private readonly IRoleDbContext _dbContext;

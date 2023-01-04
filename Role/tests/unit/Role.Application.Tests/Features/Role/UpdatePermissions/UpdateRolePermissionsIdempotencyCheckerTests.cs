@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using Role.Application.Features.Role.UpdateRolePermissions;
+using Role.Application.Features.Role.UpdatePermissions;
 
 namespace Role.Application.Tests.Features.Role.UpdatePermissions;
 public class UpdateRolePermissionsIdempotencyCheckerTests : ApplicationTestBase

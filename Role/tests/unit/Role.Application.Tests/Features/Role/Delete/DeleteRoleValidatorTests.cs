@@ -1,6 +1,6 @@
 ﻿using AutoFixture;
 using FluentValidation.TestHelper;
-using Role.Application.Features.Role.DeleteRole;
+using Role.Application.Features.Role.Delete;
 using static Role.Application.Validation.Errors;
 
 namespace Role.Application.Tests.Features.Role.Delete;

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 
-namespace Role.Application.Features.Role.CreateRole;
+namespace Role.Application.Features.Role.Create;
 
 public class CreateRoleIdempotencyCheck : IIdempotencyCheck<CreateRole>
 {

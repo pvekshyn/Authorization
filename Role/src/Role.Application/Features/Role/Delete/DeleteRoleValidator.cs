@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 using static Role.Application.Validation.Errors;
 
-namespace Role.Application.Features.Role.DeleteRole;
+namespace Role.Application.Features.Role.Delete;
 
 public class DeleteRoleValidator : AbstractValidator<DeleteRole>
 {

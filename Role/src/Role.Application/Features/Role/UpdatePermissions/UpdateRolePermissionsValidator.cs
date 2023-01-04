@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 using static Role.Application.Validation.Errors;
 
-namespace Role.Application.Features.Role.UpdateRolePermissions;
+namespace Role.Application.Features.Role.UpdatePermissions;
 
 public class UpdateRolePermissionsValidator : AbstractValidator<UpdateRolePermissions>
 {

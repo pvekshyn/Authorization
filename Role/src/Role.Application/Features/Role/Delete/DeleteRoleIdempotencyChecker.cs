@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 
-namespace Role.Application.Features.Role.DeleteRole;
+namespace Role.Application.Features.Role.Delete;
 public class DeleteRoleIdempotencyCheck : IIdempotencyCheck<DeleteRole>
 {
     private readonly IRoleDbContext _dbContext;

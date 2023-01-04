@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Role.SDK.Events;
 using Role.Application.Dependencies;
 
-namespace Role.Application.Features.Role.UpdateRolePermissions;
+namespace Role.Application.Features.Role.UpdatePermissions;
 
 public class UpdateRolePermissions : IRequest<Result>
 {

@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using FluentValidation.TestHelper;
 using static Role.Application.Validation.Errors;
-using Role.Application.Features.Role.UpdateRolePermissions;
+using Role.Application.Features.Role.UpdatePermissions;
 
 namespace Role.Application.Tests.Features.Role.UpdatePermissions;
 public class UpdateRolePermissionValidatorTests : ApplicationTestBase
