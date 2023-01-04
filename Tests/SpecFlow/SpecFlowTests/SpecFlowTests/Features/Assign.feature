@@ -6,7 +6,7 @@ Scenario: User got access when assigned
 	When user assigned to this role
 	Then user got access
 
-Scenario: User lost access when assigned 
+Scenario: User lost access when deassigned 
 	Given permission created
 	And role with this permission created
 	And user assigned to this role
