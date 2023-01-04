@@ -15,6 +15,16 @@ namespace Authorization.Infrastructure.DataAccess.Write
             _connectionString = settings.Value.ConnectionStrings.Database;
         }
 
+        public bool IsAssignmentExist(Guid id)
+        {
+            var sql = $"SELECT 1 FROM Assignment WHERE Id = @id";
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return connection.QueryFirstOrDefault<bool>(sql, new { id = id });
+            }
+        }
+
         public void AddAssignment(AssignmentDto assignment)
         {
             var sql = $"INSERT INTO Assignment (Id, UserId, RoleId) VALUES (@id, @userId, @roleId)";

@@ -30,6 +30,7 @@ internal class OutboxPublisher : IOutboxPublisher
         try
         {
             var properties = new MessageProperties();
+            properties.Headers.Add("Created", outboxMessage.Created.ToString("o"));
 
             var body = Encoding.UTF8.GetBytes(outboxMessage.Message);
 

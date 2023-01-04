@@ -9,7 +9,7 @@ namespace Inbox.Job.Infrastructure
     public interface IInboxRepository
     {
         InboxMessage? GetFirst();
-        void Insert(string message);
+        void Insert(string message, DateTime created);
         void Delete(Guid id);
         void InsertError(Guid id, Exception e);
         void InsertError(Guid inboxMessageId, string message, string stackTrace);
@@ -36,14 +36,14 @@ namespace Inbox.Job.Infrastructure
             }
         }
 
-        public void Insert(string message)
+        public void Insert(string message, DateTime created)
         {
-            var sql = "INSERT INTO InboxMessage (Message, Created) VALUES (@message, GETUTCDATE())";
+            var sql = "INSERT INTO InboxMessage (Message, Created) VALUES (@message, @created)";
             _logger.LogDebug(sql);
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Execute(sql, new { message });
+                connection.Execute(sql, new { message, created });
             }
         }
 

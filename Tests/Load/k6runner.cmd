@@ -1,2 +1,2 @@
-k6 run assign.js --summary-export=summary.json
+k6 run assign.js
 pause

@@ -9,7 +9,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddInfrastructureDependencies(builder.Configuration)
-    .AddRepositories()
     .AddTransient<IDatabaseInitializer, DatabaseInitializer>();
 
 builder.Services.AddQuickGridEntityFrameworkAdapter();

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Assignment.SDK</PackageId>
-    <Version>1.0.8</Version>
+    <Version>1.0.9</Version>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -13,9 +13,8 @@
 
   <ItemGroup>
     <PackageReference Include="Common.SDK" Version="1.0.6" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.40.0" />
+    <PackageReference Include="Refit" Version="6.3.2" />    
   </ItemGroup>
 
   <ItemGroup>

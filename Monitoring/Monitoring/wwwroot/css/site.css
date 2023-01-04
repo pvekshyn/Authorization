@@ -72,35 +72,35 @@ a, .btn-link {
 .assignment {
     position: absolute;
     width: 150px;
-    bottom: 150px;
+    bottom: 160px;
     left: 90px;
 }
 
 .outbox {
     position: absolute;
     width: 150px;
-    bottom: 120px;
+    bottom: 130px;
     left: 270px;
 }
 
 .pubsub {
     position: absolute;
     width: 100px;
-    bottom: 170px;
+    bottom: 180px;
     left: 600px;
 }
 
 .inbox {
     position: absolute;
     width: 150px;
-    bottom: 160px;
+    bottom: 170px;
     left: 870px;
 }
 
-.acl {
+.accessentry {
     position: absolute;
     width: 150px;
-    bottom: 130px;
+    bottom: 140px;
     left: 1060px;
 }
 

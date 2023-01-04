@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<AuthorizationSettings>(builder.Configuration);
 
 builder.Services.AddGrpcApplicationDependencies<IApplicationAssemblyMarker>()
-    .AddRepositories()
+    .AddInfrastructureDependencies(builder.Configuration)
     .AddEventToRequestMappers<IInfrastructureAssemblyMarker>();
 
 builder.Services.AddMediatR(typeof(IApplicationAssemblyMarker), typeof(IInfrastructureAssemblyMarker));

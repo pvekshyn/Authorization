@@ -15,8 +15,9 @@ public class CheckAccessController : ControllerBase, ICheckAccessApi
     }
 
     [HttpGet("/checkaccess/userId/{userId}/permissionId/{permissionId}")]
-    public bool CheckAccessAsync(Guid userId, Guid permissionId)
+    public async Task<bool> CheckAccessAsync(Guid userId, Guid permissionId)
     {
-        return _repository.CheckAccess(userId, permissionId);
+        var result = _repository.CheckAccess(userId, permissionId);
+        return await Task.FromResult(result);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Assignment.SDK.Events;
-using Authorization.Application.Features.Assignment;
+using Authorization.Application.Features.Assignment.Assign;
 using Common.SDK;
 using Inbox.SDK.EventToRequest;
 using MediatR;

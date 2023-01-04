@@ -12,16 +12,16 @@
     <div class="assignment">@_assignmentsCount</div>
     <div class="outbox">@_assignmentsOutboxCount</div>
     <div class="pubsub">@_pubSubCount</div>
-    <div class="inbox">@_aclInboxCount</div>
-    <div class="acl">@_aclCount</div>
+    <div class="inbox">@_authorizationInboxCount</div>
+    <div class="accessentry">@_accessEntriesCount</div>
 </div>
 
 @code {
     private int _assignmentsCount = 0;
     private int _assignmentsOutboxCount = 0;
     private int _pubSubCount = 0;
-    private int _aclInboxCount = 0;
-    private int _aclCount = 0;
+    private int _authorizationInboxCount = 0;
+    private int _accessEntriesCount = 0;
 
     protected override async void OnAfterRender(bool firstRender)
     {
@@ -39,10 +39,10 @@
                 _pubSubCount = await RefreshIfSuccess(_pubSubCount, pubSubQuery.GetMessagesCountAsync);
                 await InvokeAsync(StateHasChanged);
 
-                _aclInboxCount = await RefreshIfSuccess(_aclInboxCount, databaseQuery.GetAclInboxCountAsync);
+                _authorizationInboxCount = await RefreshIfSuccess(_authorizationInboxCount, databaseQuery.GetAclInboxCountAsync);
                 await InvokeAsync(StateHasChanged);
 
-                _aclCount = await RefreshIfSuccess(_aclCount, databaseQuery.GetAclCountAsync);
+                _accessEntriesCount = await RefreshIfSuccess(_accessEntriesCount, databaseQuery.GetAclCountAsync);
                 await InvokeAsync(StateHasChanged);
             }
         }

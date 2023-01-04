@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using System.Globalization;
 using System.Text;
 
 namespace Inbox.Job.Infrastructure
@@ -52,9 +53,13 @@ namespace Inbox.Job.Infrastructure
                 try
                 {
                     var body = ea.Body.ToArray();
+                    var createdHeader = ea.BasicProperties.Headers.Single(x => x.Key == "Created").Value;
+                    var createdString = Encoding.UTF8.GetString((byte[])createdHeader);
+                    var created = DateTime.Parse(createdString, null, DateTimeStyles.RoundtripKind);
+
                     var message = Encoding.UTF8.GetString(body);
 
-                    _inboxRepository.Insert(message);
+                    _inboxRepository.Insert(message, created);
 
                     channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
                 }

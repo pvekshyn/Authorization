@@ -25,7 +25,7 @@ namespace Outbox.Job.Infrastructure
 
         public OutboxMessage GetFirst()
         {
-            var sql = @"SELECT TOP 1 Id, Message 
+            var sql = @"SELECT TOP 1 Id, Message, Created
                 FROM OutboxMessage
                 ORDER BY Created";
             _logger.LogDebug(sql);

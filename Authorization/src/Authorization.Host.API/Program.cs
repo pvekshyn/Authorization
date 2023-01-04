@@ -12,8 +12,7 @@ builder.Services.AddMediatR(typeof(IApplicationAssemblyMarker));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddRepositories()
-    .AddInfrastructureDependencies(builder.Configuration);
+builder.Services.AddInfrastructureDependencies(builder.Configuration);
 
 builder.Services.Configure<AuthorizationSettings>(builder.Configuration);
 

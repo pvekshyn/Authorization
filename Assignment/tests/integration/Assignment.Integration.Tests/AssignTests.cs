@@ -21,6 +21,9 @@ namespace Assignment.Integration.Tests
 
         public AssignTests(CustomWebApplicationFactory<API.Program> apiFactory, CustomWebApplicationFactory<GRPC.Program> grpcFactory)
         {
+            Environment.SetEnvironmentVariable("SERVICE__role-grpc__HOST", "http://localhost");
+            Environment.SetEnvironmentVariable("SERVICE__role-grpc__PORT", "5001");
+
             _apiClient = apiFactory.CreateClient();
             _grpcClient = grpcFactory.CreateClient();
         }

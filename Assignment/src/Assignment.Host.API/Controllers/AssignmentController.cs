@@ -4,19 +4,18 @@ using Common.SDK;
 using Assignment.SDK.DTO;
 using Assignment.Application.Features.Assign;
 using Assignment.Application.Features.Deassign;
+using Assignment.SDK.Features;
 
 namespace Assignment.Host.API.Controllers;
 
 [ApiController]
-public class AssignmentController : ControllerBase
+public class AssignmentController : ControllerBase, IAssignmentApi
 {
     private readonly IMediator _mediator;
-    private readonly ILogger<AssignmentController> _logger;
 
-    public AssignmentController(IMediator mediator, ILogger<AssignmentController> logger)
+    public AssignmentController(IMediator mediator)
     {
         _mediator = mediator;
-        _logger = logger;
     }
 
     /// <summary>

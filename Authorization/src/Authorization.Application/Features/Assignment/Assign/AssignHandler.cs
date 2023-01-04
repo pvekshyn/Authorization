@@ -3,7 +3,7 @@ using Authorization.Application.Dependencies;
 using Common.SDK;
 using MediatR;
 
-namespace Authorization.Application.Features.Assignment
+namespace Authorization.Application.Features.Assignment.Assign
 {
     public class Assign : IRequest<Result>
     {

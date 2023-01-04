@@ -10,7 +10,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        return services.AddDbContext(configuration);
+        return services.AddDbContext(configuration)
+            .AddRepositories();
     }
     private static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
     {

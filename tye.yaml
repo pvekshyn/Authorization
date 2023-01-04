@@ -106,3 +106,5 @@ ingress:
         service: assignment-api
       - path: /authorization
         service: authorization-api
+      - path: /authorization-graphql
+        service: authorization-graphql
