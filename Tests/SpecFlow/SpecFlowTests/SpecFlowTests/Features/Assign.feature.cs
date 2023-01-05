@@ -124,14 +124,14 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="User lost access when assigned")]
+        [Xunit.SkippableFactAttribute(DisplayName="User lost access when deassigned")]
         [Xunit.TraitAttribute("FeatureTitle", "Assign")]
-        [Xunit.TraitAttribute("Description", "User lost access when assigned")]
-        public virtual void UserLostAccessWhenAssigned()
+        [Xunit.TraitAttribute("Description", "User lost access when deassigned")]
+        public virtual void UserLostAccessWhenDeassigned()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User lost access when assigned", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User lost access when deassigned", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 9
 this.ScenarioInitialize(scenarioInfo);
 #line hidden

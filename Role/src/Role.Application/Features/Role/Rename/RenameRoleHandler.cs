@@ -1,8 +1,6 @@
 ﻿using Common.SDK;
 using Role.SDK.DTO;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Role.SDK.Events;
 using Role.Application.Dependencies;
 using Role.Domain.ValueObjects.Role;
 
@@ -19,41 +17,23 @@ public class RenameRole : IRequest<Result>
 
 public class RenameRoleHandler : IRequestHandler<RenameRole, Result>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IRoleRepository _roleRepository;
 
-    public RenameRoleHandler(
-        IRoleDbContext dbContext)
+    public RenameRoleHandler(IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
-
+        _roleRepository = roleRepository;
     }
 
     public async Task<Result> Handle(
         RenameRole request, CancellationToken cancellationToken)
     {
-        var role = await _dbContext.Roles
-            .SingleAsync(x => x.Id == request.Role.Id, cancellationToken);
+        var role = await _roleRepository.GetAsync(request.Role.Id, cancellationToken);
 
         var newName = new RoleName(request.Role.Name);
         role.Rename(newName);
 
-        var pubsubEvent = MapToEvent(role);
-
-        await _dbContext.AddPubSubOutboxMessageAsync(role.Id, pubsubEvent, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _roleRepository.RenameAsync(role, cancellationToken);
 
         return Result.Ok();
-    }
-
-    private static RoleRenamedEvent MapToEvent(Domain.Role role)
-    {
-        return new RoleRenamedEvent
-        {
-            Role = new RenameRoleDto
-            {
-                Id = role.Id,
-                Name = role.Name
-            }
-        };
     }
 }

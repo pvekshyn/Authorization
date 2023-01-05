@@ -1,17 +1,16 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 using static Role.Application.Validation.Errors;
 
-namespace Role.Application.Features.Permission.DeletePermission;
+namespace Role.Application.Features.Permission.Delete;
 
 public class DeletePermissionValidator : AbstractValidator<DeletePermission>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IPermissionRepository _permissionRepository;
 
-    public DeletePermissionValidator(IRoleDbContext dbContext)
+    public DeletePermissionValidator(IPermissionRepository permissionRepository)
     {
-        _dbContext = dbContext;
+        _permissionRepository = permissionRepository;
 
         RuleFor(x => x.PermissionId)
             .MustAsync(NotLinkedToAnyRole).WithErrorCode(LINKED_TO_ROLE);
@@ -19,9 +18,7 @@ public class DeletePermissionValidator : AbstractValidator<DeletePermission>
 
     private async Task<bool> NotLinkedToAnyRole(Guid permissionId, CancellationToken cancellationToken)
     {
-        var isAny = await _dbContext.Roles
-            .Include(x => x.Permissions)
-            .AnyAsync(r => r.Permissions.Any(p => p.Id == permissionId), cancellationToken);
+        var isAny = await _permissionRepository.IsLinkedToAnyRole(permissionId, cancellationToken);
 
         return !isAny;
     }

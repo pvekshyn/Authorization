@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 using Role.Domain;
 using static Role.Application.Validation.Errors;
@@ -8,11 +7,13 @@ namespace Role.Application.Features.Role.Create;
 
 public class CreateRoleValidator : AbstractValidator<CreateRole>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IPermissionRepository _permissionRepository;
+    private readonly IRoleRepository _roleRepository;
 
-    public CreateRoleValidator(IRoleDbContext dbContext)
+    public CreateRoleValidator(IPermissionRepository permissionRepository, IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
+        _permissionRepository = permissionRepository;
+        _roleRepository = roleRepository;
 
         RuleFor(x => x.Role.Id)
             .MustAsync(IsIdUnique).WithErrorCode(ALREADY_EXIST);
@@ -24,28 +25,25 @@ public class CreateRoleValidator : AbstractValidator<CreateRole>
 
         RuleFor(x => x.Role.PermissionIds)
             .NotEmpty()
-            .MustAsync(AreExist).WithErrorCode(NOT_FOUND);
+            .MustAsync(AllExist).WithErrorCode(NOT_FOUND);
     }
 
     private async Task<bool> IsIdUnique(Guid id, CancellationToken cancellationToken)
     {
-        var isAny = await _dbContext.Roles.AnyAsync(x => x.Id == id, cancellationToken);
+        var isAny = await _roleRepository.AnyAsync(id, cancellationToken);
         return !isAny;
     }
 
     private async Task<bool> IsNameUnique(string name, CancellationToken cancellationToken)
     {
-        var isAny = await _dbContext.Roles.AnyAsync(x => x.Name == name, cancellationToken);
+        var isAny = await _roleRepository.AnyAsync(name, cancellationToken);
         return !isAny;
     }
 
-    private async Task<bool> AreExist(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken)
+    private async Task<bool> AllExist(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken)
     {
-        var permissionsIds = await _dbContext.Permissions
-            .Where(x => ids.Contains(x.Id))
-            .Select(x => x.Id)
-            .ToListAsync(cancellationToken);
+        var permissions = await _permissionRepository.GetAsync(ids, cancellationToken);
 
-        return permissionsIds.Count == ids.Count;
+        return permissions.Count == ids.Count;
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Common.SDK;
 using Role.SDK.DTO;
 using Role.Application.Features.Permission.Create;
-using Role.Application.Features.Permission.DeletePermission;
+using Role.Application.Features.Permission.Delete;
 using Role.SDK.Features;
 
 namespace Role.Host.API.Controllers;

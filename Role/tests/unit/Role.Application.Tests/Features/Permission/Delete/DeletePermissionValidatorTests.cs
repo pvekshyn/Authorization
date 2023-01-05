@@ -1,7 +1,9 @@
 ﻿using AutoFixture;
 using FluentValidation.TestHelper;
 using static Role.Application.Validation.Errors;
-using Role.Application.Features.Permission.DeletePermission;
+using Role.Application.Features.Permission.Delete;
+using Moq;
+using Role.Application.Dependencies;
 
 namespace Role.Application.Tests.Features.Permission.Delete;
 public class DeletePermissionValidatorTests : ApplicationTestBase
@@ -11,9 +13,10 @@ public class DeletePermissionValidatorTests : ApplicationTestBase
     {
         var request = _fixture.Create<DeletePermission>();
 
-        var role = _fixture.CreateRole(Guid.NewGuid(), permissionIds: new List<Guid> { request.PermissionId });
-        _dbContext.Roles.Add(role);
-        _dbContext.SaveChanges();
+        var permissionRepository = _fixture.Freeze<Mock<IPermissionRepository>>();
+        permissionRepository
+            .Setup(x => x.IsLinkedToAnyRole(request.PermissionId, CancellationToken.None))
+            .ReturnsAsync(true);
 
         var sut = _fixture.Create<DeletePermissionValidator>();
         var result = await sut.TestValidateAsync(request);

@@ -1,24 +1,20 @@
 ﻿using Common.Application.Idempotency;
-using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 
 namespace Role.Application.Features.Role.UpdatePermissions;
 
 public class UpdateRolePermissionsIdempotencyCheck : IIdempotencyCheck<UpdateRolePermissions>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IRoleRepository _roleRepository;
 
-    public UpdateRolePermissionsIdempotencyCheck(IRoleDbContext dbContext)
+    public UpdateRolePermissionsIdempotencyCheck(IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
+        _roleRepository = roleRepository;
     }
 
     public async Task<bool> IsOperationAlreadyAppliedAsync(UpdateRolePermissions request, CancellationToken cancellationToken)
     {
-        var role = await _dbContext.Roles
-            .Include(x => x.Permissions)
-            .AsNoTracking()
-            .SingleOrDefaultAsync(x => x.Id == request.Role.Id);
+        var role = await _roleRepository.GetAsync(request.Role.Id, cancellationToken);
 
         if (role == null)
             return false;

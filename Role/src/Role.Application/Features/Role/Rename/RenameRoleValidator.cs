@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 using Role.Domain;
 using static Role.Application.Validation.Errors;
@@ -8,11 +7,11 @@ namespace Role.Application.Features.Role.Rename;
 
 public class RenameRoleValidator : AbstractValidator<RenameRole>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IRoleRepository _roleRepository;
 
-    public RenameRoleValidator(IRoleDbContext dbContext)
+    public RenameRoleValidator(IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
+        _roleRepository = roleRepository;
 
         RuleFor(x => x.Role.Id)
            .MustAsync(RoleExist).WithErrorCode(NOT_FOUND);
@@ -25,13 +24,12 @@ public class RenameRoleValidator : AbstractValidator<RenameRole>
 
     private async Task<bool> RoleExist(Guid id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Roles.AnyAsync(x => x.Id == id, cancellationToken);
+        return await _roleRepository.AnyAsync(id, cancellationToken);
     }
 
     private async Task<bool> IsNameUnique(string name, CancellationToken cancellationToken)
     {
-        var isAny = await _dbContext.Roles
-            .AnyAsync(x => x.Name == name, cancellationToken);
+        var isAny = await _roleRepository.AnyAsync(name, cancellationToken);
         return !isAny;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 using static Role.Application.Validation.Errors;
 
@@ -7,11 +6,11 @@ namespace Role.Application.Features.Role.Delete;
 
 public class DeleteRoleValidator : AbstractValidator<DeleteRole>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IRoleRepository _roleRepository;
 
-    public DeleteRoleValidator(IRoleDbContext dbContext)
+    public DeleteRoleValidator(IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
+        _roleRepository = roleRepository;
 
         RuleFor(x => x.Id)
             .MustAsync(RoleExist).WithErrorCode(NOT_FOUND);
@@ -19,6 +18,6 @@ public class DeleteRoleValidator : AbstractValidator<DeleteRole>
 
     private async Task<bool> RoleExist(Guid id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Roles.AnyAsync(x => x.Id == id, cancellationToken);
+        return await _roleRepository.AnyAsync(id, cancellationToken);
     }
 }

@@ -14,6 +14,5 @@ public class CreatePermissionHandlerTests : ApplicationTestBase
         var result = await sut.Handle(request, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Single(_dbContext.Permissions);
     }
 }

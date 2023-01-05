@@ -1,14 +1,13 @@
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
-using Role.Application.Dependencies;
 
 namespace Role.Infrastructure.Grpc
 {
     public class RoleService : GrpcRoleService.GrpcRoleServiceBase
     {
-        private readonly IRoleDbContext _dbContext;
+        private readonly RoleDbContext _dbContext;
 
-        public RoleService(IRoleDbContext dbContext)
+        public RoleService(RoleDbContext dbContext)
         {
             _dbContext = dbContext;
         }

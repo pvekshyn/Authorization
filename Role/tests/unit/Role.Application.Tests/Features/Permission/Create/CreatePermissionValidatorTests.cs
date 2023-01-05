@@ -3,15 +3,14 @@ using AutoFixture;
 using FluentValidation.TestHelper;
 using static Role.Application.Validation.Errors;
 using Role.Application.Features.Permission.Create;
+using Moq;
+using Role.Application.Dependencies;
 
 namespace Role.Application.Tests.Features.Permission.Create;
 public class CreatePermissionValidatorTests : ApplicationTestBase
 {
-    private readonly CreatePermissionValidator _sut;
-
     public CreatePermissionValidatorTests()
     {
-        _sut = _fixture.Create<CreatePermissionValidator>();
     }
 
     [Fact]
@@ -19,8 +18,12 @@ public class CreatePermissionValidatorTests : ApplicationTestBase
     {
         var request = _fixture.Create<CreatePermission>();
 
-        _dbContext.Permissions.Add(_fixture.CreatePermission(request.Permission.Id));
-        _dbContext.SaveChanges();
+        var permissionRepository = _fixture.Freeze<Mock<IPermissionRepository>>();
+        permissionRepository
+            .Setup(x => x.AnyAsync(request.Permission.Id, CancellationToken.None))
+            .ReturnsAsync(true);
+
+        var _sut = _fixture.Create<CreatePermissionValidator>();
 
         var result = await _sut.TestValidateAsync(request);
 
@@ -34,6 +37,13 @@ public class CreatePermissionValidatorTests : ApplicationTestBase
         var request = _fixture.Create<CreatePermission>();
         request.Permission.Name = string.Empty;
 
+        var permissionRepository = _fixture.Freeze<Mock<IPermissionRepository>>();
+        permissionRepository
+            .Setup(x => x.AnyAsync(request.Permission.Id, CancellationToken.None))
+            .ReturnsAsync(false);
+
+        var _sut = _fixture.Create<CreatePermissionValidator>();
+
         var result = await _sut.TestValidateAsync(request);
 
         result.ShouldHaveValidationErrorFor(x => x.Permission.Name);
@@ -46,6 +56,13 @@ public class CreatePermissionValidatorTests : ApplicationTestBase
         var request = _fixture.Create<CreatePermission>();
         request.Permission.Name = new string('*', Constants.MaxPermissionNameLength + 1);
 
+        var permissionRepository = _fixture.Freeze<Mock<IPermissionRepository>>();
+        permissionRepository
+            .Setup(x => x.AnyAsync(request.Permission.Id, CancellationToken.None))
+            .ReturnsAsync(false);
+
+        var _sut = _fixture.Create<CreatePermissionValidator>();
+
         var result = await _sut.TestValidateAsync(request);
 
         result.ShouldHaveValidationErrorFor(x => x.Permission.Name);
@@ -57,8 +74,16 @@ public class CreatePermissionValidatorTests : ApplicationTestBase
     {
         var request = _fixture.Create<CreatePermission>();
 
-        _dbContext.Permissions.Add(_fixture.CreatePermission(_fixture.Create<Guid>(), request.Permission.Name));
-        _dbContext.SaveChanges();
+        var permissionRepository = _fixture.Freeze<Mock<IPermissionRepository>>();
+        permissionRepository
+            .Setup(x => x.AnyAsync(request.Permission.Id, CancellationToken.None))
+            .ReturnsAsync(false);
+
+        permissionRepository
+            .Setup(x => x.AnyAsync(request.Permission.Name, CancellationToken.None))
+            .ReturnsAsync(true);
+
+        var _sut = _fixture.Create<CreatePermissionValidator>();
 
         var result = await _sut.TestValidateAsync(request);
 

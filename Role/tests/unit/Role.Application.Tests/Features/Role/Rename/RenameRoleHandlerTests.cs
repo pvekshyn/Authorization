@@ -10,9 +10,6 @@ public class RenameRoleHandlerTests : ApplicationTestBase
     {
         var request = _fixture.Create<RenameRole>();
 
-        _dbContext.Roles.Add(_fixture.CreateRole(request.Role.Id));
-        _dbContext.SaveChanges();
-
         var sut = _fixture.Create<RenameRoleHandler>();
 
         var result = await sut.Handle(request, CancellationToken.None);

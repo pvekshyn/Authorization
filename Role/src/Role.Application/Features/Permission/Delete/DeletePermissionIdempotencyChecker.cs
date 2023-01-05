@@ -1,22 +1,21 @@
 ﻿using Common.Application.Idempotency;
-using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 
-namespace Role.Application.Features.Permission.DeletePermission;
+namespace Role.Application.Features.Permission.Delete;
 
 public class DeletePermissionIdempotencyCheck : IIdempotencyCheck<DeletePermission>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IPermissionRepository _permissionRepository;
 
-    public DeletePermissionIdempotencyCheck(IRoleDbContext dbContext)
+    public DeletePermissionIdempotencyCheck(IPermissionRepository permissionRepository)
     {
-        _dbContext = dbContext;
+        _permissionRepository = permissionRepository;
     }
 
     public async Task<bool> IsOperationAlreadyAppliedAsync(DeletePermission request, CancellationToken cancellationToken)
     {
-        var permissionExist = await _dbContext.Permissions
-            .AnyAsync(x => x.Id == request.PermissionId, cancellationToken);
+        var permissionExist = await _permissionRepository
+            .AnyAsync(request.PermissionId, cancellationToken);
 
         return !permissionExist;
     }

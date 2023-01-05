@@ -2,15 +2,12 @@
 using Role.SDK.DTO;
 using AutoFixture;
 using AutoFixture.AutoMoq;
-using Microsoft.EntityFrameworkCore;
-using Role.Infrastructure;
-using Role.Application.Dependencies;
+using Role.Domain.ValueObjects.Role;
 
 namespace Role.Application.Tests;
-public class ApplicationTestBase : IDisposable
+public class ApplicationTestBase
 {
     protected readonly IFixture _fixture;
-    protected readonly RoleDbContext _dbContext;
 
     public ApplicationTestBase()
     {
@@ -20,13 +17,6 @@ public class ApplicationTestBase : IDisposable
         _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
 
-        var dbContextOptions = new DbContextOptionsBuilder<RoleDbContext>()
-        .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-        .Options;
-
-        _dbContext = new RoleDbContext(dbContextOptions);
-        _fixture.Inject<IRoleDbContext>(_dbContext);
-
         _fixture.Customize<CreateRoleDto>(c => c
             .With(x => x.Name,
             () => _fixture.Create<string>().Substring(0, Constants.MaxRoleNameLength)));
@@ -34,10 +24,8 @@ public class ApplicationTestBase : IDisposable
         _fixture.Customize<RenameRoleDto>(c => c
             .With(x => x.Name,
             () => _fixture.Create<string>().Substring(0, Constants.MaxRoleNameLength)));
-    }
 
-    public void Dispose()
-    {
-        _dbContext.Dispose();
+        //ToDo fix
+        _fixture.Customize<RoleName>(c => c.FromFactory(() => new RoleName("myValue")));
     }
 }

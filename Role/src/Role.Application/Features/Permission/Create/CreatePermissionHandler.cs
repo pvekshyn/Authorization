@@ -3,7 +3,6 @@ using Common.SDK;
 using Role.SDK.DTO;
 using MediatR;
 using Role.Application.Dependencies;
-using Role.SDK.Events;
 
 namespace Role.Application.Features.Permission.Create;
 
@@ -18,12 +17,12 @@ public class CreatePermission : IRequest<Result>
 
 public class CreatePermissionHandler : IRequestHandler<CreatePermission, Result>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IPermissionRepository _permissionRepository;
 
     public CreatePermissionHandler(
-        IRoleDbContext dbContext)
+        IPermissionRepository permissionRepository)
     {
-        _dbContext = dbContext;
+        _permissionRepository = permissionRepository;
     }
 
     public async Task<Result> Handle(CreatePermission request, CancellationToken cancellationToken)
@@ -32,24 +31,10 @@ public class CreatePermissionHandler : IRequestHandler<CreatePermission, Result>
             new PermissionId(request.Permission.Id),
             new PermissionName(request.Permission.Name));
 
-        var pubsubEvent = MapToEvent(permission);
-
-        await _dbContext.AddPubSubOutboxMessageAsync(permission.Id, pubsubEvent, cancellationToken);
-        await _dbContext.Permissions.AddAsync(permission, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _permissionRepository.CreateAsync(permission, cancellationToken);
 
         return Result.Ok();
     }
 
-    private static PermissionCreatedEvent MapToEvent(Domain.Permission permission)
-    {
-        return new PermissionCreatedEvent
-        {
-            Permission = new PermissionDto
-            {
-                Id = permission.Id,
-                Name = permission.Name
-            }
-        };
-    }
+
 }

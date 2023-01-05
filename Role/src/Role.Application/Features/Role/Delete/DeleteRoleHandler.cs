@@ -1,8 +1,6 @@
 ﻿using Common.SDK;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
-using Role.SDK.Events;
 
 namespace Role.Application.Features.Role.Delete;
 
@@ -17,35 +15,24 @@ public class DeleteRole : IRequest<Result>
 
 public class DeleteRoleHandler : IRequestHandler<DeleteRole, Result>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IRoleRepository _roleRepository;
 
-    public DeleteRoleHandler(
-        IRoleDbContext dbContext)
+    public DeleteRoleHandler(IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
+        _roleRepository = roleRepository;
     }
 
     public async Task<Result> Handle(DeleteRole request, CancellationToken cancellationToken)
     {
-        var role = await _dbContext.Roles.SingleOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
+        var role = await _roleRepository.GetAsync(request.Id, cancellationToken);
 
         if (role != null)
         {
-            var pubsubEvent = MapToEvent(role);
-
-            await _dbContext.AddPubSubOutboxMessageAsync(role.Id, pubsubEvent, cancellationToken);
-            _dbContext.Roles.Remove(role);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await _roleRepository.DeleteAsync(role, cancellationToken);
         }
 
         return Result.Ok();
     }
 
-    private static RoleDeletedEvent MapToEvent(Domain.Role role)
-    {
-        return new RoleDeletedEvent
-        {
-            Id = role.Id
-        };
-    }
+
 }

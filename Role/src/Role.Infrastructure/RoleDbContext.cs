@@ -3,12 +3,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Role.Domain;
 using Role.Domain.ValueObjects.Role;
 using Role.Domain.ValueObjects.Permission;
-using Role.Application.Dependencies;
 using Outbox.SDK.Models;
 
 namespace Role.Infrastructure;
 
-public class RoleDbContext : DbContext, IRoleDbContext
+public class RoleDbContext : DbContext
 {
     public RoleDbContext(DbContextOptions<RoleDbContext> options) : base(options) { }
 

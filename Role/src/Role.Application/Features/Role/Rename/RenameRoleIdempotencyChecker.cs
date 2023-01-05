@@ -1,20 +1,19 @@
 ﻿using Common.Application.Idempotency;
-using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 
 namespace Role.Application.Features.Role.Rename;
 public class RenameRoleIdempotencyCheck : IIdempotencyCheck<RenameRole>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IRoleRepository _roleRepository;
 
-    public RenameRoleIdempotencyCheck(IRoleDbContext dbContext)
+    public RenameRoleIdempotencyCheck(IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
+        _roleRepository = roleRepository;
     }
 
     public async Task<bool> IsOperationAlreadyAppliedAsync(RenameRole request, CancellationToken cancellationToken)
     {
-        return await _dbContext.Roles
-            .AnyAsync(x => x.Id == request.Role.Id && x.Name == request.Role.Name, cancellationToken);
+        return await _roleRepository
+            .AnyAsync(request.Role.Id, request.Role.Name, cancellationToken);
     }
 }

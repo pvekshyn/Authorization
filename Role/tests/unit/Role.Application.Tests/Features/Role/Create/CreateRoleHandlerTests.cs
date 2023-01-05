@@ -10,16 +10,10 @@ public class CreateRoleHandlerTests : ApplicationTestBase
     {
         var request = _fixture.Create<CreateRole>();
 
-        var permission = _fixture.CreatePermission(request.Role.PermissionIds.First());
-        _dbContext.Permissions.Add(permission);
-        _dbContext.SaveChanges();
-
         var sut = _fixture.Create<CreateRoleHandler>();
 
         var result = await sut.Handle(request, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-
-        Assert.Single(_dbContext.Roles);
     }
 }

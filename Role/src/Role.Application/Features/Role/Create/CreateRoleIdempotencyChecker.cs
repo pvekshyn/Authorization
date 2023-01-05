@@ -1,21 +1,20 @@
 ﻿using Common.Application.Idempotency;
-using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 
 namespace Role.Application.Features.Role.Create;
 
 public class CreateRoleIdempotencyCheck : IIdempotencyCheck<CreateRole>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IRoleRepository _roleRepository;
 
-    public CreateRoleIdempotencyCheck(IRoleDbContext dbContext)
+    public CreateRoleIdempotencyCheck(IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
+        _roleRepository = roleRepository;
     }
 
     public async Task<bool> IsOperationAlreadyAppliedAsync(CreateRole request, CancellationToken cancellationToken)
     {
-        return await _dbContext.Roles
-            .AnyAsync(x => x.Id == request.Role.Id && x.Name == request.Role.Name, cancellationToken);
+        return await _roleRepository
+            .AnyAsync(request.Role.Id, cancellationToken);
     }
 }

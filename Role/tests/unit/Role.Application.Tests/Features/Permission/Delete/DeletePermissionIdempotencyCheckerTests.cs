@@ -1,14 +1,13 @@
 ﻿using AutoFixture;
-using Role.Application.Features.Permission.DeletePermission;
+using Moq;
+using Role.Application.Dependencies;
+using Role.Application.Features.Permission.Delete;
 
 namespace Role.Application.Tests.Features.Permission.Delete;
 public class DeletePermissionIdempotencyCheckerTests : ApplicationTestBase
 {
-    private readonly DeletePermissionIdempotencyCheck _sut;
-
     public DeletePermissionIdempotencyCheckerTests()
     {
-        _sut = _fixture.Create<DeletePermissionIdempotencyCheck>();
     }
 
     [Fact]
@@ -16,7 +15,14 @@ public class DeletePermissionIdempotencyCheckerTests : ApplicationTestBase
     {
         var request = _fixture.Create<DeletePermission>();
 
-        var result = await _sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
+        var permissionRepository = _fixture.Freeze<Mock<IPermissionRepository>>();
+        permissionRepository
+            .Setup(x => x.AnyAsync(request.PermissionId, CancellationToken.None))
+            .ReturnsAsync(false);
+
+        var sut = _fixture.Create<DeletePermissionIdempotencyCheck>();
+
+        var result = await sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
 
         Assert.True(result);
     }
@@ -26,10 +32,14 @@ public class DeletePermissionIdempotencyCheckerTests : ApplicationTestBase
     {
         var request = _fixture.Create<DeletePermission>();
 
-        _dbContext.Permissions.Add(_fixture.CreatePermission(request.PermissionId));
-        _dbContext.SaveChanges();
+        var permissionRepository = _fixture.Freeze<Mock<IPermissionRepository>>();
+        permissionRepository
+            .Setup(x => x.AnyAsync(request.PermissionId, CancellationToken.None))
+            .ReturnsAsync(true);
 
-        var result = await _sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
+        var sut = _fixture.Create<DeletePermissionIdempotencyCheck>();
+
+        var result = await sut.IsOperationAlreadyAppliedAsync(request, CancellationToken.None);
 
         Assert.False(result);
     }

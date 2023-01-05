@@ -1,22 +1,20 @@
 ﻿using Common.Application.Idempotency;
-using Microsoft.EntityFrameworkCore;
 using Role.Application.Dependencies;
 
 namespace Role.Application.Features.Role.Delete;
 public class DeleteRoleIdempotencyCheck : IIdempotencyCheck<DeleteRole>
 {
-    private readonly IRoleDbContext _dbContext;
+    private readonly IRoleRepository _roleRepository;
 
-    public DeleteRoleIdempotencyCheck(IRoleDbContext dbContext)
+    public DeleteRoleIdempotencyCheck(IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
+        _roleRepository = roleRepository;
     }
 
     public async Task<bool> IsOperationAlreadyAppliedAsync(DeleteRole request, CancellationToken cancellationToken)
     {
-        var RoleExist = await _dbContext.Roles
-            .AnyAsync(x => x.Id == request.Id, cancellationToken);
+        var roleExist = await _roleRepository.AnyAsync(request.Id, cancellationToken);
 
-        return !RoleExist;
+        return !roleExist;
     }
 }
