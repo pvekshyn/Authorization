@@ -1,0 +1,69 @@
+using Microsoft.EntityFrameworkCore;
+using Role.SDK.DTO;
+using TechTalk.SpecFlow;
+
+namespace Role.Integration.Tests.StepDefinitions
+{
+    [Binding]
+    public class UpdateRolePermissionsStepDefinitions : IntegrationTestBase
+    {
+        private ScenarioContext _scenarioContext;
+
+        public UpdateRolePermissionsStepDefinitions(CustomWebApplicationFactory<Program> apiFactory, ScenarioContext scenarioContext) : base(apiFactory)
+        {
+            _scenarioContext = scenarioContext;
+        }
+
+        [Given(@"Update payload with not existing role")]
+        public void GivenUpdatePayloadWithNotExistingRole()
+        {
+            var roleId = Guid.NewGuid();
+            var dto = GetRoleDto(roleId);
+            _scenarioContext["dto"] = dto;
+        }
+
+        [When(@"Role permissions updated")]
+        public async Task WhenRolePermissionsUpdated()
+        {
+            var dto = (UpdateRolePermissionsDto)_scenarioContext["dto"];
+
+            var result = await _roleApiClient.UpdateRolePermissionsAsync(dto, CancellationToken.None);
+
+            _scenarioContext["result"] = result;
+            _scenarioContext["entityId"] = dto.Id;
+        }
+
+        [Given(@"Update payload valid")]
+        public void GivenUpdatePayloadValid()
+        {
+            var roleId = (Guid)_scenarioContext["roleId"];
+
+            var dto = GetRoleDto(roleId);
+
+            _scenarioContext["dto"] = dto;
+        }
+
+        [Then(@"Role permissions changed in database")]
+        public async Task ThenRolePermissionsChangedInDatabase()
+        {
+            var dto = (UpdateRolePermissionsDto)_scenarioContext["dto"];
+            var role = await _dbContext.Roles
+                .Include(x => x.Permissions)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Id == dto.Id);
+
+            Assert.NotNull(role);
+            Assert.Equal(dto.PermissionIds.Single(), role.Permissions.Single().Id);
+        }
+
+        private UpdateRolePermissionsDto GetRoleDto(Guid? roleId = null)
+        {
+            var newPermissionId = (Guid)_scenarioContext["newPermissionId"];
+            return new UpdateRolePermissionsDto()
+            {
+                Id = roleId ?? Guid.NewGuid(),
+                PermissionIds = new List<Guid> { newPermissionId },
+            };
+        }
+    }
+}
