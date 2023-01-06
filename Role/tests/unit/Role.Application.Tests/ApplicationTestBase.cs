@@ -25,7 +25,7 @@ public class ApplicationTestBase
             .With(x => x.Name,
             () => _fixture.Create<string>().Substring(0, Constants.MaxRoleNameLength)));
 
-        //ToDo fix
-        _fixture.Customize<RoleName>(c => c.FromFactory(() => new RoleName("myValue")));
+        _fixture.Customize<RoleName>(c => c.FromFactory(() =>
+            new RoleName(_fixture.Create<string>().Substring(0, Constants.MaxRoleNameLength))));
     }
 }
