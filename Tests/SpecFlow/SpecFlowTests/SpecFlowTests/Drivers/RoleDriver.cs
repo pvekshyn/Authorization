@@ -16,9 +16,18 @@ namespace SpecFlowTests.Drivers
         {
             var roleUrl = "http://localhost:8080/role";
 
-            _roleApiClient = RestService.For<IRoleApi>(roleUrl);
-            _permissionApiClient = RestService.For<IPermissionApi>(roleUrl);
             _featureContext = featureContext;
+
+            var token = (string)_featureContext["accessToken"];
+
+            var settings = new RefitSettings
+            {
+                AuthorizationHeaderValueGetter = () => Task.FromResult(token)
+            };
+
+            _roleApiClient = RestService.For<IRoleApi>(roleUrl, settings);
+            _permissionApiClient = RestService.For<IPermissionApi>(roleUrl, settings);
+
         }
 
         public async Task CreatePermissionAsync()

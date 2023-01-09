@@ -4,6 +4,7 @@ using Refit;
 
 namespace Assignment.SDK.Features
 {
+    [Headers("Authorization: Bearer")]
     public interface IAssignmentApi
     {
         [Post("/assign")]

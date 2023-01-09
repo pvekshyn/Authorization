@@ -16,6 +16,14 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(options =>
+    {
+        options.Authority = builder.Configuration.GetServiceUri("identity-server").ToString();
+        options.TokenValidationParameters.ValidateAudience = false;
+        options.RequireHttpsMetadata = false;
+    });
+
 builder.Services.AddMediatR(typeof(IApiAssemblyMarker), typeof(IApplicationAssemblyMarker), typeof(IInfrastructureAssemblyMarker));
 builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>();
 builder.Services.AddInfrastructureDependencies(builder.Configuration);
@@ -26,6 +34,9 @@ var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 

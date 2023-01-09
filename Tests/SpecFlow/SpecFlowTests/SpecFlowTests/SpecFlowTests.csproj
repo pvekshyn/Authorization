@@ -9,8 +9,9 @@
   <ItemGroup>
     <PackageReference Include="Assignment.SDK" Version="1.0.9" />
     <PackageReference Include="Authorization.SDK" Version="1.0.2" />
+    <PackageReference Include="IdentityModel" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-    <PackageReference Include="Role.SDK" Version="1.0.10" />
+    <PackageReference Include="Role.SDK" Version="1.0.11" />
     <PackageReference Include="SpecFlow.Plus.LivingDocPlugin" Version="3.9.57" />
     <PackageReference Include="SpecFlow.xUnit" Version="3.9.40" />
     <PackageReference Include="xunit" Version="2.4.1" />

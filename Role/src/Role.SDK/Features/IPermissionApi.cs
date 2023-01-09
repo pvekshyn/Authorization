@@ -4,6 +4,7 @@ using Role.SDK.DTO;
 
 namespace Role.SDK.Features
 {
+    [Headers("Authorization: Bearer")]
     public interface IPermissionApi
     {
         [Post("/permission")]

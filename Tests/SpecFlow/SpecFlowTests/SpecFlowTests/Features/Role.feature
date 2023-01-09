@@ -1,12 +1,14 @@
 ﻿Feature: Role
 
 Scenario: Create new role
-	Given permission created
+	Given I am logged in as admin
+	And permission created
 	When role with this permission created
 	Then role in authorization service
 
 Scenario: Delete role
-	Given permission created
+	Given I am logged in as admin
+	And permission created
 	And role with this permission created
 	And role in authorization service
 	When role deleted

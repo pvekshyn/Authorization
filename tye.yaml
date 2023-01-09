@@ -1,5 +1,7 @@
 name: authorization
 services:
+- name: identity-server
+  project: IdentityServer/src/IdentityServer/IdentityServer.csproj
 - name: role-api
   project: Role/src/Role.Host.API/Role.Host.API.csproj
   env:
@@ -100,6 +102,8 @@ ingress:
     bindings:
       - port: 8080
     rules:
+      - path: /identity-server
+        service: identity-server
       - path: /role
         service: role-api
       - path: /assignment
