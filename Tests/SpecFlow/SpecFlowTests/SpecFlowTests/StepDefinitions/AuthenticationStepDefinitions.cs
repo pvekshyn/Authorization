@@ -5,27 +5,33 @@ namespace SpecFlowTests.StepDefinitions
     [Binding]
     public class AuthenticationStepDefinitions
     {
-        private FeatureContext _featureContext;
+        private ScenarioContext _scenarioContext;
 
         public AuthenticationStepDefinitions(
-            FeatureContext featureContext)
+            ScenarioContext scenarioContext)
         {
-            _featureContext = featureContext;
+            _scenarioContext = scenarioContext;
         }
 
         [Given(@"I am logged in as admin")]
         public async Task LoggedInAsAdmin()
         {
-            _featureContext["accessToken"] = await GetAccessTokenAsync();
+            _scenarioContext["accessToken"] = await GetAccessTokenAsync("admin");
         }
 
-        public static async Task<string> GetAccessTokenAsync()
+        [Given(@"I am logged in as user without permissions")]
+        public async Task LoggedInAsUser()
+        {
+            _scenarioContext["accessToken"] = await GetAccessTokenAsync("user");
+        }
+
+        public static async Task<string> GetAccessTokenAsync(string clientId)
         {
             var client = new HttpClient();
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
                 Address = $"http://localhost:8080/identity-server/connect/token",
-                ClientId = "admin",
+                ClientId = clientId,
                 ClientSecret = "secret",
                 Scope = "api"
 

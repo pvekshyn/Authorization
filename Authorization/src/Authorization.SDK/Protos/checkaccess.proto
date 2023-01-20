@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+service GrpcCheckAccessService {
+    rpc CheckAccess(GrpcCheckAccessRequest) returns(GrpcCheckAccessResult);
+}
+message GrpcCheckAccessRequest {
+    string UserId = 1;
+    string PermissionId = 2;
+}
+message GrpcCheckAccessResult {
+    bool HasAccess = 1;
+}

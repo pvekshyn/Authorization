@@ -8,20 +8,20 @@ public class IdempotencyBehavior<TRequest, TResponse> : IPipelineBehavior<TReque
     where TResponse : Result
     where TRequest : IRequest<TResponse>
 {
-    private readonly IEnumerable<IIdempotencyCheck<TRequest>> _idempotencyCheckers;
+    private readonly IEnumerable<IIdempotencyCheck<TRequest>> _idempotencyChecks;
 
-    public IdempotencyBehavior(IEnumerable<IIdempotencyCheck<TRequest>> idempotencyCheckers)
+    public IdempotencyBehavior(IEnumerable<IIdempotencyCheck<TRequest>> idempotencyChecks)
     {
-        _idempotencyCheckers = idempotencyCheckers;
+        _idempotencyChecks = idempotencyChecks;
     }
 
     public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
     {
-        var idempotencyChecker = _idempotencyCheckers.FirstOrDefault();
+        var idempotencyCheck = _idempotencyChecks.FirstOrDefault();
 
-        if (idempotencyChecker != null)
+        if (idempotencyCheck != null)
         {
-            var result = await idempotencyChecker.IsOperationAlreadyAppliedAsync(request, cancellationToken);
+            var result = await idempotencyCheck.IsOperationAlreadyAppliedAsync(request, cancellationToken);
             if (result)
                 return (TResponse)Activator.CreateInstance(typeof(TResponse), 204);
         }

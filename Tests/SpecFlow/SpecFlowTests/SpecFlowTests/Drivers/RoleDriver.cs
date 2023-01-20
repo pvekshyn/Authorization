@@ -9,20 +9,21 @@ namespace SpecFlowTests.Drivers
         private IRoleApi _roleApiClient;
         private IPermissionApi _permissionApiClient;
 
-        private FeatureContext _featureContext;
+        private ScenarioContext _scenarioContext;
 
 
-        public RoleDriver(FeatureContext featureContext)
+        public RoleDriver(ScenarioContext scenarioContext)
         {
             var roleUrl = "http://localhost:8080/role";
 
-            _featureContext = featureContext;
+            _scenarioContext = scenarioContext;
 
-            var token = (string)_featureContext["accessToken"];
+            var token = (string)_scenarioContext["accessToken"];
 
             var settings = new RefitSettings
             {
-                AuthorizationHeaderValueGetter = () => Task.FromResult(token)
+                AuthorizationHeaderValueGetter = () => Task.FromResult(token),
+                ExceptionFactory = httpResponse => Task.FromResult<Exception>(null)
             };
 
             _roleApiClient = RestService.For<IRoleApi>(roleUrl, settings);
@@ -35,8 +36,8 @@ namespace SpecFlowTests.Drivers
             var permissionId = Guid.NewGuid();
             var permissionName = $"Test {permissionId}";
 
-            _featureContext["permissionId"] = permissionId;
-            _featureContext["permissionName"] = permissionName;
+            _scenarioContext["permissionId"] = permissionId;
+            _scenarioContext["permissionName"] = permissionName;
 
             var permissionDto = new PermissionDto
             {
@@ -45,13 +46,13 @@ namespace SpecFlowTests.Drivers
             };
 
             var result = await _permissionApiClient.CreateAsync(permissionDto, CancellationToken.None);
-            Assert.Equal(200, result.Status);
+            _scenarioContext["result"] = result;
         }
 
         public async Task DeletePermissionAsync(Guid id)
         {
             var result = await _permissionApiClient.DeleteAsync(id, CancellationToken.None);
-            Assert.Equal(200, result.Status);
+            _scenarioContext["result"] = result;
         }
 
         public async Task CreateRoleAsync(Guid permissionId)
@@ -59,8 +60,8 @@ namespace SpecFlowTests.Drivers
             var roleId = Guid.NewGuid();
             var roleName = $"Test {roleId}".Substring(0, 25);
 
-            _featureContext["roleId"] = roleId;
-            _featureContext["roleName"] = roleName;
+            _scenarioContext["roleId"] = roleId;
+            _scenarioContext["roleName"] = roleName;
 
             var createRoleDto = new CreateRoleDto
             {
@@ -70,13 +71,13 @@ namespace SpecFlowTests.Drivers
             };
 
             var result = await _roleApiClient.CreateAsync(createRoleDto, CancellationToken.None);
-            Assert.Equal(200, result.Status);
+            _scenarioContext["result"] = result;
         }
 
         public async Task DeleteRoleAsync(Guid id)
         {
             var result = await _roleApiClient.DeleteRoleAsync(id, CancellationToken.None);
-            Assert.Equal(200, result.Status);
+            _scenarioContext["result"] = result;
         }
     }
 }

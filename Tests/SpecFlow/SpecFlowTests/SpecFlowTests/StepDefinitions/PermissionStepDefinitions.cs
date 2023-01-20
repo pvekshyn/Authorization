@@ -7,13 +7,15 @@ namespace SpecFlowTests.StepDefinitions
     {
         private readonly RoleDriver _roleDriver;
         private readonly AuthorizationDriver _authorizationDriver;
-        private FeatureContext _featureContext;
+        private ScenarioContext _scenarioContext;
 
-        public PermissionStepDefinitions(RoleDriver roleDriver, AuthorizationDriver authorizationDriver, FeatureContext featureContext)
+        public PermissionStepDefinitions(RoleDriver roleDriver, AuthorizationDriver authorizationDriver, ScenarioContext scenarioContext)
         {
             _roleDriver = roleDriver;
             _authorizationDriver = authorizationDriver;
-            _featureContext = featureContext;
+            _scenarioContext = scenarioContext;
+
+            _scenarioContext["permissionId"] = Guid.Empty;
         }
 
         [Given(@"permission created")]
@@ -26,8 +28,8 @@ namespace SpecFlowTests.StepDefinitions
         [Then(@"permission in authorization service")]
         public async Task ThenPermissionInAuthorizationService()
         {
-            var permissionId = (Guid)_featureContext["permissionId"];
-            var permissionName = (string)_featureContext["permissionName"];
+            var permissionId = (Guid)_scenarioContext["permissionId"];
+            var permissionName = (string)_scenarioContext["permissionName"];
 
             var result = await _authorizationDriver.GetCreatedPermissionAsync(permissionId);
             Assert.Equal(200, result.Status);
@@ -39,14 +41,14 @@ namespace SpecFlowTests.StepDefinitions
         [When(@"permission deleted")]
         public async Task WhenPermissionDeleted()
         {
-            var permissionId = (Guid)_featureContext["permissionId"];
+            var permissionId = (Guid)_scenarioContext["permissionId"];
             await _roleDriver.DeletePermissionAsync(permissionId);
         }
 
         [Then(@"permission not in authorization service")]
         public async Task ThenPermissionNotInAuthorizationService()
         {
-            var permissionId = (Guid)_featureContext["permissionId"];
+            var permissionId = (Guid)_scenarioContext["permissionId"];
             var result = await _authorizationDriver.GetDeletedPermissionAsync(permissionId);
             Assert.Equal(404, result.Status);
         }

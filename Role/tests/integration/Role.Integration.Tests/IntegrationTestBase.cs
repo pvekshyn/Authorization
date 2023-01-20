@@ -22,17 +22,14 @@ public class IntegrationTestBase : IDisposable, IClassFixture<CustomWebApplicati
 
         var httpClient = apiFactory.CreateClient();
 
-        _permissionApiClient = RestService.For<IPermissionApi>(httpClient,
-        new RefitSettings
+        var settings = new RefitSettings
         {
             ExceptionFactory = httpResponse => Task.FromResult<Exception>(null)
-        });
+        };
 
-        _roleApiClient = RestService.For<IRoleApi>(httpClient,
-        new RefitSettings
-        {
-            ExceptionFactory = httpResponse => Task.FromResult<Exception>(null)
-        });
+        _permissionApiClient = RestService.For<IPermissionApi>(httpClient, settings);
+
+        _roleApiClient = RestService.For<IRoleApi>(httpClient, settings);
     }
 
     protected bool OutboxMessageExists(Guid entityId)

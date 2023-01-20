@@ -6,7 +6,6 @@ using Role.Application.Features.Permission.Create;
 using Role.Application.Features.Permission.Delete;
 using Role.SDK.Features;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 
 namespace Role.Host.API.Controllers;
 
@@ -26,7 +25,6 @@ public class PermissionController : ControllerBase, IPermissionApi
     [HttpPost("/permission")]
     public async Task<Result> CreateAsync(PermissionDto PermissionDto, CancellationToken cancellationToken)
     {
-        var identity = HttpContext.User.Identity as ClaimsIdentity;
         return await _mediator.Send(new CreatePermission(PermissionDto), cancellationToken);
     }
 

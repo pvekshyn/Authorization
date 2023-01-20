@@ -1,4 +1,5 @@
 using Common.Application.Extensions;
+using Common.Infrastructure.Extensions;
 using MediatR;
 using Role.API;
 using Role.API.Filters;
@@ -29,6 +30,10 @@ builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>();
 builder.Services.AddInfrastructureDependencies(builder.Configuration);
 
 builder.Services.Configure<RoleSettings>(builder.Configuration);
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddCheckAccessGrpcClient(builder.Configuration);
 
 var app = builder.Build();
 

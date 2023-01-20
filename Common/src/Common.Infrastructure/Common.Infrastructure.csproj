@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Common.Infrastructure</PackageId>
-    <Version>1.0.23</Version>
+    <Version>1.0.24</Version>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -10,25 +10,13 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="Inbox.SDK" Version="1.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="EasyNetQ" Version="7.0.4" />
-    <PackageReference Include="RabbitMQ.Client" Version="6.4.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
-    <PackageReference Include="Scrutor" Version="4.2.0" />
+    <PackageReference Include="Authorization.SDK" Version="1.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.10.0-alpha.21420.1" />
   </ItemGroup>
-
-  <ItemGroup>
-    <InternalsVisibleTo Include="Common.Infrastructure.Tests" />
-    <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\Common.Application\Common.Application.csproj" />
   </ItemGroup>

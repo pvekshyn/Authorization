@@ -7,22 +7,22 @@ namespace SpecFlowTests.StepDefinitions
     {
         private readonly AssignmentDriver _assignmentDriver;
         private readonly AuthorizationDriver _authorizationDriver;
-        private FeatureContext _featureContext;
+        private ScenarioContext _scenarioContext;
 
         public AssignStepDefinitions(AssignmentDriver assignmentDriver,
             AuthorizationDriver authorizationDriver,
-            FeatureContext featureContext)
+            ScenarioContext scenarioContext)
         {
             _assignmentDriver = assignmentDriver;
             _authorizationDriver = authorizationDriver;
-            _featureContext = featureContext;
+            _scenarioContext = scenarioContext;
         }
 
         [Given(@"user assigned to this role")]
         [When(@"user assigned to this role")]
         public async Task UserAssignedToThisRole()
         {
-            var roleId = (Guid)_featureContext["roleId"];
+            var roleId = (Guid)_scenarioContext["roleId"];
             await _assignmentDriver.AssignAsync(roleId);
         }
 
@@ -30,8 +30,8 @@ namespace SpecFlowTests.StepDefinitions
         [Then(@"user got access")]
         public async Task ThenUserGotAccess()
         {
-            var userId = (Guid)_featureContext["userId"];
-            var permissionId = (Guid)_featureContext["permissionId"];
+            var userId = (Guid)_scenarioContext["userId"];
+            var permissionId = (Guid)_scenarioContext["permissionId"];
             var result = await _authorizationDriver.CheckGotAccessAsync(userId, permissionId);
             Assert.True(result);
         }
@@ -39,16 +39,16 @@ namespace SpecFlowTests.StepDefinitions
         [When(@"user deassigned from this role")]
         public async Task WhenUserDeassignedFromThisRole()
         {
-            var userId = (Guid)_featureContext["userId"];
-            var roleId = (Guid)_featureContext["roleId"];
+            var userId = (Guid)_scenarioContext["userId"];
+            var roleId = (Guid)_scenarioContext["roleId"];
             await _assignmentDriver.DeassignAsync(userId, roleId);
         }
 
         [Then(@"user lost access")]
         public async Task ThenUserLostAccess()
         {
-            var userId = (Guid)_featureContext["userId"];
-            var permissionId = (Guid)_featureContext["permissionId"];
+            var userId = (Guid)_scenarioContext["userId"];
+            var permissionId = (Guid)_scenarioContext["permissionId"];
             var result = await _authorizationDriver.CheckLostAccessAsync(userId, permissionId);
             Assert.False(result);
         }

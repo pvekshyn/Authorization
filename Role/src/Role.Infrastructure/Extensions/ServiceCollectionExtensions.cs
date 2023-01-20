@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Common.Infrastructure.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Role.Application.Dependencies;
@@ -9,7 +10,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        return services.AddDbContext(configuration)
+        return services.AddCommonInfrastructureDependencies()
+            .AddDbContext(configuration)
             .AddRepositories();
     }
     public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)

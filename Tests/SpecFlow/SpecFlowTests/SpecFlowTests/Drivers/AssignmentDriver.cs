@@ -11,22 +11,22 @@ namespace SpecFlowTests.Drivers
     {
         private IAssignmentApi _assignmentApiClient;
 
-        private FeatureContext _featureContext;
+        private ScenarioContext _scenarioContext;
 
 
-        public AssignmentDriver(FeatureContext featureContext)
+        public AssignmentDriver(ScenarioContext scenarioContext)
         {
             var assignmentUrl = "http://localhost:8080/assignment";
 
             _assignmentApiClient = RestService.For<IAssignmentApi>(assignmentUrl);
-            _featureContext = featureContext;
+            _scenarioContext = scenarioContext;
         }
 
         public async Task AssignAsync(Guid roleId)
         {
             var userId = Guid.NewGuid();
 
-            _featureContext["userId"] = userId;
+            _scenarioContext["userId"] = userId;
 
             var assignmentDto = new AssignmentDto
             {
