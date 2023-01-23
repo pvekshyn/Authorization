@@ -66,5 +66,6 @@
     <None Include="Assignment.publish.xml" />
     <None Include="Role.publish.xml" />
     <None Include="Role.integration.test.publish.xml" />
+    <None Include="Assignment.integration.test.publish.xml" />
   </ItemGroup>
 </Project>

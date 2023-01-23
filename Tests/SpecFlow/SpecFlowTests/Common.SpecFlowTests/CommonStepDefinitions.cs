@@ -1,6 +1,8 @@
 using Common.SDK;
+using TechTalk.SpecFlow;
+using Xunit;
 
-namespace SpecFlowTests.StepDefinitions
+namespace Common.SpecFlowTests
 {
     [Binding]
     public class CommonStepDefinitions
@@ -23,6 +25,21 @@ namespace SpecFlowTests.StepDefinitions
         {
             var result = (Result)_scenarioContext["result"];
             Assert.Equal(403, result.Status);
+        }
+
+        [Then(@"validation error")]
+        public void ThenValidationError()
+        {
+            var result = (Result)_scenarioContext["result"];
+            Assert.Equal(422, result.Status);
+
+        }
+
+        [Then(@"idempotent result")]
+        public void Idempotent()
+        {
+            var result = (Result)_scenarioContext["result"];
+            Assert.Equal(204, result.Status);
         }
     }
 }

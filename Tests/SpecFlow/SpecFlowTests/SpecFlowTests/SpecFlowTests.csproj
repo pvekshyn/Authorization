@@ -20,6 +20,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common.SpecFlowTests\Common.SpecFlowTests.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Features\Role.feature.cs">
       <DependentUpon>Role.feature</DependentUpon>
     </Compile>

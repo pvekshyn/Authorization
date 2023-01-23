@@ -3,6 +3,7 @@ using Assignment.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Assignment.Integration.Tests
 {
@@ -10,6 +11,16 @@ namespace Assignment.Integration.Tests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            var inMemorySettings = new Dictionary<string, string> {
+                {"SERVICE:role-grpc:HOST", "http://localhost"},
+                {"SERVICE:role-grpc:PORT", "5000"},
+            };
+
+            builder.ConfigureAppConfiguration((context, builder) =>
+            {
+                builder.AddInMemoryCollection(inMemorySettings);
+            });
+
             builder.ConfigureServices(services =>
             {
                 var descriptor = services.SingleOrDefault(
@@ -18,7 +29,7 @@ namespace Assignment.Integration.Tests
 
                 services.Remove(descriptor);
 
-                services.AddDbContext("Data Source=localhost\\SQLEXPRESS;User Id=assignment_service;Password=assignment_password;Initial Catalog=Assignment;TrustServerCertificate=True");
+                services.AddDbContext(Constants.ConnectionString);
             });
         }
     }

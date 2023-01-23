@@ -1,6 +1,4 @@
-﻿using Dapper;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Refit;
 using Role.Infrastructure;
 using Role.SDK.Features;
@@ -30,18 +28,6 @@ public class IntegrationTestBase : IDisposable, IClassFixture<CustomWebApplicati
         _permissionApiClient = RestService.For<IPermissionApi>(httpClient, settings);
 
         _roleApiClient = RestService.For<IRoleApi>(httpClient, settings);
-    }
-
-    protected bool OutboxMessageExists(Guid entityId)
-    {
-        var sql = @"SELECT TOP 1 1 
-                FROM OutboxMessage
-                WHERE EntityId = @entityId";
-
-        using (var connection = new SqlConnection(Constants.ConnectionString))
-        {
-            return connection.QueryFirstOrDefault<bool>(sql, new { entityId = entityId });
-        }
     }
 
     public void Dispose()

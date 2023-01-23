@@ -4,7 +4,6 @@ using Common.Application.Extensions;
 using MediatR;
 using Assignment.Infrastructure;
 using Assignment.Infrastructure.Init;
-using System.Diagnostics;
 using Assignment.Host.API.Filters;
 using Assignment.Host.API;
 
@@ -37,18 +36,18 @@ app.UseSwagger();
 app.UseSwaggerUI();
 app.MapControllers();
 
-var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
-using (var scope = scopeFactory.CreateScope())
-{
-    Stopwatch sw = new Stopwatch();
-    sw.Start();
+//var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+//using (var scope = scopeFactory.CreateScope())
+//{
+//    Stopwatch sw = new Stopwatch();
+//    sw.Start();
 
-    var databaseInitializer = scope.ServiceProvider.GetRequiredService<IDatabaseInitializer>();
-    await databaseInitializer.InitRoles();
+//    var databaseInitializer = scope.ServiceProvider.GetRequiredService<IDatabaseInitializer>();
+//    await databaseInitializer.InitRoles();
 
-    sw.Stop();
-    Console.WriteLine("Init took {0} ms", sw.ElapsedMilliseconds);
-}
+//    sw.Stop();
+//    Console.WriteLine("Init took {0} ms", sw.ElapsedMilliseconds);
+//}
 
 app.Run();
 
