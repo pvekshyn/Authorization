@@ -1,8 +1,6 @@
 ﻿using Assignment.Application.Dependencies;
-using Assignment.Domain.ValueObjects;
 using Common.SDK;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Assignment.Application.Features.Role
 {
@@ -17,24 +15,16 @@ namespace Assignment.Application.Features.Role
 
     public class CreateRoleHandler : IRequestHandler<CreateRole, Result>
     {
-        private readonly IAssignmentDbContext _dbContext;
+        private readonly IRoleRepository _roleRepository;
 
-        public CreateRoleHandler(IAssignmentDbContext dbContext)
+        public CreateRoleHandler(IRoleRepository roleRepository)
         {
-            _dbContext = dbContext;
+            _roleRepository = roleRepository;
         }
 
         public async Task<Result> Handle(CreateRole request, CancellationToken cancellationToken)
         {
-            //ToDo replace this check with idempotency check
-            var alreadyExist = await _dbContext.Roles.AnyAsync(x => x.Id == request.Id);
-            if (!alreadyExist)
-            {
-                var role = new Domain.Role(new RoleId(request.Id));
-                _dbContext.Roles.Add(role);
-                await _dbContext.SaveChangesAsync();
-            }
-
+            await _roleRepository.CreateAsync(request.Id);
             return Result.Ok();
         }
     }

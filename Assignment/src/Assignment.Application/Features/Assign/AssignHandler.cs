@@ -3,7 +3,6 @@ using MediatR;
 using Assignment.SDK.DTO;
 using Assignment.Domain.ValueObjects;
 using Assignment.Application.Dependencies;
-using Assignment.SDK.Events;
 
 namespace Assignment.Application.Features.Assign;
 
@@ -18,14 +17,11 @@ public class Assign : IRequest<Result>
 
 public class AssignHandler : IRequestHandler<Assign, Result>
 {
-    private readonly IAssignmentDbContext _dbContext;
-    private readonly IMediator _mediator;
+    private readonly IAssignmentRepository _repository;
 
-    public AssignHandler(
-        IAssignmentDbContext dbContext, IMediator mediator)
+    public AssignHandler(IAssignmentRepository repository)
     {
-        _dbContext = dbContext;
-        _mediator = mediator;
+        _repository = repository;
     }
 
     public async Task<Result> Handle(Assign request, CancellationToken cancellationToken)
@@ -35,25 +31,8 @@ public class AssignHandler : IRequestHandler<Assign, Result>
         var roleId = new RoleId(request.Assignment.RoleId);
         var assignment = new Domain.Assignment(assignmentId, userId, roleId);
 
-        var assignmentEvent = MapToEvent(assignment);
-
-        await _dbContext.Assignments.AddAsync(assignment, cancellationToken);
-        await _dbContext.AddPubSubOutboxMessageAsync(assignment.Id, assignmentEvent, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _repository.AssignAsync(assignment, cancellationToken);
 
         return Result.Ok();
-    }
-
-    private static AssignmentEvent MapToEvent(Domain.Assignment assignment)
-    {
-        return new AssignmentEvent
-        {
-            Assignment = new AssignmentDto
-            {
-                Id = assignment.Id,
-                UserId = assignment.UserId,
-                RoleId = assignment.RoleId
-            }
-        };
     }
 }

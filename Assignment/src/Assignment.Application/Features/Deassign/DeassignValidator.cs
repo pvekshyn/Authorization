@@ -1,24 +1,23 @@
 ﻿using Assignment.Application.Dependencies;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using static Assignment.Application.Validation.Errors;
 
 namespace Assignment.Application.Features.Deassign;
 
 public class DeassignValidator : AbstractValidator<Deassign>
 {
-    private readonly IAssignmentDbContext _dbContext;
+    private readonly IRoleRepository _roleRepository;
 
-    public DeassignValidator(IAssignmentDbContext dbContext)
+    public DeassignValidator(IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
+        _roleRepository = roleRepository;
 
         RuleFor(x => x.RoleId)
-            .MustAsync(RoleExist).WithErrorCode(NOT_FOUND); ;
+            .MustAsync(RoleExist).WithErrorCode(NOT_FOUND);
     }
 
     private async Task<bool> RoleExist(Guid id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Roles.AnyAsync(x => x.Id == id, cancellationToken);
+        return await _roleRepository.AnyAsync(id, cancellationToken);
     }
 }

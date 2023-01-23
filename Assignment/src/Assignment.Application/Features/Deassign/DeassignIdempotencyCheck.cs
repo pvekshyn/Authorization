@@ -1,23 +1,20 @@
 ﻿using Assignment.Application.Dependencies;
 using Common.Application.Idempotency;
-using Microsoft.EntityFrameworkCore;
 
 namespace Assignment.Application.Features.Deassign;
 
 public class DeassignIdempotencyCheck : IIdempotencyCheck<Deassign>
 {
-    private readonly IAssignmentDbContext _dbContext;
+    private readonly IAssignmentRepository _repository;
 
-    public DeassignIdempotencyCheck(IAssignmentDbContext dbContext)
+    public DeassignIdempotencyCheck(IAssignmentRepository repository)
     {
-        _dbContext = dbContext;
+        _repository = repository;
     }
 
     public async Task<bool> IsOperationAlreadyAppliedAsync(Deassign request, CancellationToken cancellationToken)
     {
-        var isAny = await _dbContext.Assignments.AnyAsync(
-            x => x.UserId == request.UserId &&
-            x.RoleId == request.RoleId, cancellationToken);
+        var isAny = await _repository.AnyAsync(request.UserId, request.RoleId, cancellationToken);
 
         return !isAny;
     }

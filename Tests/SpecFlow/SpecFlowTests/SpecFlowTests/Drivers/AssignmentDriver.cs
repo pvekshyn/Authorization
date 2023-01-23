@@ -18,7 +18,12 @@ namespace SpecFlowTests.Drivers
         {
             var assignmentUrl = "http://localhost:8080/assignment";
 
-            _assignmentApiClient = RestService.For<IAssignmentApi>(assignmentUrl);
+            var settings = new RefitSettings
+            {
+                ExceptionFactory = httpResponse => Task.FromResult<Exception>(null)
+            };
+
+            _assignmentApiClient = RestService.For<IAssignmentApi>(assignmentUrl, settings);
             _scenarioContext = scenarioContext;
         }
 

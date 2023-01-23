@@ -1,18 +1,16 @@
 ﻿using Assignment.Application.Dependencies;
-using Common.Application.Validation;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using static Assignment.Application.Validation.Errors;
 
 namespace Assignment.Application.Features.Assign;
 
 public class AssignValidator : AbstractValidator<Assign>
 {
-    private readonly IAssignmentDbContext _dbContext;
+    private readonly IRoleRepository _roleRepository;
 
-    public AssignValidator(IAssignmentDbContext dbContext)
+    public AssignValidator(IRoleRepository roleRepository)
     {
-        _dbContext = dbContext;
+        _roleRepository = roleRepository;
 
         RuleFor(x => x.Assignment.Id)
            .NotEmpty().WithErrorCode(EMPTY);
@@ -22,11 +20,11 @@ public class AssignValidator : AbstractValidator<Assign>
 
         RuleFor(x => x.Assignment.RoleId)
             .NotEmpty().WithErrorCode(EMPTY)
-            .MustAsync(RoleExist).WithErrorCode(NOT_FOUND).WithDependency();
+            .MustAsync(RoleExist).WithErrorCode(NOT_FOUND);
     }
 
     private async Task<bool> RoleExist(Guid id, CancellationToken cancellationToken)
     {
-        return await _dbContext.Roles.AnyAsync(x => x.Id == id, cancellationToken);
+        return await _roleRepository.AnyAsync(id, cancellationToken);
     }
 }

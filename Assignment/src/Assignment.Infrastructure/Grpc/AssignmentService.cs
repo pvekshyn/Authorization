@@ -1,13 +1,12 @@
 using Grpc.Core;
-using Assignment.Application.Dependencies;
 using Microsoft.EntityFrameworkCore;
 
 namespace Assignment.Infrastructure.Grpc
 {
     public class AssignmentService : GrpcAssignmentService.GrpcAssignmentServiceBase
     {
-        private readonly IAssignmentDbContext _dbContext;
-        public AssignmentService(IAssignmentDbContext dbContext)
+        private readonly AssignmentDbContext _dbContext;
+        public AssignmentService(AssignmentDbContext dbContext)
         {
             _dbContext = dbContext;
         }

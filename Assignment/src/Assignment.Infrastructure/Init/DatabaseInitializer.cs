@@ -1,5 +1,4 @@
-﻿using Assignment.Application.Dependencies;
-using Assignment.Domain.ValueObjects;
+﻿using Assignment.Domain.ValueObjects;
 using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,10 +11,10 @@ namespace Assignment.Infrastructure.Init
 
     public class DatabaseInitializer : IDatabaseInitializer
     {
-        private readonly IAssignmentDbContext _dbContext;
+        private readonly AssignmentDbContext _dbContext;
         private readonly GrpcRoleService.GrpcRoleServiceClient _grpcRoleClient;
 
-        public DatabaseInitializer(IAssignmentDbContext dbContext, GrpcRoleService.GrpcRoleServiceClient grpcRoleClient)
+        public DatabaseInitializer(AssignmentDbContext dbContext, GrpcRoleService.GrpcRoleServiceClient grpcRoleClient)
         {
             _dbContext = dbContext;
             _grpcRoleClient = grpcRoleClient;

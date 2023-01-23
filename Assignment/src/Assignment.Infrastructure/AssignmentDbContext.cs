@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Assignment.Domain.ValueObjects;
-using Assignment.Application.Dependencies;
 using Outbox.SDK.Models;
 
 namespace Assignment.Infrastructure;
 
-public class AssignmentDbContext : DbContext, IAssignmentDbContext
+public class AssignmentDbContext : DbContext
 {
 
     public AssignmentDbContext(DbContextOptions<AssignmentDbContext> options) : base(options) { }

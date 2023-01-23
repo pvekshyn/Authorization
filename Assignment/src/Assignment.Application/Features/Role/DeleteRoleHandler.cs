@@ -1,7 +1,6 @@
 ﻿using Assignment.Application.Dependencies;
 using Common.SDK;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Assignment.Application.Features.Role
 {
@@ -16,22 +15,16 @@ namespace Assignment.Application.Features.Role
 
     public class DeleteRoleHandler : IRequestHandler<DeleteRole, Result>
     {
-        private readonly IAssignmentDbContext _dbContext;
+        private readonly IRoleRepository _roleRepository;
 
-        public DeleteRoleHandler(IAssignmentDbContext dbContext)
+        public DeleteRoleHandler(IRoleRepository roleRepository)
         {
-            _dbContext = dbContext;
+            _roleRepository = roleRepository;
         }
 
         public async Task<Result> Handle(DeleteRole request, CancellationToken cancellationToken)
         {
-            //ToDo replace this check with idempotency check
-            var role = await _dbContext.Roles.FirstOrDefaultAsync(x => x.Id == request.Id);
-            if (role is not null)
-            {
-                _dbContext.Roles.Remove(role);
-                await _dbContext.SaveChangesAsync();
-            }
+            await _roleRepository.DeleteAsync(request.Id);
 
             return Result.Ok();
         }

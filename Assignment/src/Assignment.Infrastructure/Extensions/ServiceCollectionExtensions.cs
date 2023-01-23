@@ -1,4 +1,5 @@
 ﻿using Assignment.Application.Dependencies;
+using Assignment.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,9 +9,10 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext(configuration);
-        return services;
+        return services.AddDbContext(configuration)
+            .AddRepositories();
     }
+
     public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("Database");
@@ -20,7 +22,12 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddDbContext(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<AssignmentDbContext>(x => x.UseSqlServer(connectionString), ServiceLifetime.Transient);
-        services.AddTransient<IAssignmentDbContext, AssignmentDbContext>();
         return services;
+    }
+
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        return services.AddTransient<IAssignmentRepository, AssignmentRepository>()
+            .AddTransient<IRoleRepository, RoleRepository>();
     }
 }
