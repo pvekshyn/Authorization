@@ -1,5 +1,4 @@
 using Common.Application.Extensions;
-using Common.Infrastructure.Extensions;
 using MediatR;
 using Role.API;
 using Role.API.Filters;
@@ -17,23 +16,15 @@ builder.Services.AddControllers(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthentication("Bearer")
-    .AddJwtBearer(options =>
-    {
-        options.Authority = builder.Configuration.GetServiceUri("identity-server").ToString();
-        options.TokenValidationParameters.ValidateAudience = false;
-        options.RequireHttpsMetadata = false;
-    });
+builder.Services.AddMediatR(
+    typeof(IApiAssemblyMarker),
+    typeof(IApplicationAssemblyMarker),
+    typeof(IInfrastructureAssemblyMarker));
 
-builder.Services.AddMediatR(typeof(IApiAssemblyMarker), typeof(IApplicationAssemblyMarker), typeof(IInfrastructureAssemblyMarker));
 builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>();
 builder.Services.AddInfrastructureDependencies(builder.Configuration);
 
 builder.Services.Configure<RoleSettings>(builder.Configuration);
-
-builder.Services.AddHttpContextAccessor();
-
-builder.Services.AddCheckAccessGrpcClient(builder.Configuration);
 
 var app = builder.Build();
 

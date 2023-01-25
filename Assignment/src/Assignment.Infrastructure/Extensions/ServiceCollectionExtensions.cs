@@ -1,5 +1,6 @@
 ﻿using Assignment.Application.Dependencies;
 using Assignment.Infrastructure.Repositories;
+using Common.Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        return services.AddDbContext(configuration)
+        return services.AddAuthenticationAndAuthorization(configuration)
+            .AddDbContext(configuration)
             .AddRepositories();
     }
 

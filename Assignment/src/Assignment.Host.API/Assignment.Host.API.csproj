@@ -14,6 +14,7 @@
     <ProjectReference Include="..\Assignment.Application\Assignment.Application.csproj" />
     <ProjectReference Include="..\Assignment.Infrastructure\Assignment.Infrastructure.csproj" />
     <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.10.0-alpha.21420.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.12" />
   </ItemGroup>
 
   <ItemGroup>

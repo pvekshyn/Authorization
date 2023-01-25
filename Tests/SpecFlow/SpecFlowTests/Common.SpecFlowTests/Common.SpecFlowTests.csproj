@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Common.SpecFlowTests</PackageId>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
   
@@ -13,9 +13,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Common.Application" Version="1.0.10" />
     <PackageReference Include="Common.SDK" Version="1.0.6" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="SpecFlow.xUnit" Version="3.9.40" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.11" />
   </ItemGroup>
   
 </Project>

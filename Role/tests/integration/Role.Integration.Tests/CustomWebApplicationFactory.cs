@@ -1,5 +1,4 @@
-﻿using Common.Application.Dependencies;
-using Microsoft.AspNetCore.Authentication;
+﻿using Common.SpecFlowTests;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -26,26 +25,24 @@ namespace Role.Integration.Tests
 
             builder.ConfigureServices(services =>
             {
-                var descriptor = services.SingleOrDefault(
-                    d => d.ServiceType ==
-                        typeof(DbContextOptions<RoleDbContext>));
+                services.TurnOffAuthentication();
+                services.TurnOffAuthorization();
 
-                services.Remove(descriptor);
-
-                services.AddDbContext(Constants.ConnectionString);
-
-                services.AddAuthentication(defaultScheme: "TestScheme")
-                    .AddScheme<AuthenticationSchemeOptions, TestAuthenticationHandler>(
-                        "TestScheme", options => { });
-
-                var descriptor1 = services.SingleOrDefault(
-                    d => d.ServiceType ==
-                        typeof(ICurrentUserCheckAccessService));
-                services.Remove(descriptor1);
-                services.AddTransient<ICurrentUserCheckAccessService, TestCurrentUserCheckAccessService>();
+                ReplaceDbContext(services);
             });
 
             base.ConfigureWebHost(builder);
+        }
+
+        private static void ReplaceDbContext(IServiceCollection services)
+        {
+            var service = services.SingleOrDefault(
+                d => d.ServiceType ==
+                    typeof(DbContextOptions<RoleDbContext>));
+
+            services.Remove(service);
+
+            services.AddDbContext(Constants.ConnectionString);
         }
     }
 }

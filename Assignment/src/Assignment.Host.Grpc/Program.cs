@@ -21,7 +21,6 @@ builder.Services.AddGrpc();
 
 var app = builder.Build();
 
-
 app.MapGrpcService<AssignmentService>();
 app.MapGrpcService<EventProcessingService>();
 

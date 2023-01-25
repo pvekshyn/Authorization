@@ -5,10 +5,12 @@ using Assignment.SDK.DTO;
 using Assignment.Application.Features.Assign;
 using Assignment.Application.Features.Deassign;
 using Assignment.SDK.Features;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Assignment.Host.API.Controllers;
 
 [ApiController]
+[Authorize]
 public class AssignmentController : ControllerBase, IAssignmentApi
 {
     private readonly IMediator _mediator;

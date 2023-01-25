@@ -5,18 +5,27 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Common.Infrastructure.Extensions;
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddCommonInfrastructureDependencies(this IServiceCollection services)
+    public static IServiceCollection AddAuthenticationAndAuthorization(this IServiceCollection services, IConfiguration configuration)
     {
-        return services.AddSingleton<ICurrentContext, CurrentContext>()
-            .AddTransient<ICurrentUserCheckAccessService, CurrentUserCheckAccessService>();
-    }
+        services.AddAuthentication("Bearer")
+            .AddJwtBearer(options =>
+            {
+                options.Authority = GetUri(configuration, "identity-server").ToString();
+                options.TokenValidationParameters.ValidateAudience = false;
+                options.RequireHttpsMetadata = false;
+            });
 
-    public static void AddCheckAccessGrpcClient(this IServiceCollection services, IConfiguration configuration)
-    {
+        services.AddHttpContextAccessor();
+
+        services.AddSingleton<ICurrentContext, CurrentContext>()
+            .AddTransient<ICurrentUserCheckAccessService, CurrentUserCheckAccessService>();
+
         services.AddGrpcClient<GrpcCheckAccessService.GrpcCheckAccessServiceClient>(o =>
         {
             o.Address = GetUri(configuration, "authorization-grpc");
         });
+
+        return services;
     }
 
     public static Uri? GetUri(IConfiguration configuration, string serviceName)

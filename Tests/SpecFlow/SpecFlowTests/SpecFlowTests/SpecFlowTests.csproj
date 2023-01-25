@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Assignment.SDK" Version="1.0.9" />
-    <PackageReference Include="Authorization.SDK" Version="1.0.2" />
+    <PackageReference Include="Assignment.SDK" Version="1.0.10" />
+    <PackageReference Include="Authorization.SDK" Version="1.0.3" />
     <PackageReference Include="IdentityModel" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
     <PackageReference Include="Role.SDK" Version="1.0.11" />

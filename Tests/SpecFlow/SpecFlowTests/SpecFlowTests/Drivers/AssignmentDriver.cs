@@ -16,15 +16,19 @@ namespace SpecFlowTests.Drivers
 
         public AssignmentDriver(ScenarioContext scenarioContext)
         {
+            _scenarioContext = scenarioContext;
+
             var assignmentUrl = "http://localhost:8080/assignment";
+
+            var token = (string)_scenarioContext["accessToken"];
 
             var settings = new RefitSettings
             {
+                AuthorizationHeaderValueGetter = () => Task.FromResult(token),
                 ExceptionFactory = httpResponse => Task.FromResult<Exception>(null)
             };
 
             _assignmentApiClient = RestService.For<IAssignmentApi>(assignmentUrl, settings);
-            _scenarioContext = scenarioContext;
         }
 
         public async Task AssignAsync(Guid roleId)
