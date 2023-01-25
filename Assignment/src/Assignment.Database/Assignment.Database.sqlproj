@@ -57,14 +57,21 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Tables" />
+    <Folder Include="Scripts" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Assignment.sql" />
     <Build Include="Tables\Role.sql" />
     <Build Include="Login.sql" />
+    <None Include="Scripts\Assignment.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="local.publish.xml" />
     <None Include="integration.test.publish.xml" />
+    <None Include="Scripts\Variables.sql" />
+    <None Include="Scripts\Role.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\_postdeploy.sql" />
   </ItemGroup>
 </Project>
