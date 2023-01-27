@@ -19,6 +19,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  displayName: 'Nuget restore'
+  inputs:
+    restoreSolution: '$(solution)'
+
 - task: VSBuild@1
   displayName: 'Build'
   inputs:
@@ -32,4 +39,4 @@ steps:
   inputs:
     command: test
     projects: 'Role/tests/unit/*/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
