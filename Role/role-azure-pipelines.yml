@@ -39,4 +39,11 @@ steps:
   inputs:
     command: test
     projects: 'Role/tests/unit/*/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Integration tests'
+  inputs:
+    command: test
+    projects: 'Role/tests/integration/*/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
