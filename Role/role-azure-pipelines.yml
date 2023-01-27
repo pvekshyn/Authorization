@@ -12,6 +12,7 @@ trigger:
     - Role
 
 pool: Default
+container: mcr.microsoft.com/dotnet/sdk:6.0
 
 variables:
   solution: 'Role/Role.sln'
