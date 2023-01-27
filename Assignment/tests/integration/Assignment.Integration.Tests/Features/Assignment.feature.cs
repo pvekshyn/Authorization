@@ -19,41 +19,39 @@ namespace Assignment.Integration.Tests.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class AssignmentFeature : object, Xunit.IClassFixture<AssignmentFeature.FixtureData>, System.IDisposable
+    [NUnit.Framework.TestFixtureAttribute()]
+    [NUnit.Framework.DescriptionAttribute("Assignment")]
+    public partial class AssignmentFeature
     {
         
-        private static TechTalk.SpecFlow.ITestRunner testRunner;
+        private TechTalk.SpecFlow.ITestRunner testRunner;
         
         private string[] _featureTags = ((string[])(null));
-        
-        private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
 #line 1 "Assignment.feature"
 #line hidden
         
-        public AssignmentFeature(AssignmentFeature.FixtureData fixtureData, Assignment_Integration_Tests_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
-        {
-            this._testOutputHelper = testOutputHelper;
-            this.TestInitialize();
-        }
-        
-        public static void FeatureSetup()
+        [NUnit.Framework.OneTimeSetUpAttribute()]
+        public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Assignment", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
-        public static void FeatureTearDown()
+        [NUnit.Framework.OneTimeTearDownAttribute()]
+        public virtual void FeatureTearDown()
         {
             testRunner.OnFeatureEnd();
             testRunner = null;
         }
         
+        [NUnit.Framework.SetUpAttribute()]
         public virtual void TestInitialize()
         {
         }
         
+        [NUnit.Framework.TearDownAttribute()]
         public virtual void TestTearDown()
         {
             testRunner.OnScenarioEnd();
@@ -62,7 +60,7 @@ namespace Assignment.Integration.Tests.Features
         public virtual void ScenarioInitialize(TechTalk.SpecFlow.ScenarioInfo scenarioInfo)
         {
             testRunner.OnScenarioInitialize(scenarioInfo);
-            testRunner.ScenarioContext.ScenarioContainer.RegisterInstanceAs<Xunit.Abstractions.ITestOutputHelper>(_testOutputHelper);
+            testRunner.ScenarioContext.ScenarioContainer.RegisterInstanceAs<NUnit.Framework.TestContext>(NUnit.Framework.TestContext.CurrentContext);
         }
         
         public virtual void ScenarioStart()
@@ -75,14 +73,8 @@ namespace Assignment.Integration.Tests.Features
             testRunner.CollectScenarioErrors();
         }
         
-        void System.IDisposable.Dispose()
-        {
-            this.TestTearDown();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Assign user to not existing role validation")]
-        [Xunit.TraitAttribute("FeatureTitle", "Assignment")]
-        [Xunit.TraitAttribute("Description", "Assign user to not existing role validation")]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Assign user to not existing role validation")]
         public virtual void AssignUserToNotExistingRoleValidation()
         {
             string[] tagsOfScenario = ((string[])(null));
@@ -121,9 +113,8 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Assign user success")]
-        [Xunit.TraitAttribute("FeatureTitle", "Assignment")]
-        [Xunit.TraitAttribute("Description", "Assign user success")]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Assign user success")]
         public virtual void AssignUserSuccess()
         {
             string[] tagsOfScenario = ((string[])(null));
@@ -165,9 +156,8 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Assign already assigned user idempotent")]
-        [Xunit.TraitAttribute("FeatureTitle", "Assignment")]
-        [Xunit.TraitAttribute("Description", "Assign already assigned user idempotent")]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Assign already assigned user idempotent")]
         public virtual void AssignAlreadyAssignedUserIdempotent()
         {
             string[] tagsOfScenario = ((string[])(null));
@@ -209,9 +199,8 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Deassign not assigned user idempotent")]
-        [Xunit.TraitAttribute("FeatureTitle", "Assignment")]
-        [Xunit.TraitAttribute("Description", "Deassign not assigned user idempotent")]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Deassign not assigned user idempotent")]
         public virtual void DeassignNotAssignedUserIdempotent()
         {
             string[] tagsOfScenario = ((string[])(null));
@@ -250,9 +239,8 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Deassign user success")]
-        [Xunit.TraitAttribute("FeatureTitle", "Assignment")]
-        [Xunit.TraitAttribute("Description", "Deassign user success")]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Deassign user success")]
         public virtual void DeassignUserSuccess()
         {
             string[] tagsOfScenario = ((string[])(null));
@@ -295,22 +283,6 @@ this.ScenarioInitialize(scenarioInfo);
 #line hidden
             }
             this.ScenarioCleanup();
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
-        [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-        public class FixtureData : System.IDisposable
-        {
-            
-            public FixtureData()
-            {
-                AssignmentFeature.FeatureSetup();
-            }
-            
-            void System.IDisposable.Dispose()
-            {
-                AssignmentFeature.FeatureTearDown();
-            }
         }
     }
 }

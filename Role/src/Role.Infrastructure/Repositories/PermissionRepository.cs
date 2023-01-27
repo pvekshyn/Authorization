@@ -46,6 +46,7 @@ namespace Role.Infrastructure.Repositories
 
             await _dbContext.AddPubSubOutboxMessageAsync(permission.Id, pubsubEvent, cancellationToken);
             await _dbContext.Permissions.AddAsync(permission, cancellationToken);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
         }
 

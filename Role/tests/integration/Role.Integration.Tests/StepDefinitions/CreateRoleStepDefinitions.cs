@@ -1,18 +1,28 @@
 using Common.SDK;
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using Role.Infrastructure;
 using Role.SDK.DTO;
+using Role.SDK.Features;
 using TechTalk.SpecFlow;
 
 namespace Role.Integration.Tests.StepDefinitions
 {
     [Binding]
-    public class CreateRoleStepDefinitions : IntegrationTestBase
+    public class CreateRoleStepDefinitions
     {
         private ScenarioContext _scenarioContext;
+        private readonly RoleDbContext _dbContext;
+        private IRoleApi _roleApiClient;
 
-        public CreateRoleStepDefinitions(CustomWebApplicationFactory<Program> apiFactory, ScenarioContext scenarioContext) : base(apiFactory)
+        public CreateRoleStepDefinitions(
+            ScenarioContext scenarioContext,
+            RoleDbContext dbContext,
+            IRoleApi roleApiClient)
         {
             _scenarioContext = scenarioContext;
+            _dbContext = dbContext;
+            _roleApiClient = roleApiClient;
         }
 
         [Given(@"Role name empty")]

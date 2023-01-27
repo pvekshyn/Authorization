@@ -1,16 +1,25 @@
 using Role.Domain.ValueObjects.Permission;
+using Role.Infrastructure;
+using Role.SDK.Features;
 using TechTalk.SpecFlow;
 
 namespace Role.Integration.Tests.StepDefinitions
 {
     [Binding]
-    public class DeletePermissionStepDefinitions : IntegrationTestBase
+    public class DeletePermissionStepDefinitions
     {
         private ScenarioContext _scenarioContext;
+        private readonly RoleDbContext _dbContext;
+        private IPermissionApi _permissionApiClient;
 
-        public DeletePermissionStepDefinitions(CustomWebApplicationFactory<Program> apiFactory, ScenarioContext scenarioContext) : base(apiFactory)
+        public DeletePermissionStepDefinitions(
+            ScenarioContext scenarioContext,
+            RoleDbContext dbContext,
+            IPermissionApi permissionApiClient)
         {
             _scenarioContext = scenarioContext;
+            _dbContext = dbContext;
+            _permissionApiClient = permissionApiClient;
         }
 
         [Given(@"Permission not exist")]

@@ -1,18 +1,28 @@
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 using Role.Domain.ValueObjects.Role;
+using Role.Infrastructure;
 using Role.SDK.DTO;
+using Role.SDK.Features;
 using TechTalk.SpecFlow;
 
 namespace Role.Integration.Tests.StepDefinitions
 {
     [Binding]
-    public class RenameRoleStepDefinitions : IntegrationTestBase
+    public class RenameRoleStepDefinitions
     {
         private ScenarioContext _scenarioContext;
+        private readonly RoleDbContext _dbContext;
+        private IRoleApi _roleApiClient;
 
-        public RenameRoleStepDefinitions(CustomWebApplicationFactory<Program> apiFactory, ScenarioContext scenarioContext) : base(apiFactory)
+        public RenameRoleStepDefinitions(
+            ScenarioContext scenarioContext,
+            RoleDbContext dbContext,
+            IRoleApi roleApiClient)
         {
             _scenarioContext = scenarioContext;
+            _dbContext = dbContext;
+            _roleApiClient = roleApiClient;
         }
 
         [Given(@"Rename payload with not existing role")]
@@ -75,7 +85,7 @@ namespace Role.Integration.Tests.StepDefinitions
                 .SingleOrDefaultAsync(x => x.Id == dto.Id);
 
             Assert.NotNull(role);
-            Assert.Equal(dto.Name, role.Name);
+            Assert.AreEqual(dto.Name, role.Name.ToString());
         }
 
         private RenameRoleDto GetRoleDto(Guid? roleId = null)

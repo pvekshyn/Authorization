@@ -1,6 +1,7 @@
 using Common.SDK;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using NUnit.Framework;
 using TechTalk.SpecFlow;
 
 namespace Role.Integration.Tests.StepDefinitions
@@ -18,42 +19,42 @@ namespace Role.Integration.Tests.StepDefinitions
         public void Success()
         {
             var result = (Result)_scenarioContext["result"];
-            Assert.Equal(200, result.Status);
+            Assert.AreEqual(200, result.Status);
         }
 
         [Then(@"Idempotent result")]
         public void Idempotent()
         {
             var result = (Result)_scenarioContext["result"];
-            Assert.Equal(204, result.Status);
+            Assert.AreEqual(204, result.Status);
         }
 
         [Then(@"Validation error")]
         public void ValidationError()
         {
             var result = (Result)_scenarioContext["result"];
-            Assert.Equal(422, result.Status);
+            Assert.AreEqual(422, result.Status);
         }
 
         [Then(@"One success result")]
         public void OneSuccess()
         {
             var results = (Result[])_scenarioContext["results"];
-            Assert.Single(results.Where(x => x.Status == 200));
+            Assert.AreEqual(1, results.Where(x => x.Status == 200).Count());
         }
 
         [Then(@"One idempotent result")]
         public void OneIdempotent()
         {
             var results = (Result[])_scenarioContext["results"];
-            Assert.Single(results.Where(x => x.Status == 204));
+            Assert.AreEqual(1, results.Where(x => x.Status == 204).Count());
         }
 
         [Then(@"One validation error")]
         public void OneValidationError()
         {
             var results = (Result[])_scenarioContext["results"];
-            Assert.Single(results.Where(x => x.Status == 422));
+            Assert.AreEqual(1, results.Where(x => x.Status == 422).Count());
         }
 
         [Then(@"Outbox message in database")]
@@ -65,7 +66,7 @@ namespace Role.Integration.Tests.StepDefinitions
                 FROM OutboxMessage
                 WHERE EntityId = @entityId";
 
-            using (var connection = new SqlConnection(Constants.ConnectionString))
+            using (var connection = new SqlConnection(TestSetUp.ConnectionString))
             {
                 var outboxMessageExists = connection.QueryFirstOrDefault<bool>(sql, new { entityId });
 

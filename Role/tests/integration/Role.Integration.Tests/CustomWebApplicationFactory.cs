@@ -1,6 +1,7 @@
 ﻿using Common.SpecFlowTests;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +10,8 @@ using Role.Infrastructure.Extensions;
 
 namespace Role.Integration.Tests
 {
-    public class CustomWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint> where TEntryPoint : class
+    public class CustomWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint>
+        where TEntryPoint : class
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -23,15 +25,13 @@ namespace Role.Integration.Tests
                 builder.AddInMemoryCollection(inMemorySettings);
             });
 
-            builder.ConfigureServices(services =>
+            builder.ConfigureTestServices(services =>
             {
                 services.TurnOffAuthentication();
                 services.TurnOffAuthorization();
 
                 ReplaceDbContext(services);
             });
-
-            base.ConfigureWebHost(builder);
         }
 
         private static void ReplaceDbContext(IServiceCollection services)
@@ -42,7 +42,7 @@ namespace Role.Integration.Tests
 
             services.Remove(service);
 
-            services.AddDbContext(Constants.ConnectionString);
+            services.AddDbContext(TestSetUp.ConnectionString);
         }
     }
 }

@@ -1,17 +1,27 @@
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using Role.Infrastructure;
 using Role.SDK.DTO;
+using Role.SDK.Features;
 using TechTalk.SpecFlow;
 
 namespace Role.Integration.Tests.StepDefinitions
 {
     [Binding]
-    public class UpdateRolePermissionsStepDefinitions : IntegrationTestBase
+    public class UpdateRolePermissionsStepDefinitions
     {
         private ScenarioContext _scenarioContext;
+        private readonly RoleDbContext _dbContext;
+        private IRoleApi _roleApiClient;
 
-        public UpdateRolePermissionsStepDefinitions(CustomWebApplicationFactory<Program> apiFactory, ScenarioContext scenarioContext) : base(apiFactory)
+        public UpdateRolePermissionsStepDefinitions(
+            ScenarioContext scenarioContext,
+            RoleDbContext dbContext,
+            IRoleApi roleApiClient)
         {
             _scenarioContext = scenarioContext;
+            _dbContext = dbContext;
+            _roleApiClient = roleApiClient;
         }
 
         [Given(@"Update payload with not existing role")]
@@ -53,7 +63,7 @@ namespace Role.Integration.Tests.StepDefinitions
                 .SingleOrDefaultAsync(x => x.Id == dto.Id);
 
             Assert.NotNull(role);
-            Assert.Equal(dto.PermissionIds.Single(), role.Permissions.Single().Id);
+            Assert.AreEqual(dto.PermissionIds.Single(), (Guid)role.Permissions.Single().Id);
         }
 
         private UpdateRolePermissionsDto GetRoleDto(Guid? roleId = null)

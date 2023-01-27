@@ -9,7 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Assignment.Integration.Tests
 {
-    public class CustomWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint> where TEntryPoint : class
+    public class CustomWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint>
+        where TEntryPoint : class
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
@@ -40,7 +41,7 @@ namespace Assignment.Integration.Tests
 
             services.Remove(service);
 
-            services.AddDbContext(Constants.ConnectionString);
+            services.AddDbContext(TestSetUp.ConnectionString);
         }
     }
 }

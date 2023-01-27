@@ -1,10 +1,11 @@
 extern alias API;
 extern alias GRPC;
-
 using Assignment.SDK.DTO;
+using Assignment.SDK.Features;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Newtonsoft.Json;
+using NUnit.Framework;
 using Role.SDK.DTO;
 using Role.SDK.Events;
 using TechTalk.SpecFlow;
@@ -12,18 +13,22 @@ using TechTalk.SpecFlow;
 namespace Assignment.Integration.Tests.StepDefinitions
 {
     [Binding]
-    public class AssignmentStepDefinitions : IntegrationTestBase
+    public class AssignmentStepDefinitions
     {
         private ScenarioContext _scenarioContext;
+        protected readonly IAssignmentApi _apiClient;
+        protected readonly GrpcEventProcessingService.GrpcEventProcessingServiceClient _grpcClient;
 
         public AssignmentStepDefinitions(
-            CustomWebApplicationFactory<API.Program> apiFactory,
-            CustomWebApplicationFactory<GRPC.Program> grpcFactory,
-            ScenarioContext scenarioContext) : base(apiFactory, grpcFactory)
+            ScenarioContext scenarioContext,
+            IAssignmentApi apiClient,
+            GrpcEventProcessingService.GrpcEventProcessingServiceClient grpcClient)
         {
             _scenarioContext = scenarioContext;
 
             _scenarioContext["userId"] = Guid.NewGuid();
+            _apiClient = apiClient;
+            _grpcClient = grpcClient;
         }
 
         [Given(@"role not exist")]
@@ -91,7 +96,7 @@ namespace Assignment.Integration.Tests.StepDefinitions
                 FROM OutboxMessage
                 WHERE EntityId = @entityId";
 
-            using (var connection = new SqlConnection(Constants.ConnectionString))
+            using (var connection = new SqlConnection(TestSetUp.ConnectionString))
             {
                 var outboxMessageExists = connection.QueryFirstOrDefault<bool>(sql, new { entityId });
 

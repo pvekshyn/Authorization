@@ -1,17 +1,28 @@
 using Common.SDK;
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using Role.Infrastructure;
 using Role.SDK.DTO;
+using Role.SDK.Features;
 using TechTalk.SpecFlow;
 
 namespace Role.Integration.Tests.StepDefinitions
 {
     [Binding]
-    public class CreatePermissionStepDefinitions : IntegrationTestBase
+    public class CreatePermissionStepDefinitions
     {
         private ScenarioContext _scenarioContext;
-        public CreatePermissionStepDefinitions(CustomWebApplicationFactory<Program> apiFactory, ScenarioContext scenarioContext) : base(apiFactory)
+        private readonly RoleDbContext _dbContext;
+        private IPermissionApi _permissionApiClient;
+
+        public CreatePermissionStepDefinitions(
+            ScenarioContext scenarioContext,
+            RoleDbContext dbContext,
+            IPermissionApi permissionApiClient)
         {
             _scenarioContext = scenarioContext;
+            _dbContext = dbContext;
+            _permissionApiClient = permissionApiClient;
         }
 
         [Given(@"Permission name empty")]

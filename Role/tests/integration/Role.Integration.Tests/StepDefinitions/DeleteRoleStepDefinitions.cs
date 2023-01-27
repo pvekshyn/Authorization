@@ -1,15 +1,19 @@
+using Role.SDK.Features;
 using TechTalk.SpecFlow;
 
 namespace Role.Integration.Tests.StepDefinitions
 {
     [Binding]
-    public class DeleteRoleStepDefinitions : IntegrationTestBase
+    public class DeleteRoleStepDefinitions
     {
         private ScenarioContext _scenarioContext;
+        private IRoleApi _roleApiClient;
 
-        public DeleteRoleStepDefinitions(CustomWebApplicationFactory<Program> apiFactory, ScenarioContext scenarioContext) : base(apiFactory)
+
+        public DeleteRoleStepDefinitions(ScenarioContext scenarioContext, IRoleApi roleApiClient)
         {
             _scenarioContext = scenarioContext;
+            _roleApiClient = roleApiClient;
         }
         [Given(@"Role not exist")]
         public void GivenRoleNotExist()

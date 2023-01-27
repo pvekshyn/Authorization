@@ -19,41 +19,39 @@ namespace Role.Integration.Tests.Features
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public partial class CreatePermissionFeature : object, Xunit.IClassFixture<CreatePermissionFeature.FixtureData>, System.IDisposable
+    [NUnit.Framework.TestFixtureAttribute()]
+    [NUnit.Framework.DescriptionAttribute("Create Permission")]
+    public partial class CreatePermissionFeature
     {
         
-        private static TechTalk.SpecFlow.ITestRunner testRunner;
+        private TechTalk.SpecFlow.ITestRunner testRunner;
         
         private string[] _featureTags = ((string[])(null));
-        
-        private Xunit.Abstractions.ITestOutputHelper _testOutputHelper;
         
 #line 1 "CreatePermission.feature"
 #line hidden
         
-        public CreatePermissionFeature(CreatePermissionFeature.FixtureData fixtureData, Role_Integration_Tests_XUnitAssemblyFixture assemblyFixture, Xunit.Abstractions.ITestOutputHelper testOutputHelper)
-        {
-            this._testOutputHelper = testOutputHelper;
-            this.TestInitialize();
-        }
-        
-        public static void FeatureSetup()
+        [NUnit.Framework.OneTimeSetUpAttribute()]
+        public virtual void FeatureSetup()
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
             TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Create Permission", null, ProgrammingLanguage.CSharp, ((string[])(null)));
             testRunner.OnFeatureStart(featureInfo);
         }
         
-        public static void FeatureTearDown()
+        [NUnit.Framework.OneTimeTearDownAttribute()]
+        public virtual void FeatureTearDown()
         {
             testRunner.OnFeatureEnd();
             testRunner = null;
         }
         
+        [NUnit.Framework.SetUpAttribute()]
         public virtual void TestInitialize()
         {
         }
         
+        [NUnit.Framework.TearDownAttribute()]
         public virtual void TestTearDown()
         {
             testRunner.OnScenarioEnd();
@@ -62,7 +60,7 @@ namespace Role.Integration.Tests.Features
         public virtual void ScenarioInitialize(TechTalk.SpecFlow.ScenarioInfo scenarioInfo)
         {
             testRunner.OnScenarioInitialize(scenarioInfo);
-            testRunner.ScenarioContext.ScenarioContainer.RegisterInstanceAs<Xunit.Abstractions.ITestOutputHelper>(_testOutputHelper);
+            testRunner.ScenarioContext.ScenarioContainer.RegisterInstanceAs<NUnit.Framework.TestContext>(NUnit.Framework.TestContext.CurrentContext);
         }
         
         public virtual void ScenarioStart()
@@ -75,14 +73,8 @@ namespace Role.Integration.Tests.Features
             testRunner.CollectScenarioErrors();
         }
         
-        void System.IDisposable.Dispose()
-        {
-            this.TestTearDown();
-        }
-        
-        [Xunit.SkippableFactAttribute(DisplayName="Create permission validation")]
-        [Xunit.TraitAttribute("FeatureTitle", "Create Permission")]
-        [Xunit.TraitAttribute("Description", "Create permission validation")]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Create permission validation")]
         public virtual void CreatePermissionValidation()
         {
             string[] tagsOfScenario = ((string[])(null));
@@ -124,9 +116,8 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Create permission success")]
-        [Xunit.TraitAttribute("FeatureTitle", "Create Permission")]
-        [Xunit.TraitAttribute("Description", "Create permission success")]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Create permission success")]
         public virtual void CreatePermissionSuccess()
         {
             string[] tagsOfScenario = ((string[])(null));
@@ -171,9 +162,8 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Concurrent create same permission twice")]
-        [Xunit.TraitAttribute("FeatureTitle", "Create Permission")]
-        [Xunit.TraitAttribute("Description", "Concurrent create same permission twice")]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Concurrent create same permission twice")]
         public virtual void ConcurrentCreateSamePermissionTwice()
         {
             string[] tagsOfScenario = ((string[])(null));
@@ -215,9 +205,8 @@ this.ScenarioInitialize(scenarioInfo);
             this.ScenarioCleanup();
         }
         
-        [Xunit.SkippableFactAttribute(DisplayName="Concurrent create permission with same name twice")]
-        [Xunit.TraitAttribute("FeatureTitle", "Create Permission")]
-        [Xunit.TraitAttribute("Description", "Concurrent create permission with same name twice")]
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Concurrent create permission with same name twice")]
         public virtual void ConcurrentCreatePermissionWithSameNameTwice()
         {
             string[] tagsOfScenario = ((string[])(null));
@@ -257,22 +246,6 @@ this.ScenarioInitialize(scenarioInfo);
 #line hidden
             }
             this.ScenarioCleanup();
-        }
-        
-        [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
-        [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-        public class FixtureData : System.IDisposable
-        {
-            
-            public FixtureData()
-            {
-                CreatePermissionFeature.FeatureSetup();
-            }
-            
-            void System.IDisposable.Dispose()
-            {
-                CreatePermissionFeature.FeatureTearDown();
-            }
         }
     }
 }

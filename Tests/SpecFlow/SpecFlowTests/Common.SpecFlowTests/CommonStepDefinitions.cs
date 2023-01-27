@@ -1,6 +1,6 @@
 using Common.SDK;
+using NUnit.Framework;
 using TechTalk.SpecFlow;
-using Xunit;
 
 namespace Common.SpecFlowTests
 {
@@ -17,21 +17,21 @@ namespace Common.SpecFlowTests
         public void Success()
         {
             var result = (Result)_scenarioContext["result"];
-            Assert.Equal(200, result.Status);
+            Assert.AreEqual(200, result.Status);
         }
 
         [Then(@"forbidden result")]
         public void Forbidden()
         {
             var result = (Result)_scenarioContext["result"];
-            Assert.Equal(403, result.Status);
+            Assert.AreEqual(403, result.Status);
         }
 
         [Then(@"validation error")]
         public void ThenValidationError()
         {
             var result = (Result)_scenarioContext["result"];
-            Assert.Equal(422, result.Status);
+            Assert.AreEqual(422, result.Status);
 
         }
 
@@ -39,7 +39,7 @@ namespace Common.SpecFlowTests
         public void Idempotent()
         {
             var result = (Result)_scenarioContext["result"];
-            Assert.Equal(204, result.Status);
+            Assert.AreEqual(204, result.Status);
         }
     }
 }

@@ -1,20 +1,23 @@
 extern alias GRPC;
 using Grpc.Core;
 using Grpc.Net.Client;
-using Microsoft.AspNetCore.Mvc.Testing;
+using NUnit.Framework;
 
 namespace Assignment.Integration.Tests
 {
-    public class AssigmentServiceTests : IClassFixture<WebApplicationFactory<GRPC.Program>>
+    [TestFixture]
+    public class AssigmentServiceTests
     {
-        private readonly HttpClient _grpcClient;
+        private HttpClient _grpcClient;
 
-        public AssigmentServiceTests(WebApplicationFactory<GRPC.Program> factory)
+        [OneTimeSetUp]
+        public void Init()
         {
+            var factory = new CustomWebApplicationFactory<GRPC.Program>();
             _grpcClient = factory.CreateClient();
         }
 
-        [Fact]
+        [Test]
         public async Task GetAssigments_ReturnAssignments()
         {
             // Arrange
