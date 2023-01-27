@@ -37,5 +37,5 @@ steps:
   displayName: 'Unit tests'
   inputs:
     command: test
-    projects: 'Role/tests/unit/*.csproj'
+    projects: 'Role/tests/unit/*/*.csproj'
     arguments: '--configuration $(buildConfiguration)'
