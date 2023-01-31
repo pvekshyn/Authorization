@@ -5,20 +5,32 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  project: 'Common/src/Common.SDK/Common.SDK.csproj'
 
 steps:
+- task: NuGetToolInstaller@1
+
+- task: DotNetCoreCLI@2
+  displayName: 'Nuget restore'
+  inputs:
+    command: restore
+    projects: $(project)
+    feedsToUse: 'select'
+    vstsFeed: 'Authorization/authorizationFeed'
+    includeNuGetOrg: true      
+
 - task: DotNetCoreCLI@2
   displayName: 'Build'
   inputs:
     command: 'build'
     arguments: '--configuration $(buildConfiguration)'
-    projects: 'Common/src/Common.SDK/Common.SDK.csproj'
+    projects: $(project)
 
 - task: NuGetCommand@2
   displayName: 'Nuget Pack'
   inputs:
     command: pack
-    packagesToPack: 'Common/src/Common.SDK/Common.SDK.csproj'
+    packagesToPack: $(project)
 
 - task: NuGetCommand@2
   displayName: 'Nuget Push'
