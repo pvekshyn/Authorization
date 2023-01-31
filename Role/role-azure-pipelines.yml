@@ -26,9 +26,7 @@ steps:
   displayName: 'Build'
   inputs:
     command: 'build'
-    projects: |
-      '**/*.csproj'
-      '!**/*.sqlproj'
+    projects: '**/*.csproj'
     arguments: '-r $(runtimeIdentifier) /p:RestoreUseSkipNonexistentTargets=false'
 
 - task: DotNetCoreCLI@2
