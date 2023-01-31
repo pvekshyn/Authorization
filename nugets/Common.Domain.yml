@@ -5,8 +5,18 @@ pool:
 
 steps:
 - task: NuGetCommand@2
-  displayName: 'Pack'
+  displayName: 'Nuget Pack'
   inputs:
     command: pack
     packagesToPack: 'Common/src/Common.Domain/Common.Domain.csproj1'
 
+- task: NuGetCommand@2
+  displayName: 'Nuget Push'
+  inputs:
+    command: 'push'
+    feedsToUse: 'select'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: 'authorizationFeed'
+    versioningScheme: 'off'
+    allowPackageConflicts: true
