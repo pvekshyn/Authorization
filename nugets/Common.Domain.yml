@@ -3,9 +3,10 @@ trigger: none
 pool: 
   vmImage: ubuntu-latest
 
-- task: NuGetCommand@2
-  inputs:
+  steps:
+  - task: NuGetCommand@2
+    inputs:
     command: pack
-    packagesToPack: 'Common/src/Common.Domain/Common.Domain.csproj'
+    packagesToPack: 'Common/src/Common.Domain/Common.Domain.csproj1'
     packDestination: '$(Build.ArtifactStagingDirectory)'
 
