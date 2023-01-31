@@ -36,3 +36,4 @@ steps:
   displayName: "Push" 
   inputs:
     command: 'push'
+    publishVstsFeed: 'Authorization/authorizationFeed'
