@@ -11,7 +11,8 @@ trigger:
     include:
     - Role
 
-pool: Default
+pool: 
+  vmImage: ubuntu-latest
 
 variables:
   solution: 'Role/Role.sln'
