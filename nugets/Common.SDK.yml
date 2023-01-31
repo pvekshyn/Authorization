@@ -12,13 +12,13 @@ steps:
   inputs:
     command: 'build'
     arguments: '--configuration $(buildConfiguration)'
-    projects: 'Common/src/Common.Domain/Common.Domain.csproj'
+    projects: 'Common/src/Common.SDK/Common.SDK.csproj'
 
 - task: NuGetCommand@2
   displayName: 'Nuget Pack'
   inputs:
     command: pack
-    packagesToPack: 'Common/src/Common.Domain/Common.Domain.csproj'
+    packagesToPack: 'Common/src/Common.SDK/Common.SDK.csproj'
 
 - task: NuGetCommand@2
   displayName: 'Nuget Push'
