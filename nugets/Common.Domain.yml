@@ -3,7 +3,17 @@ trigger: none
 pool: 
   vmImage: ubuntu-latest
 
+variables:
+  buildConfiguration: 'Release'
+
 steps:
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet build'
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+    projects: 'Common/src/Common.Domain/Common.Domain.csproj'
+
 - task: NuGetCommand@2
   displayName: 'Nuget Pack'
   inputs:
