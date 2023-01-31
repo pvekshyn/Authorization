@@ -25,6 +25,6 @@ steps:
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-    publishVstsFeed: 'authorizationFeed'
+    publishVstsFeed: 'Authorization/authorizationFeed'
     versioningScheme: 'off'
     allowPackageConflicts: true
