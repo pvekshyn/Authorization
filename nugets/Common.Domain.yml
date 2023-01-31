@@ -8,7 +8,7 @@ steps:
   displayName: 'Nuget Pack'
   inputs:
     command: pack
-    packagesToPack: 'Common/src/Common.Domain/Common.Domain.csproj1'
+    packagesToPack: 'Common/src/Common.Domain/Common.Domain.csproj'
 
 - task: NuGetCommand@2
   displayName: 'Nuget Push'
