@@ -26,11 +26,13 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
     projects: $(project)
 
-- task: NuGetCommand@2
-  displayName: 'Nuget Pack'
+- task: DotNetCoreCLI@2
+  displayName: "Pack" 
   inputs:
-    command: pack
-    packagesToPack: $(project)
+    command: 'pack'
+    nobuild: true
+    projects: $(project)
+    arguments: '--no-build'
 
 - task: NuGetCommand@2
   displayName: 'Nuget Push'
