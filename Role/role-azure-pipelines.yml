@@ -22,11 +22,6 @@ variables:
 steps:
 - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  displayName: 'Nuget restore'
-  inputs:
-    restoreSolution: '$(solution)'
-
 - task: DotNetCoreCLI@2
   displayName: 'Build'
   inputs:
@@ -34,6 +29,7 @@ steps:
     projects: |
       '**/*.csproj'
       '!**/*.sqlproj'
+    arguments: '-r $(runtimeIdentifier) /p:RestoreUseSkipNonexistentTargets=false'
 
 - task: DotNetCoreCLI@2
   displayName: 'Unit tests'
