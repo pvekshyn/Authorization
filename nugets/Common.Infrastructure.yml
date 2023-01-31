@@ -26,17 +26,15 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
     projects: $(project)
 
-- task: NuGetCommand@2
-  displayName: 'Nuget Pack'
+- task: DotNetCoreCLI@2
+  displayName: "Pack" 
   inputs:
-    command: pack
-    packagesToPack: $(project)
+    command: 'pack'
+    packagesToPack : $(project)
+    nobuild: true
 
-- task: NuGetCommand@2
-  displayName: 'Nuget Push'
+- task: DotNetCoreCLI@2
+  displayName: "Push" 
   inputs:
     command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
     publishVstsFeed: 'Authorization/authorizationFeed'
-    versioningScheme: 'off'
-    allowPackageConflicts: true
