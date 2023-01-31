@@ -3,38 +3,39 @@ parameters:
   type: string
 
 jobs:
-  pool: 
-    vmImage: ubuntu-latest
-
-  steps:
-  - task: NuGetToolInstaller@1
-  
-  - task: DotNetCoreCLI@2
-    displayName: 'Restore'
-    inputs:
-      command: restore
-      projects: ${{ parameters.project }}
-      feedsToUse: 'select'
-      vstsFeed: 'Authorization/authorizationFeed'
-      includeNuGetOrg: true      
-  
-  - task: DotNetCoreCLI@2
-    displayName: 'Build'
-    inputs:
-      command: 'build'
-      arguments: '--configuration Release'
-      projects: ${{ parameters.project }}
-  
-  - task: DotNetCoreCLI@2
-    displayName: "Pack" 
-    inputs:
-      command: 'pack'
-      packagesToPack : ${{ parameters.project }}
-      nobuild: true
-  
-  - task: DotNetCoreCLI@2
-    displayName: "Push" 
-    inputs:
-      command: 'push'
-      publishVstsFeed: 'Authorization/authorizationFeed'
-  
+  - job:
+    pool: 
+      vmImage: ubuntu-latest
+    
+    steps:
+    - task: NuGetToolInstaller@1
+    
+    - task: DotNetCoreCLI@2
+      displayName: 'Restore'
+      inputs:
+        command: restore
+        projects: ${{ parameters.project }}
+        feedsToUse: 'select'
+        vstsFeed: 'Authorization/authorizationFeed'
+        includeNuGetOrg: true      
+    
+    - task: DotNetCoreCLI@2
+      displayName: 'Build'
+      inputs:
+        command: 'build'
+        arguments: '--configuration Release'
+        projects: ${{ parameters.project }}
+    
+    - task: DotNetCoreCLI@2
+      displayName: "Pack" 
+      inputs:
+        command: 'pack'
+        packagesToPack : ${{ parameters.project }}
+        nobuild: true
+    
+    - task: DotNetCoreCLI@2
+      displayName: "Push" 
+      inputs:
+        command: 'push'
+        publishVstsFeed: 'Authorization/authorizationFeed'
+    
