@@ -1,0 +1,30 @@
+trigger: none
+
+pool: 
+  vmImage: ubuntu-latest
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- task: DotNetCoreCLI@2
+  displayName: 'Build'
+  inputs:
+    command: 'build'
+    arguments: '--configuration $(buildConfiguration)'
+    projects: 'Common/src/Common.Infrastructure/Common.Infrastructure.csproj'
+
+- task: NuGetCommand@2
+  displayName: 'Nuget Pack'
+  inputs:
+    command: pack
+    packagesToPack: 'Common/src/Common.Infrastructure/Common.Infrastructure.csproj'
+
+- task: NuGetCommand@2
+  displayName: 'Nuget Push'
+  inputs:
+    command: 'push'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    publishVstsFeed: 'Authorization/authorizationFeed'
+    versioningScheme: 'off'
+    allowPackageConflicts: true
