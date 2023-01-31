@@ -2,13 +2,9 @@ parameters:
 - name: project
   type: string
 
-variables:
-  buildConfiguration: 'Release'
-
 jobs:
-- job:
   pool: 
-  vmImage: ubuntu-latest
+    vmImage: ubuntu-latest
 
   steps:
   - task: NuGetToolInstaller@1
@@ -26,7 +22,7 @@ jobs:
     displayName: 'Build'
     inputs:
       command: 'build'
-      arguments: '--configuration $(buildConfiguration)'
+      arguments: '--configuration Release'
       projects: ${{ parameters.project }}
   
   - task: DotNetCoreCLI@2
