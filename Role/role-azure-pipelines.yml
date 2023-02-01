@@ -37,15 +37,20 @@ steps:
   inputs:
     command: 'build'
     projects: $(projects)
+    arguments: '--configuration $(buildConfiguration)'
+
 
 - task: DotNetCoreCLI@2
   displayName: 'Unit tests'
   inputs:
     command: test
     projects: 'Role/tests/unit/*/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+
 
 - task: DotNetCoreCLI@2
   displayName: 'Integration tests'
   inputs:
     command: test
     projects: 'Role/tests/integration/*/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
