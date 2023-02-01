@@ -36,9 +36,9 @@ steps:
   displayName: 'Build'
   inputs:
     command: 'build'
-    projects: $(projects)  |
-**/proj1.csproj
-**/proj2.csproj
+    projects: |
+      $(projects)
+      Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
     arguments: '--configuration $(buildConfiguration)'
 
 
