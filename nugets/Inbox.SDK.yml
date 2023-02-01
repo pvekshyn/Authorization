@@ -1,0 +1,6 @@
+trigger: none
+
+jobs:
+- template: publishNuget.yml
+  parameters:
+    project: 'Inbox.Job/src/Inbox.SDK/Inbox.SDK.csproj'
