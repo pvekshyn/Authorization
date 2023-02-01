@@ -18,6 +18,7 @@ variables:
   solution: 'Role/Role.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  projects: 'Role/**/*.csproj'
 
 steps:
 - task: NuGetToolInstaller@1
@@ -26,7 +27,7 @@ steps:
   displayName: 'Nuget restore'
   inputs:
     command: restore
-    projects: '**/*.csproj'
+    projects: $(projects)
     feedsToUse: 'select'
     vstsFeed: 'Authorization/authorizationFeed'
     includeNuGetOrg: true         
@@ -35,8 +36,7 @@ steps:
   displayName: 'Build'
   inputs:
     command: 'build'
-    projects: '**/*.csproj'
-    arguments: '-r $(runtimeIdentifier) /p:RestoreUseSkipNonexistentTargets=false'
+    projects: $(projects)
 
 - task: DotNetCoreCLI@2
   displayName: 'Unit tests'
