@@ -16,4 +16,8 @@
     <ItemGroup>
       <PostDeploy Include="Scripts\_postdeploy.sql" />
     </ItemGroup>
+
+  <Target Name="CopyDacPacToIntegrationTests" AfterTargets="AfterBuild">
+    <Copy SourceFiles="$(TargetDir)Build.Role.Database.dacpac" DestinationFolder="../../tests/integration/Role.Integration.Tests/bin/Release/netstandard2.0" SkipUnchangedFiles="true" />
+  </Target>
 </Project>
