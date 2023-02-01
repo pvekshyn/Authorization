@@ -36,7 +36,9 @@ steps:
   displayName: 'Build'
   inputs:
     command: 'build'
-    projects: $(projects)
+    projects: $(projects)  |
+**/proj1.csproj
+**/proj2.csproj
     arguments: '--configuration $(buildConfiguration)'
 
 

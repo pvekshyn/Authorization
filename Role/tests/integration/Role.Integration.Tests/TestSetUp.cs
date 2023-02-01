@@ -17,8 +17,8 @@ namespace Role.Integration.Tests
         protected override string DbName => "Role";
         protected override IEnumerable<string> DacPacPaths => new List<string>
         {
-            @"../netstandard2.0/Build.Role.Database.dacpac"//,
-            //@"c:\2\Outbox.Job\src\Outbox.Database\bin\Debug\Outbox.Database.dacpac"
+            @"../netstandard2.0/Build.Role.Database.dacpac",
+            @"../netstandard2.0/Build.Outbox.Database.dacpac"
         };
 
         [OneTimeSetUp]
