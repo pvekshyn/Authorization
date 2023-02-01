@@ -3,4 +3,4 @@ trigger: none
 jobs:
 - template: publishNuget.yml
   parameters:
-    project: 'Tests\SpecFlow\SpecFlowTests\Common.SpecFlowTests\Common.SpecFlowTests.csproj'
+    project: 'Tests/SpecFlow/SpecFlowTests/Common.SpecFlowTests/Common.SpecFlowTests.csproj'
