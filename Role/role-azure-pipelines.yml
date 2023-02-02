@@ -1,8 +1,3 @@
-# ASP.NET Core (.NET Framework)
-# Build and test ASP.NET Core projects targeting the full .NET Framework.
-# Add steps that publish symbols, save build artifacts, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
-
 trigger:
   branches:
     include:
@@ -14,59 +9,66 @@ trigger:
 pool: 
   vmImage: ubuntu-latest
 
-variables:
-  solution: 'Role/Role.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-  dotNetFramework: 'net6.0'
-  targetRuntime: 'linux-x64'
-  projects: 'Role/**/*.csproj'
+stages:
+  - stage: Build and test
+    variables:
+      buildPlatform: 'Any CPU'
+      buildConfiguration: 'Release'
+      dotNetFramework: 'net6.0'
+      targetRuntime: 'linux-x64'
+      projects: 'Role/**/*.csproj'
+    jobs:
+      - job: Build
+        steps:
+        - task: NuGetToolInstaller@1
+        
+        - task: DotNetCoreCLI@2
+          displayName: 'Nuget restore'
+          inputs:
+            command: restore
+            projects: $(projects)
+            feedsToUse: 'select'
+            vstsFeed: 'Authorization/authorizationFeed'
+            includeNuGetOrg: true         
+        
+        - task: DotNetCoreCLI@2
+          displayName: 'Build'
+          inputs:
+            command: 'build'
+            projects: |
+              $(projects)
+              Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
+            arguments: '--configuration $(buildConfiguration)'
 
-steps:
-- task: NuGetToolInstaller@1
+      - job: Publish
+        steps:
+        - task: DotNetCoreCLI@2
+          displayName: 'Dotnet publish'
+          inputs:
+            command: 'publish'
+            publishWebProjects: false 
+            projects: 'Role/src/Role.Host.API/Role.Host.API.csproj'
+            arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+        
+        - task: PublishPipelineArtifact@1
+          displayName: 'Artifact publish'
+          inputs:
+            targetPath: $(build.artifactStagingDirectory)
+            artifact: 'drop'
+            publishLocation: 'pipeline'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Nuget restore'
-  inputs:
-    command: restore
-    projects: $(projects)
-    feedsToUse: 'select'
-    vstsFeed: 'Authorization/authorizationFeed'
-    includeNuGetOrg: true         
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build'
-  inputs:
-    command: 'build'
-    projects: |
-      $(projects)
-      Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
-    arguments: '--configuration $(buildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: false 
-    projects: 'Role/src/Role.Host.API/Role.Host.API.csproj'
-    arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
-
-- task: PublishPipelineArtifact@1
-  inputs:
-    targetPath: $(build.artifactStagingDirectory)
-    artifact: 'drop'
-    publishLocation: 'pipeline'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Unit tests'
-  inputs:
-    command: test
-    projects: 'Role/tests/unit/*/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
-
-
-- task: DotNetCoreCLI@2
-  displayName: 'Integration tests'
-  inputs:
-    command: test
-    projects: 'Role/tests/integration/*/*.csproj'
-    arguments: '--configuration $(buildConfiguration)'
+      - job: Test
+        steps:
+        - task: DotNetCoreCLI@2
+          displayName: 'Unit tests'
+          inputs:
+            command: test
+            projects: 'Role/tests/unit/*/*.csproj'
+            arguments: '--configuration $(buildConfiguration)'
+        
+        - task: DotNetCoreCLI@2
+          displayName: 'Integration tests'
+          inputs:
+            command: test
+            projects: 'Role/tests/integration/*/*.csproj'
+            arguments: '--configuration $(buildConfiguration)'
