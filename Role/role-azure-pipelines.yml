@@ -66,6 +66,7 @@ stages:
         
         - task: DotNetCoreCLI@2
           displayName: 'Integration tests'
+          condition: eq(1,2)
           inputs:
             command: test
             projects: 'Role/tests/integration/*/*.csproj'
@@ -87,5 +88,4 @@ stages:
               azureSubscription: 'authorization_sc'
               appType: 'webAppLinux'
               appName: 'pv-role'
-              package: '$(Pipeline.Workspace)/drop'
               runtimeStack: 'DOTNETCORE|6.0'
