@@ -46,6 +46,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
+    projects: $(projects)
     arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
 
 - task: PublishPipelineArtifact@1
