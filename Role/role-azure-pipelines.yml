@@ -10,7 +10,7 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: 'BuildAndTest'
+  - stage: BuildAndTest
     displayName: 'Build and test'
     variables:
       buildPlatform: 'Any CPU'
@@ -19,7 +19,8 @@ stages:
       targetRuntime: 'linux-x64'
       projects: 'Role/**/*.csproj'
     jobs:
-      - job: Build
+      - job: BuildAndTest
+        displayName: 'Build and test'
         steps:
         - task: NuGetToolInstaller@1
         
@@ -41,9 +42,6 @@ stages:
               Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
             arguments: '--configuration $(buildConfiguration)'
 
-      - job: Publish
-        dependsOn: Build
-        steps:
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet publish'
           inputs:
@@ -59,9 +57,6 @@ stages:
             artifact: 'drop'
             publishLocation: 'pipeline'
 
-      - job: Test
-        dependsOn: Build
-        steps:
         - task: DotNetCoreCLI@2
           displayName: 'Unit tests'
           inputs:
