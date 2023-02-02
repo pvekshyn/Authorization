@@ -90,4 +90,5 @@ stages:
               appName: 'pv-role'
               runtimeStack: 'DOTNETCORE|6.0'
               package: '$(Pipeline.Workspace)/drop'
+              deploymentMethod: 'zipDeploy'
               startUpCommand: 'dotnet Role.Host.API.dll'
