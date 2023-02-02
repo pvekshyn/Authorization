@@ -41,6 +41,17 @@ steps:
       Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
     arguments: '--configuration $(buildConfiguration)'
 
+- task: DotNetCoreCLI@2
+        inputs:
+          command: publish
+          publishWebProjects: True
+          arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+          zipAfterPublish: True
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathToPublish: '$(Build.ArtifactStagingDirectory)'
+    artifactName: drop
 
 - task: DotNetCoreCLI@2
   displayName: 'Unit tests'
