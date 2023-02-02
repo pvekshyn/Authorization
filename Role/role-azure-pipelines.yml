@@ -90,4 +90,4 @@ stages:
               appName: 'pv-role'
               runtimeStack: 'DOTNETCORE|6.0'
               package: '$(Pipeline.Workspace)/drop'
-              startUpCommand: dotnet Role.Host.API.dll
+              startUpCommand: 'dotnet Role.Host.API.dll'
