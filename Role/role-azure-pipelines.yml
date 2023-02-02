@@ -10,7 +10,8 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: 'Build and test'
+  - stage: 'BuildAndTest'
+    displayName: 'Build and test'
     variables:
       buildPlatform: 'Any CPU'
       buildConfiguration: 'Release'
