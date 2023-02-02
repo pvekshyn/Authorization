@@ -70,3 +70,21 @@ stages:
             command: test
             projects: 'Role/tests/integration/*/*.csproj'
             arguments: '--configuration $(buildConfiguration)'
+
+  - stage: deploy_dev
+    jobs:
+      - job: deploy
+        displayName: 'Deploy DEV'
+        steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              buildType: 'current'
+              artifactName: 'drop'
+              targetPath: '$(Pipeline.Workspace)/drop'
+          - task: AzureWebApp@1
+            inputs:
+              azureSubscription: 'authorization_sc'
+              appType: 'webAppLinux'
+              appName: 'Role'
+              package: '$(Pipeline.Workspace)/drop'
+              runtimeStack: 'DOTNETCORE|6.0'
