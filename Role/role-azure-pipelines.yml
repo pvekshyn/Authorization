@@ -72,6 +72,7 @@ stages:
             arguments: '--configuration $(buildConfiguration)'
 
   - stage: deploy_dev
+    displayName: 'Deploy DEV'
     jobs:
       - job: deploy
         displayName: 'Deploy DEV'
@@ -85,6 +86,6 @@ stages:
             inputs:
               azureSubscription: 'authorization_sc'
               appType: 'webAppLinux'
-              appName: 'Role'
+              appName: 'pv-role'
               package: '$(Pipeline.Workspace)/drop'
               runtimeStack: 'DOTNETCORE|6.0'
