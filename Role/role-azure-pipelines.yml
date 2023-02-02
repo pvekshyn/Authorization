@@ -18,6 +18,8 @@ variables:
   solution: 'Role/Role.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  dotNetFramework: 'net6.0'
+  targetRuntime: 'linux-x64'
   projects: 'Role/**/*.csproj'
 
 steps:
@@ -42,16 +44,15 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
 
 - task: DotNetCoreCLI@2
-        inputs:
-          command: publish
-          publishWebProjects: True
-          arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
-          zipAfterPublish: True
-
-- task: PublishBuildArtifacts@1
   inputs:
-    pathToPublish: '$(Build.ArtifactStagingDirectory)'
-    artifactName: drop
+    command: 'publish'
+    arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: $(build.artifactStagingDirectory)
+    artifact: 'drop'
+    publishLocation: 'pipeline'
 
 - task: DotNetCoreCLI@2
   displayName: 'Unit tests'
