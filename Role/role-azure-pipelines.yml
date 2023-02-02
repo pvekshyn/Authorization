@@ -74,6 +74,8 @@ stages:
 
   - stage: deploy_dev
     displayName: 'Deploy DEV'
+    variables:
+      system.debug: true
     jobs:
       - job: deploy
         displayName: 'Deploy DEV'
