@@ -46,7 +46,8 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'publish'
-    projects: $(projects)
+    publishWebProjects: false 
+    projects: 'Role/src/Role.Host.API/Role.Host.API.csproj'
     arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
 
 - task: PublishPipelineArtifact@1
