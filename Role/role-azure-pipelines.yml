@@ -51,14 +51,14 @@ stages:
             arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
         
         - task: PublishPipelineArtifact@1
-          displayName: 'Project Artifact publish'
+          displayName: 'Publish Project Artifact'
           inputs:
             targetPath: $(build.artifactStagingDirectory)
             artifact: 'projectDrop'
             publishLocation: 'pipeline'
 
         - task: PublishPipelineArtifact@1
-          displayName: 'Db Artifact publish'
+          displayName: 'Publish Database Artifact'
           inputs:
             targetPath: 'Role/tests/integration/Role.Integration.Tests/bin/Release/netstandard2.0'
             artifact: 'dbDrop'
@@ -84,6 +84,23 @@ stages:
     variables:
       system.debug: true
     jobs:
+      - job: preDeploy
+        displayName: 'Predeploy DEV'
+        steps:
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download Database Artifact'
+            inputs:
+              buildType: 'current'
+              artifactName: 'dbDrop'
+              targetPath: '$(Pipeline.Workspace)/drop'
+
+          - task: SqlAzureDacpacDeployment@1
+            displayName: 'Publish Database'
+            inputs:
+              azureSubscription: 'authorization_sc'
+              AuthenticationType: 'connectionString'
+              ConnectionString: 'Server=tcp:authorization-db.database.windows.net,1433;Initial Catalog=role;User ID=pv;Password=password#123;TrustServerCertificate=True;'
+              DacpacFile: '$(Pipeline.Workspace)/drop/Build.Role.Database.dacpac'
       - job: deploy
         displayName: 'Deploy DEV'
         steps:
@@ -92,6 +109,7 @@ stages:
               buildType: 'current'
               artifactName: 'projectDrop'
               targetPath: '$(Pipeline.Workspace)/drop'
+
           - task: AzureWebApp@1
             inputs:
               azureSubscription: 'authorization_sc'
