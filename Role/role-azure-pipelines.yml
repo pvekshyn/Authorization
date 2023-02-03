@@ -106,6 +106,7 @@ stages:
 
       - job: deploy
         displayName: 'Deploy DEV'
+        dependsOn: 'preDeploy'
         steps:
           - task: DownloadPipelineArtifact@2
             inputs:
