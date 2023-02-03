@@ -1,8 +1,5 @@
-﻿using Common.Application.Authorization;
-using Common.Application.Dependencies;
-
-namespace Role.Application.Features.Permission.Create;
-
+﻿namespace Role.Application.Features.Permission.Create;
+/*
 public class CreatePermissionAuthorizationCheck : IAuthorizationCheck<CreatePermission>
 {
     private readonly ICurrentUserCheckAccessService _currentUserCheckAccessService;
@@ -17,3 +14,4 @@ public class CreatePermissionAuthorizationCheck : IAuthorizationCheck<CreatePerm
         return await _currentUserCheckAccessService.CheckAccessAsync(AuthorizationConstants.Permissions.CreatePermission);
     }
 }
+*/
