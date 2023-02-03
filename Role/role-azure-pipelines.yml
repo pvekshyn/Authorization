@@ -85,7 +85,8 @@ stages:
       system.debug: true
     jobs:
       - job: preDeploy
-        pool: 'windows-latest'
+        pool: 
+          vmImage: 'windows-latest'
         displayName: 'Predeploy DEV'
         steps:
           - task: DownloadPipelineArtifact@2
