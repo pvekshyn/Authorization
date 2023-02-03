@@ -85,6 +85,7 @@ stages:
       system.debug: true
     jobs:
       - job: preDeploy
+        pool: 'windows-latest'
         displayName: 'Predeploy DEV'
         steps:
           - task: DownloadPipelineArtifact@2
@@ -101,6 +102,7 @@ stages:
               AuthenticationType: 'connectionString'
               ConnectionString: 'Server=tcp:authorization-db.database.windows.net,1433;Initial Catalog=role;User ID=pv;Password=password#123;TrustServerCertificate=True;'
               DacpacFile: '$(Pipeline.Workspace)/drop/Build.Role.Database.dacpac'
+
       - job: deploy
         displayName: 'Deploy DEV'
         steps:
