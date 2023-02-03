@@ -1,5 +1,5 @@
 ﻿CREATE LOGIN [role_service] 
-WITH PASSWORD = 'Role_password#123',
+WITH PASSWORD = 'SecurePassword#123',
 DEFAULT_DATABASE = [Role],
 CHECK_POLICY     = OFF,
 CHECK_EXPIRATION = OFF;
