@@ -51,10 +51,17 @@ stages:
             arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
         
         - task: PublishPipelineArtifact@1
-          displayName: 'Artifact publish'
+          displayName: 'Project Artifact publish'
           inputs:
             targetPath: $(build.artifactStagingDirectory)
-            artifact: 'drop'
+            artifact: 'projectDrop'
+            publishLocation: 'pipeline'
+
+        - task: PublishPipelineArtifact@1
+          displayName: 'Db Artifact publish'
+          inputs:
+            targetPath: 'Role/tests/integration/Role.Integration.Tests/bin/Release/netstandard2.0'
+            artifact: 'dbDrop'
             publishLocation: 'pipeline'
 
         - task: DotNetCoreCLI@2
@@ -83,7 +90,7 @@ stages:
           - task: DownloadPipelineArtifact@2
             inputs:
               buildType: 'current'
-              artifactName: 'drop'
+              artifactName: 'projectDrop'
               targetPath: '$(Pipeline.Workspace)/drop'
           - task: AzureWebApp@1
             inputs:
