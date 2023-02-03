@@ -81,8 +81,6 @@ stages:
 
   - stage: deploy_dev
     displayName: 'Deploy DEV'
-    variables:
-      system.debug: true
     jobs:
       - job: preDeploy
         pool: 
@@ -101,7 +99,7 @@ stages:
             inputs:
               azureSubscription: 'authorization_sc'
               AuthenticationType: 'connectionString'
-              ConnectionString: 'Server=tcp:authorization-db.database.windows.net,1433;Initial Catalog=role;User ID=pv;Password=password#123;TrustServerCertificate=True;'
+              ConnectionString: 'Server=authorization-db.database.windows.net,1433;Initial Catalog=role;User ID=pv;Password=password#123;TrustServerCertificate=True;'
               DacpacFile: '$(Pipeline.Workspace)/drop/Build.Role.Database.dacpac'
 
       - job: deploy
