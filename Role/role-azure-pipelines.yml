@@ -95,12 +95,20 @@ stages:
               targetPath: '$(Pipeline.Workspace)/drop'
 
           - task: SqlAzureDacpacDeployment@1
-            displayName: 'Publish Database'
+            displayName: 'Publish Role dacpac'
             inputs:
               azureSubscription: 'authorization_sc'
               AuthenticationType: 'connectionString'
               ConnectionString: 'Server=authorization-db.database.windows.net,1433;Initial Catalog=role;User ID=pv;Password=password#123;TrustServerCertificate=True;'
               DacpacFile: '$(Pipeline.Workspace)/drop/Build.Role.Database.dacpac'
+
+          - task: SqlAzureDacpacDeployment@1
+            displayName: 'Publish Outbox dacpac'
+            inputs:
+              azureSubscription: 'authorization_sc'
+              AuthenticationType: 'connectionString'
+              ConnectionString: 'Server=authorization-db.database.windows.net,1433;Initial Catalog=role;User ID=pv;Password=password#123;TrustServerCertificate=True;'
+              DacpacFile: '$(Pipeline.Workspace)/drop/Build.Outbox.Database.dacpac'
 
       - job: deploy
         displayName: 'Deploy DEV'
