@@ -28,7 +28,7 @@ builder.Services.AddInfrastructureDependencies(builder.Configuration);
 builder.Services.Configure<RoleSettings>(builder.Configuration);
 
 var keyVaultEndpoint = "https://pv-role-kv.vault.azure.net";
-var azureADManagedIdentityClientId = "24674518-8529-4fae-98f0-9cbba2ef478d";
+var azureADManagedIdentityClientId = "de1a4f70-9eba-4c10-9ef6-03619e9cd42d";
 
 var miCredentials = new DefaultAzureCredential(new DefaultAzureCredentialOptions
 {
