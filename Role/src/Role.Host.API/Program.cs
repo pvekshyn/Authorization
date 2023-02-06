@@ -27,11 +27,14 @@ builder.Services.AddInfrastructureDependencies(builder.Configuration);
 
 builder.Services.Configure<RoleSettings>(builder.Configuration);
 
-var keyVaultEndpoint = "https://pv-role-kv.vault.azure.net";
-
-builder.Configuration.AddAzureKeyVault(
-    new Uri(keyVaultEndpoint),
-    new DefaultAzureCredential());
+var keyVaultName = builder.Configuration.GetSection("KeyVaultName")?.Value;
+if (!string.IsNullOrEmpty(keyVaultName))
+{
+    var keyVaultEndpoint = $"https://{keyVaultName}.vault.azure.net";
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(keyVaultEndpoint),
+        new DefaultAzureCredential());
+}
 
 var app = builder.Build();
 
