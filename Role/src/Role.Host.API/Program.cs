@@ -22,11 +22,6 @@ builder.Services.AddMediatR(
     typeof(IApplicationAssemblyMarker),
     typeof(IInfrastructureAssemblyMarker));
 
-builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>();
-builder.Services.AddInfrastructureDependencies(builder.Configuration);
-
-builder.Services.Configure<RoleSettings>(builder.Configuration);
-
 var keyVaultName = builder.Configuration.GetSection("KeyVaultName")?.Value;
 if (!string.IsNullOrEmpty(keyVaultName))
 {
@@ -35,6 +30,11 @@ if (!string.IsNullOrEmpty(keyVaultName))
         new Uri(keyVaultEndpoint),
         new DefaultAzureCredential());
 }
+
+builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>();
+builder.Services.AddInfrastructureDependencies(builder.Configuration);
+
+builder.Services.Configure<RoleSettings>(builder.Configuration);
 
 var app = builder.Build();
 
