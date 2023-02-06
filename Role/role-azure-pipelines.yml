@@ -83,6 +83,7 @@ stages:
     displayName: 'Deploy DEV'
     jobs:
       - job: preDeploy
+        condition: eq(1,2)
         pool: 
           vmImage: 'windows-latest'
         displayName: 'Predeploy DEV'
