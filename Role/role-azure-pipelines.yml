@@ -86,7 +86,7 @@ stages:
       condition: eq(1,2)
       pool: 
         vmImage: 'windows-latest'
-      displayName: 'Predeploy DEV'
+      displayName: 'Predeploy'
       steps:
         - task: DownloadPipelineArtifact@2
           displayName: 'Download Database Artifact'
