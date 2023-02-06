@@ -1,3 +1,5 @@
+using Azure.Extensions.AspNetCore.Configuration.Secrets;
+using Azure.Identity;
 using Common.Application.Extensions;
 using MediatR;
 using Role.API;
@@ -25,6 +27,21 @@ builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>();
 builder.Services.AddInfrastructureDependencies(builder.Configuration);
 
 builder.Services.Configure<RoleSettings>(builder.Configuration);
+
+var keyVaultEndpoint = "https://pv-role-kv.vault.azure.net";
+//var azureADManagedIdentityClientId = settings["AzureADManagedIdentityClientId"];
+
+var miCredentials = new DefaultAzureCredential(new DefaultAzureCredentialOptions
+{
+    //ManagedIdentityClientId = azureADManagedIdentityClientId
+});
+
+builder.Configuration.AddAzureKeyVault(new Uri(keyVaultEndpoint), miCredentials,
+    new AzureKeyVaultConfigurationOptions
+    {
+        // Manager = new PrefixKeyVaultSecretManager(secretPrefix),
+        ReloadInterval = TimeSpan.FromMinutes(5)
+    });
 
 var app = builder.Build();
 
