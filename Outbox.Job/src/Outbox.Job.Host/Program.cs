@@ -20,6 +20,7 @@ builder.ConfigureAppConfiguration((context, config) =>
 builder.ConfigureLogging(logging =>
 {
     logging.AddAzureWebAppDiagnostics();
+    logging.AddConsole();
 });
 
 var host = builder
