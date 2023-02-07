@@ -5,18 +5,13 @@ using Newtonsoft.Json.Linq;
 using Outbox.Job.Infrastructure.Models;
 
 namespace Outbox.Job.Infrastructure;
-
-public interface IOutboxPublisher
-{
-    Task PublishAsync(OutboxMessage outboxMessage);
-}
-internal class OutboxPublisher : IOutboxPublisher
+internal class OutboxPublisherRabbit : IOutboxPublisher
 {
     private readonly IOutboxRepository _outboxRepository;
     private readonly IAdvancedBus _bus;
     private readonly Exchange _exchange;
 
-    public OutboxPublisher(IOutboxRepository outboxRepository)
+    public OutboxPublisherRabbit(IOutboxRepository outboxRepository)
     {
         _outboxRepository = outboxRepository;
 

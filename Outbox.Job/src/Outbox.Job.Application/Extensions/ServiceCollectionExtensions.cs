@@ -30,7 +30,7 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddOutboxPublisherDependencies(this IServiceCollection services)
     {
-        return services.AddSingleton<IOutboxPublisher, OutboxPublisher>()
+        return services.AddSingleton<IOutboxPublisher, OutboxPublisherAzure>()
             .AddSingleton<IOutboxRepository, OutboxRepository>();
     }
 }
