@@ -16,11 +16,16 @@ builder.ConfigureAppConfiguration((context, config) =>
     }
 });
 
+builder.ConfigureLogging(logging =>
+{
+    logging.AddAzureWebAppDiagnostics();
+});
+
 var host = builder
     .ConfigureServices((context, services) =>
     {
         services.AddQuartzJob(context.Configuration)
-        .AddOutboxPublisherDependencies();
+            .AddOutboxPublisherDependencies();
     })
     .Build();
 
