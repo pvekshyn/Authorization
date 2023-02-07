@@ -80,3 +80,4 @@ stages:
                   runtimeStack: 'DOTNETCORE|6.0'
                   package: '$(Pipeline.Workspace)/drop/Outbox.Job.Host.zip'
                   deploymentMethod: 'runFromPackage'
+                  startUpCommand: 'dotnet Outbox.Job.Host.dll'
