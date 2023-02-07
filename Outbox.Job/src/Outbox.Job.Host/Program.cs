@@ -19,6 +19,8 @@ builder.ConfigureAppConfiguration((context, config) =>
 var host = builder
     .ConfigureServices((context, services) =>
     {
+        services.AddApplicationInsightsTelemetryWorkerService();
+
         services.AddQuartzJob(context.Configuration)
             .AddOutboxPublisherDependencies();
     })
