@@ -19,6 +19,7 @@ builder.ConfigureAppConfiguration((context, config) =>
 builder.ConfigureLogging(logging =>
 {
     logging.AddConsole();
+    logging.AddDebug();
 });
 
 var host = builder
