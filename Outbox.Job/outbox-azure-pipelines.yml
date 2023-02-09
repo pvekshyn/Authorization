@@ -84,7 +84,7 @@ stages:
                 displayName: Create imagePullSecret
                 inputs:
                   action: createSecret
-                  secretName: imagePullSecret
+                  secretName: secret
                   dockerRegistryEndpoint: pvauthorizationcr-sc
                   kubernetesServiceConnection: pvauthorizationaks-sc
               
@@ -96,7 +96,7 @@ stages:
                     $(System.ArtifactsDirectory)/manifests/deployment.yml
                     $(System.ArtifactsDirectory)/manifests/service.yml
                   imagePullSecrets: |
-                    imagePullSecret
+                    secret
                   containers: |
                     pvauthorizationcr.azurecr.io/outbox-job:1.0.0
                   kubernetesServiceConnection: pvauthorizationaks-sc
