@@ -85,6 +85,7 @@ stages:
                 displayName: Create imagePullSecret
                 inputs:
                   action: createSecret
+                  namespace: default
                   secretName: secret
                   dockerRegistryEndpoint: pvauthorizationcr-sc
                   kubernetesServiceConnection: pvauthorizationaks-sc
@@ -93,6 +94,7 @@ stages:
                 displayName: Deploy to Kubernetes cluster
                 inputs:
                   action: deploy
+                  namespace: default
                   manifests: |
                     $(System.ArtifactsDirectory)/manifests/deployment.yml
                     $(System.ArtifactsDirectory)/manifests/service.yml
