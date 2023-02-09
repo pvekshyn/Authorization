@@ -32,9 +32,10 @@ stages:
         - task: CopyFiles@2
           displayName: 'Copy Manifests'
           inputs:
+            SourceFolder: 'Outbox.Job/src/Outbox.Job.Host/pipeline'
             Contents: |
-              Outbox.Job/src/Outbox.Job.Host/pipeline/service.yml
-              Outbox.Job/src/Outbox.Job.Host/pipeline/deployment.yml
+              service.yml
+              deployment.yml
             TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
         - task: PublishPipelineArtifact@1
