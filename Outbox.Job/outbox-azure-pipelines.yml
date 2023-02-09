@@ -64,8 +64,8 @@ stages:
             tags: |
               '1.0.0'
 
-  - stage: Deploy DEV
-    displayName: Deploy stage
+  - stage: DeployDev
+    displayName: Deploy DEV
     dependsOn: Build
     jobs:
     - deployment: Deploy
