@@ -1,0 +1,8 @@
+name: authorization
+registry: pvauthorizationcr.azurecr.io
+services:
+- name: role-outbox-job
+  project: Outbox.Job/src/Outbox.Job.Host/Outbox.Job.Host.csproj
+  env:
+  - name: ConnectionStrings__Database
+    value: Server=authorization-db.database.windows.net,1433;Initial Catalog=role;User ID=pv;Password=password#123;TrustServerCertificate=True
