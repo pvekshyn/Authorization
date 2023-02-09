@@ -29,6 +29,21 @@ stages:
             projects: $(hostProject)
             arguments: '--configuration $(buildConfiguration)'
 
+        - task: CopyFiles@2
+          displayName: 'Copy Manifests'
+          inputs:
+            Contents: |
+              Outbox.Job\src\Outbox.Job.Host\pipeline\service.yml
+              Outbox.Job\src\Outbox.Job.Host\pipeline\deployment.yml
+            TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+        - task: PublishPipelineArtifact@1
+          displayName: 'Publish Manifest Artifact'
+          inputs:
+            targetPath: $(build.artifactStagingDirectory)
+            artifact: 'manifestDrop'
+            publishLocation: 'pipeline'
+
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet publish'
           inputs:
@@ -44,5 +59,42 @@ stages:
           inputs:
             command: buildAndPush
             repository: outbox-job
-            Dockerfile: $(build.artifactStagingDirectory)/Outbox.Job.Host/Dockerfile
+            Dockerfile: $(build.artifactStagingDirectory)/pipeline/Outbox.Job.Host/Dockerfile
             containerRegistry: pvauthorizationcr-sc
+            tags: |
+              '1.0.0'
+
+  - stage: Deploy DEV
+    displayName: Deploy stage
+    dependsOn: Build
+    jobs:
+    - deployment: Deploy
+      displayName: Deploy job
+      environment: 'DEV'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - task: DownloadPipelineArtifact@2
+                inputs:
+                  artifactName: 'manifestDrop'
+                  targetPath: '$(System.ArtifactsDirectory)/manifests'
+              
+              - task: KubernetesManifest@0
+                displayName: Create imagePullSecret
+                inputs:
+                  action: createSecret
+                  secretName: imagePullSecret
+                  dockerRegistryEndpoint: pvauthorizationcr-sc
+              
+              - task: KubernetesManifest@0
+                displayName: Deploy to Kubernetes cluster
+                inputs:
+                  action: deploy
+                  manifests: |
+                    $(System.ArtifactsDirectory)/manifests/deployment.yml
+                    $(System.ArtifactsDirectory)/manifests/service.yml
+                  imagePullSecrets: |
+                    imagePullSecret
+                  containers: |
+                    pvauthorizationcr.azurecr.io/outbox-job:1.0.0
