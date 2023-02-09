@@ -36,28 +36,23 @@ stages:
             publishWebProjects: false 
             projects: $(hostProject)
             nobuild: true
+            zipAfterPublish: false
             arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
-        
-        - task: PublishPipelineArtifact@1
-          displayName: 'Publish Project Artifact'
-          inputs:
-            targetPath: $(build.artifactStagingDirectory)
-            artifact: 'projectDrop'
-            publishLocation: pipeline
 
         - task: CmdLine@2
           inputs:
             script: |
-              echo "Structure of work folder of this pipeline:"
-              tree $(Agent.WorkFolder)/1
-          
+
               echo "Build.ArtifactStagingDirectory:" 
               echo "$(Build.ArtifactStagingDirectory)"
-        
+
+              echo "Structure of work folder of this pipeline:"
+              tree $(Agent.WorkFolder)/1/a
+          
         - task: Docker@2
           displayName: Build and push an image to container registry
           inputs:
             command: buildAndPush
             repository: outbox-job
-            Dockerfile: $(build.artifactStagingDirectory)/Outbox.Job.Host/Dockerfile
+            Dockerfile: $(build.artifactStagingDirectory)/Dockerfile
             containerRegistry: pvauthorizationcr-sc
