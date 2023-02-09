@@ -38,21 +38,11 @@ stages:
             nobuild: true
             zipAfterPublish: false
             arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
-
-        - task: CmdLine@2
-          inputs:
-            script: |
-
-              echo "Build.ArtifactStagingDirectory:" 
-              echo "$(Build.ArtifactStagingDirectory)"
-
-              echo "Structure of work folder of this pipeline:"
-              tree $(Agent.WorkFolder)/1/a
           
         - task: Docker@2
           displayName: Build and push an image to container registry
           inputs:
             command: buildAndPush
             repository: outbox-job
-            Dockerfile: $(build.artifactStagingDirectory)/Dockerfile
+            Dockerfile: $(build.artifactStagingDirectory)/Outbox.Job.Host/Dockerfile
             containerRegistry: pvauthorizationcr-sc
