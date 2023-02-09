@@ -17,4 +17,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Outbox.Job.Application\Outbox.Job.Infrastructure.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Dockerfile">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
