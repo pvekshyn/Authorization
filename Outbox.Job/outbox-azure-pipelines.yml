@@ -62,7 +62,7 @@ stages:
             Dockerfile: $(build.artifactStagingDirectory)/Outbox.Job.Host/pipeline/Dockerfile
             containerRegistry: pvauthorizationcr-sc
             tags: |
-              '1.0.0'
+              1.0.0
 
   - stage: DeployDev
     displayName: Deploy DEV
