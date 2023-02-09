@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: role-outbox-job
-        image: outbox-job:1.0.0
+        image: pvauthorizationcr.azurecr.io/outbox-job:1.0.0
         imagePullPolicy: Always
         env:
         - name: ASPNETCORE_URLS
