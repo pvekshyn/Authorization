@@ -50,5 +50,5 @@ stages:
           inputs:
             command: buildAndPush
             repository: outbox-job
-            Dockerfile: $(build.artifactStagingDirectory)/Dockerfile
+            Dockerfile: $(build.artifactStagingDirectory)/Outbox.Job.Host/Dockerfile
             containerRegistry: pvauthorizationcr-sc
