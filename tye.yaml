@@ -17,6 +17,8 @@ services:
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=role_service;Password=role_password;Initial Catalog=Role;TrustServerCertificate=True
+  - name: PubSub__Transport
+    value: rabbit
 - name: assignment-api
   project: Assignment/src/Assignment.Host.API/Assignment.Host.API.csproj
   env:
@@ -32,6 +34,8 @@ services:
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=assignment_service;Password=assignment_password;Initial Catalog=Assignment;TrustServerCertificate=True
+  - name: PubSub__Transport
+    value: rabbit
 - name: assignment-inbox-job
   project: Inbox.Job/src/Inbox.Job.Host/Inbox.Job.Host.csproj
   env:

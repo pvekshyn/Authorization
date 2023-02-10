@@ -22,7 +22,7 @@ var host = builder
         services.AddApplicationInsightsTelemetryWorkerService();
 
         services.AddQuartzJob(context.Configuration)
-            .AddOutboxPublisherDependencies();
+            .AddOutboxPublisherDependencies(context.Configuration);
     })
     .Build();
 

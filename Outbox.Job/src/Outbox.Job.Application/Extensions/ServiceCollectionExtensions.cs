@@ -28,9 +28,19 @@ public static class ServiceCollectionExtensions
         .AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
     }
 
-    public static IServiceCollection AddOutboxPublisherDependencies(this IServiceCollection services)
+    public static IServiceCollection AddOutboxPublisherDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        return services.AddSingleton<IOutboxPublisher, OutboxPublisherAzure>()
-            .AddSingleton<IOutboxRepository, OutboxRepository>();
+        var transport = configuration["PubSub:Transport"];
+
+        if (transport == "rabbit")
+        {
+            services.AddSingleton<IOutboxPublisher, OutboxPublisherRabbit>();
+        }
+        else
+        {
+            services.AddSingleton<IOutboxPublisher, OutboxPublisherAzure>();
+        }
+
+        return services.AddSingleton<IOutboxRepository, OutboxRepository>();
     }
 }

@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using SpecFlowTests.Drivers;
 
 namespace SpecFlowTests.StepDefinitions
@@ -32,10 +33,10 @@ namespace SpecFlowTests.StepDefinitions
             var permissionName = (string)_scenarioContext["permissionName"];
 
             var result = await _authorizationDriver.GetCreatedPermissionAsync(permissionId);
-            Assert.Equal(200, result.Status);
+            Assert.AreEqual(200, result.Status);
 
             var permission = result.Data;
-            Assert.Equal(permissionName, permission.Name);
+            Assert.AreEqual(permissionName, permission.Name);
         }
 
         [When(@"permission deleted")]
@@ -50,7 +51,7 @@ namespace SpecFlowTests.StepDefinitions
         {
             var permissionId = (Guid)_scenarioContext["permissionId"];
             var result = await _authorizationDriver.GetDeletedPermissionAsync(permissionId);
-            Assert.Equal(404, result.Status);
+            Assert.AreEqual(404, result.Status);
         }
     }
 }

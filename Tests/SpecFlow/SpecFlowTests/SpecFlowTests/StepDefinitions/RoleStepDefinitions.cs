@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using SpecFlowTests.Drivers;
 
 namespace SpecFlowTests.StepDefinitions
@@ -43,10 +44,10 @@ namespace SpecFlowTests.StepDefinitions
             var roleName = (string)_scenarioContext["roleName"];
 
             var result = await _authorizationDriver.GetCreatedRoleAsync(roleId);
-            Assert.Equal(200, result.Status);
+            Assert.AreEqual(200, result.Status);
 
             var permission = result.Data;
-            Assert.Equal(roleName, permission.Name);
+            Assert.AreEqual(roleName, permission.Name);
 
         }
 
@@ -63,7 +64,7 @@ namespace SpecFlowTests.StepDefinitions
         {
             var roleId = (Guid)_scenarioContext["roleId"];
             var result = await _authorizationDriver.GetDeletedRoleAsync(roleId);
-            Assert.Equal(404, result.Status);
+            Assert.AreEqual(404, result.Status);
         }
     }
 }

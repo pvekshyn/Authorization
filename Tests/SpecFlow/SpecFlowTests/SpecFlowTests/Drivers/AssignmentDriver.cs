@@ -1,6 +1,7 @@
 ﻿using Assignment.SDK.DTO;
 using Assignment.SDK.Features;
 using Common.SDK;
+using NUnit.Framework;
 using Polly;
 using Refit;
 using SpecFlowTests.Support;
@@ -52,7 +53,7 @@ namespace SpecFlowTests.Drivers
                 await _assignmentApiClient.AssignAsync(assignmentDto)
             );
 
-            Assert.Equal(200, result.Status);
+            Assert.AreEqual(200, result.Status);
         }
 
         public async Task DeassignAsync(Guid userId, Guid roleId)
@@ -65,7 +66,7 @@ namespace SpecFlowTests.Drivers
                 await _assignmentApiClient.DeassignAsync(userId, roleId)
             );
 
-            Assert.Equal(200, result.Status);
+            Assert.AreEqual(200, result.Status);
         }
     }
 }

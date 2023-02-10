@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using SpecFlowTests.Drivers;
 
 namespace SpecFlowTests.StepDefinitions
