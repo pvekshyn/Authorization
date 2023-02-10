@@ -21,9 +21,5 @@ spec:
         image: pvauthorizationcr.azurecr.io/outbox-job:1.0.0
         imagePullPolicy: Always
         env:
-        - name: ASPNETCORE_URLS
-          value: 'http://*'
-        - name: PORT
-          value: '80'
-        ports:
-        - containerPort: 80
+        - name: KeyVaultName
+          value: 'pv-role-kv'
