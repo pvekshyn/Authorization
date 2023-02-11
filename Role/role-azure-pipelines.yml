@@ -42,6 +42,22 @@ stages:
               Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
             arguments: '--configuration $(buildConfiguration)'
 
+        - task: CopyFiles@2
+          displayName: 'Copy Manifests'
+          inputs:
+            SourceFolder: 'Role/src/Role.Host.API/pipeline'
+            Contents: |
+              service.yml
+              deployment.yml
+            TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+        - task: PublishPipelineArtifact@1
+          displayName: 'Publish Manifest Artifact'
+          inputs:
+            targetPath: $(build.artifactStagingDirectory)
+            artifact: 'manifestDrop'
+            publishLocation: 'pipeline'
+
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet publish'
           inputs:
@@ -50,12 +66,6 @@ stages:
             projects: 'Role/src/Role.Host.API/Role.Host.API.csproj'
             arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
         
-        - task: PublishPipelineArtifact@1
-          displayName: 'Publish Project Artifact'
-          inputs:
-            targetPath: $(build.artifactStagingDirectory)
-            artifact: 'projectDrop'
-            publishLocation: 'pipeline'
 
         - task: PublishPipelineArtifact@1
           displayName: 'Publish Database Artifact'
@@ -63,6 +73,16 @@ stages:
             targetPath: 'Role/tests/integration/Role.Integration.Tests/bin/Release/netstandard2.0'
             artifact: 'dbDrop'
             publishLocation: 'pipeline'
+
+        - task: Docker@2
+          displayName: Build and push an image to container registry
+          inputs:
+            command: buildAndPush
+            repository: role-api
+            Dockerfile: $(build.artifactStagingDirectory)/Role.Host.API/Dockerfile
+            containerRegistry: pvauthorizationcr-sc
+            tags: |
+              1.0.0
 
         - task: DotNetCoreCLI@2
           displayName: 'Unit tests'
@@ -120,17 +140,32 @@ stages:
         runOnce:
           deploy:
             steps:
+              - download: none
+
               - task: DownloadPipelineArtifact@2
                 inputs:
-                  buildType: 'current'
-                  artifactName: 'projectDrop'
-                  targetPath: '$(Pipeline.Workspace)/drop'
-            
-              - task: AzureWebApp@1
+                  artifactName: 'manifestDrop'
+                  targetPath: '$(System.ArtifactsDirectory)/manifests'
+
+              - task: KubernetesManifest@0
+                displayName: Create imagePullSecret
                 inputs:
-                  azureSubscription: 'authorization_sc'
-                  appType: 'webAppLinux'
-                  appName: 'pv-role'
-                  runtimeStack: 'DOTNETCORE|6.0'
-                  package: '$(Pipeline.Workspace)/drop/Role.Host.API.zip'
-                  deploymentMethod: 'runFromPackage'
+                  action: createSecret
+                  namespace: default
+                  secretName: secret
+                  dockerRegistryEndpoint: pvauthorizationcr-sc
+                  kubernetesServiceConnection: pvauthorizationaks-sc
+              
+              - task: KubernetesManifest@0
+                displayName: Deploy to Kubernetes cluster
+                inputs:
+                  action: deploy
+                  namespace: default
+                  manifests: |
+                    $(System.ArtifactsDirectory)/manifests/deployment.yml
+                    $(System.ArtifactsDirectory)/manifests/service.yml
+                  imagePullSecrets: |
+                    secret
+                  containers: |
+                    pvauthorizationcr.azurecr.io/role-api:1.0.0
+                  kubernetesServiceConnection: pvauthorizationaks-sc
