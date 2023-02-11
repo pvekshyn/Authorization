@@ -64,6 +64,8 @@ stages:
             command: 'publish'
             publishWebProjects: false 
             projects: 'Role/src/Role.Host.API/Role.Host.API.csproj'
+            nobuild: true
+            zipAfterPublish: false
             arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
         
         - task: PublishPipelineArtifact@1
