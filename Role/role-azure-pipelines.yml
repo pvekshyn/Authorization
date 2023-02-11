@@ -66,7 +66,6 @@ stages:
             projects: 'Role/src/Role.Host.API/Role.Host.API.csproj'
             arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
         
-
         - task: PublishPipelineArtifact@1
           displayName: 'Publish Database Artifact'
           inputs:
@@ -74,6 +73,12 @@ stages:
             artifact: 'dbDrop'
             publishLocation: 'pipeline'
 
+        - task: CmdLine@2
+          inputs:
+            script: |
+              echo "build.artifactStagingDirectory:"
+              tree $(build.artifactStagingDirectory)/1
+          
         - task: Docker@2
           displayName: Build and push an image to container registry
           inputs:
