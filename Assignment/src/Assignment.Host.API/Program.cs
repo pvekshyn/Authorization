@@ -5,6 +5,9 @@ using MediatR;
 using Assignment.Infrastructure;
 using Assignment.Host.API.Filters;
 using Assignment.Host.API;
+using Inbox.SDK.Extensions;
+using Assignment.Infrastructure.Grpc;
+using Inbox.SDK.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,15 +24,13 @@ builder.Services.AddMediatR(
     typeof(IApplicationAssemblyMarker),
     typeof(IInfrastructureAssemblyMarker));
 
-builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>();
-builder.Services.AddInfrastructureDependencies(builder.Configuration);
+builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>()
+    .AddInfrastructureDependencies(builder.Configuration)
+    .AddEventToRequestMappers<IInfrastructureAssemblyMarker>();
+
+builder.Services.AddGrpc();
 
 builder.Services.Configure<AssignmentSettings>(builder.Configuration);
-
-builder.Services.AddGrpcClient<GrpcRoleService.GrpcRoleServiceClient>(o =>
-{
-    o.Address = builder.Configuration.GetServiceUri("role-grpc");
-});
 
 var app = builder.Build();
 
@@ -40,6 +41,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGrpcService<AssignmentService>();
+app.MapGrpcService<EventProcessingService>();
 
 app.Run();
 

@@ -1,17 +1,20 @@
 name: authorization
 services:
+
 - name: identity-server
   project: IdentityServer/src/IdentityServer/IdentityServer.csproj
+
 - name: role-api
   project: Role/src/Role.Host.API/Role.Host.API.csproj
+  bindings:
+    - name: api
+      port: 5001
+    - name: grpc
+      port: 5002
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=role_service;Password=role_password;Initial Catalog=Role;TrustServerCertificate=True
-- name: role-grpc
-  project: Role/src/Role.Host.Grpc/Role.Host.Grpc.csproj
-  env:
-  - name: ConnectionStrings__Database
-    value: Data Source=localhost\SQLEXPRESS;User Id=role_service;Password=role_password;Initial Catalog=Role;TrustServerCertificate=True
+
 - name: role-outbox-job
   project: Outbox.Job/src/Outbox.Job.Host/Outbox.Job.Host.csproj
   env:
@@ -19,16 +22,18 @@ services:
     value: Data Source=localhost\SQLEXPRESS;User Id=role_service;Password=role_password;Initial Catalog=Role;TrustServerCertificate=True
   - name: PubSub__Transport
     value: rabbit
+
 - name: assignment-api
   project: Assignment/src/Assignment.Host.API/Assignment.Host.API.csproj
+  bindings:
+    - name: api
+      port: 5003
+    - name: grpc
+      port: 5004
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=assignment_service;Password=assignment_password;Initial Catalog=Assignment;TrustServerCertificate=True
-- name: assignment-grpc
-  project: Assignment/src/Assignment.Host.Grpc/Assignment.Host.Grpc.csproj
-  env:
-  - name: ConnectionStrings__Database
-    value: Data Source=localhost\SQLEXPRESS;User Id=assignment_service;Password=assignment_password;Initial Catalog=Assignment;TrustServerCertificate=True
+
 - name: assignment-outbox-job
   project: Outbox.Job/src/Outbox.Job.Host/Outbox.Job.Host.csproj
   env:
@@ -36,36 +41,39 @@ services:
     value: Data Source=localhost\SQLEXPRESS;User Id=assignment_service;Password=assignment_password;Initial Catalog=Assignment;TrustServerCertificate=True
   - name: PubSub__Transport
     value: rabbit
+
 - name: assignment-inbox-job
   project: Inbox.Job/src/Inbox.Job.Host/Inbox.Job.Host.csproj
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=assignment_service;Password=assignment_password;Initial Catalog=Assignment;TrustServerCertificate=True
   - name: EventProcessingServiceName
-    value: assignment-grpc
+    value: assignment-api
   - name: PubSub__QueueName
     value: assignmentQueue
   - name: PubSub__Subscriptions__0
     value: Role.SDK.Events.RoleCreatedEvent
   - name: PubSub__Subscriptions__1
     value: Role.SDK.Events.RoleDeletedEvent
+
 - name: authorization-api
   project: Authorization/src/Authorization.Host.API/Authorization.Host.API.csproj
+  bindings:
+    - name: api
+      port: 5005
+    - name: grpc
+      port: 5006
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=authorization_service;Password=authorization_password;Initial Catalog=Authorization;TrustServerCertificate=True
-- name: authorization-grpc
-  project: Authorization/src/Authorization.Host.Grpc/Authorization.Host.Grpc.csproj
-  env:
-  - name: ConnectionStrings__Database
-    value: Data Source=localhost\SQLEXPRESS;User Id=authorization_service;Password=authorization_password;Initial Catalog=Authorization;TrustServerCertificate=True
+
 - name: authorization-inbox-job
   project: Inbox.Job/src/Inbox.Job.Host/Inbox.Job.Host.csproj
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=authorization_service;Password=authorization_password;Initial Catalog=Authorization;TrustServerCertificate=True
   - name: EventProcessingServiceName
-    value: authorization-grpc
+    value: authorization-api
   - name: PubSub__QueueName
     value: authorizationQueue
   - name: PubSub__Subscriptions__0
@@ -84,23 +92,28 @@ services:
     value: Role.SDK.Events.PermissionCreatedEvent
   - name: PubSub__Subscriptions__7
     value: Role.SDK.Events.PermissionDeletedEvent
+
 - name: authorization-blazor
   project: Authorization\src\Authorization.Host.Blazor\Authorization.Host.Blazor.csproj
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=authorization_service;Password=authorization_password;Initial Catalog=Authorization;TrustServerCertificate=True
+
 - name: authorization-odata
   project: Authorization\src\Authorization.Host.OData\Authorization.Host.OData.csproj
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=authorization_service;Password=authorization_password;Initial Catalog=Authorization;TrustServerCertificate=True
+
 - name: authorization-graphql
   project: Authorization\src\Authorization.Host.GraphQL\Authorization.Host.GraphQL.csproj
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=authorization_service;Password=authorization_password;Initial Catalog=Authorization;TrustServerCertificate=True
+
 - name: monitoring
   project: Monitoring/Monitoring/Monitoring.csproj
+
 ingress:
   - name: ingress
     bindings:

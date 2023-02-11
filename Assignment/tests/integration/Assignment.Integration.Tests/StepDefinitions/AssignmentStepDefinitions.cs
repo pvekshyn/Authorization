@@ -1,5 +1,3 @@
-extern alias API;
-extern alias GRPC;
 using Assignment.SDK.DTO;
 using Assignment.SDK.Features;
 using Dapper;

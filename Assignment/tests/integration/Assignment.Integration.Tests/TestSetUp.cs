@@ -1,6 +1,4 @@
-﻿extern alias API;
-extern alias GRPC;
-using Common.SpecFlowTests;
+﻿using Common.SpecFlowTests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
@@ -54,7 +52,7 @@ namespace Assignment.Integration.Tests
 
         private static IAssignmentApi CreateApiClient()
         {
-            var apiFactory = new CustomWebApplicationFactory<API.Program>();
+            var apiFactory = new CustomWebApplicationFactory<Program>();
             var httpClient = apiFactory.CreateClient();
 
             var settings = new RefitSettings
@@ -67,7 +65,7 @@ namespace Assignment.Integration.Tests
 
         private static GrpcEventProcessingService.GrpcEventProcessingServiceClient CreateGrpcClient()
         {
-            var grpcFactory = new CustomWebApplicationFactory<GRPC.Program>();
+            var grpcFactory = new CustomWebApplicationFactory<Program>();
 
             var channel = GrpcChannel.ForAddress("http://localhost", new GrpcChannelOptions
             {

@@ -29,7 +29,7 @@ Uri? GetGrpcUri(IConfiguration configuration)
     if (string.IsNullOrEmpty(eventProcessingServiceName))
         throw new Exception("Cannot get EventProcessingServiceName from configuration");
 
-    var grpcServiceUri = configuration.GetServiceUri(eventProcessingServiceName);
+    var grpcServiceUri = configuration.GetServiceUri(eventProcessingServiceName, "grpc");
     if (grpcServiceUri is null)
         throw new Exception("Cannot get Service Uri");
 

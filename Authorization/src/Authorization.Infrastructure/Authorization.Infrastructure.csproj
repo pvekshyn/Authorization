@@ -7,7 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Common.Infrastructure" Version="1.0.23" />
+    <PackageReference Include="Common.Infrastructure" Version="1.0.27" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Inbox.SDK" Version="1.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
   </ItemGroup>

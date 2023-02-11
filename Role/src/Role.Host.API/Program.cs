@@ -6,6 +6,7 @@ using Role.API.Filters;
 using Role.Application;
 using Role.Infrastructure;
 using Role.Infrastructure.Extensions;
+using Role.Infrastructure.Grpc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,8 @@ builder.Services.AddInfrastructureDependencies(builder.Configuration);
 
 builder.Services.Configure<RoleSettings>(builder.Configuration);
 
+builder.Services.AddGrpc();
+
 var app = builder.Build();
 
 app.UseSwagger();
@@ -45,6 +48,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGrpcService<RoleService>();
 
 app.Run();
 

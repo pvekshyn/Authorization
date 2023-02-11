@@ -22,15 +22,15 @@ public static class ServiceCollectionExtensions
 
         services.AddGrpcClient<GrpcCheckAccessService.GrpcCheckAccessServiceClient>(o =>
         {
-            o.Address = GetUri(configuration, "authorization-grpc");
+            o.Address = GetUri(configuration, "authorization-api", "grpc");
         });
 
         return services;
     }
 
-    public static Uri? GetUri(IConfiguration configuration, string serviceName)
+    public static Uri? GetUri(IConfiguration configuration, string serviceName, string? binding = null)
     {
-        var serviceUri = configuration.GetServiceUri(serviceName);
+        var serviceUri = configuration.GetServiceUri(serviceName, binding);
         if (serviceUri is null)
             throw new Exception($"Cannot get {serviceName} Service Uri");
 

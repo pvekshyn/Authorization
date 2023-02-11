@@ -1,4 +1,3 @@
-extern alias GRPC;
 using Grpc.Core;
 using Grpc.Net.Client;
 using NUnit.Framework;
@@ -13,7 +12,7 @@ namespace Assignment.Integration.Tests
         [OneTimeSetUp]
         public void Init()
         {
-            var factory = new CustomWebApplicationFactory<GRPC.Program>();
+            var factory = new CustomWebApplicationFactory<Program>();
             _grpcClient = factory.CreateClient();
         }
 

@@ -24,10 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\Assignment.Host.API\Assignment.Host.API.csproj">
-      <Aliases>API</Aliases>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\Assignment.Host.Grpc\Assignment.Host.Grpc.csproj">
-      <Aliases>GRPC</Aliases>
     </ProjectReference>
   </ItemGroup>
 
