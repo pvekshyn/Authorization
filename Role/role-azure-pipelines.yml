@@ -1,3 +1,6 @@
+variables:
+  global_variable: value
+
 trigger:
   branches:
     include:
@@ -22,17 +25,6 @@ stages:
       - job: BuildAndTest
         displayName: 'Build and test'
         steps:
-        - task: NuGetToolInstaller@1
-        
-        - task: DotNetCoreCLI@2
-          displayName: 'Nuget restore'
-          inputs:
-            command: restore
-            projects: $(projects)
-            feedsToUse: 'select'
-            vstsFeed: 'Authorization/authorizationFeed'
-            includeNuGetOrg: true         
-        
         - task: DotNetCoreCLI@2
           displayName: 'Build'
           inputs:
@@ -41,6 +33,9 @@ stages:
               $(projects)
               Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
             arguments: '--configuration $(buildConfiguration)'
+            feedsToUse: 'select'
+            vstsFeed: 'Authorization/authorizationFeed'
+
 
         - task: CopyFiles@2
           displayName: 'Copy Manifests'
