@@ -58,7 +58,7 @@ stages:
             includeNuGetOrg: true         
         
         - task: DotNetCoreCLI@2
-          displayName: 'Build'
+          displayName: 'Build App Host'
           condition: eq(variables.needToUpdateAppImage, 'true')
           inputs:
             command: 'build'
@@ -73,26 +73,33 @@ stages:
           inputs:
             command: 'publish'
             publishWebProjects: false 
-            projects: 'Role/src/Role.Host.API/Role.Host.API.csproj'
+            projects: $(hostProject)
             nobuild: true
             zipAfterPublish: false
             arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
         
+        - task: DotNetCoreCLI@2
+          displayName: 'Build Database Project'
+          condition: eq(variables.needToUpdateDatabase, 'true')
+          inputs:
+            command: 'build'
+            projects: |
+              Role/src/Role.Database/Build.Role.Database.csproj
+              Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
+            arguments: '--configuration $(buildConfiguration)'
+
+
         - task: PublishPipelineArtifact@1
           displayName: 'Publish Database Artifact'
+          condition: eq(variables.needToUpdateDatabase, 'true')
           inputs:
             targetPath: 'Role/tests/integration/Role.Integration.Tests/bin/Release/netstandard2.0'
             artifact: 'dbDrop'
             publishLocation: 'pipeline'
 
-        - task: CmdLine@2
-          inputs:
-            script: |
-              echo "build.artifactStagingDirectory:"
-              tree $(build.artifactStagingDirectory)
-          
         - task: Docker@2
           displayName: Build and push an image to container registry
+          condition: eq(variables.needToUpdateAppImage, 'true')
           inputs:
             command: buildAndPush
             repository: role-api
@@ -103,6 +110,7 @@ stages:
 
         - task: DotNetCoreCLI@2
           displayName: 'Unit tests'
+          condition: eq(variables.needToUnitTest, 'true')
           inputs:
             command: test
             projects: 'Role/tests/unit/*/*.csproj'
@@ -110,7 +118,7 @@ stages:
         
         - task: DotNetCoreCLI@2
           displayName: 'Integration tests'
-          condition: eq(1,2)
+          condition: eq(variables.needToIntegrationTest, 'true')
           inputs:
             command: test
             projects: 'Role/tests/integration/*/*.csproj'
@@ -120,7 +128,7 @@ stages:
     displayName: 'Deploy DEV'
     jobs:
     - job: preDeploy
-      condition: eq(1,2)
+      condition: eq(variables.needToUpdateDatabase, 'true')
       pool: 
         vmImage: 'windows-latest'
       displayName: 'Predeploy'
