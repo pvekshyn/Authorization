@@ -49,7 +49,7 @@ stages:
         
         - task: DotNetCoreCLI@2
           displayName: 'Nuget restore'
-          condition: eq($(needToUpdateAppImage), 'true')
+          condition: eq(variables.needToUpdateAppImage, 'true')
           inputs:
             command: restore
             projects: $(hostProject)
@@ -59,7 +59,7 @@ stages:
         
         - task: DotNetCoreCLI@2
           displayName: 'Build'
-          condition: eq($(needToUpdateAppImage), 'true')
+          condition: eq(variables.needToUpdateAppImage, 'true')
           inputs:
             command: 'build'
             projects: |
@@ -69,7 +69,7 @@ stages:
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet publish'
-          condition: eq($(needToUpdateAppImage), 'true')
+          condition: eq(variables.needToUpdateAppImage, 'true')
           inputs:
             command: 'publish'
             publishWebProjects: false 
