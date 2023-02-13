@@ -1,5 +1,8 @@
 variables:
-  global_variable: value
+  needToUnitTest: false
+  needToIntegrationTest: false
+  needToUpdateDatabase: false
+  needToUpdateAppImage: false
 
 trigger:
   branches:
@@ -20,22 +23,11 @@ stages:
       buildConfiguration: 'Release'
       dotNetFramework: 'net6.0'
       targetRuntime: 'linux-x64'
-      projects: 'Role/**/*.csproj'
+      hostProject: 'Role/src/Role.Host.API/Role.Host.API.csproj'
     jobs:
       - job: BuildAndTest
         displayName: 'Build and test'
         steps:
-        - task: DotNetCoreCLI@2
-          displayName: 'Build'
-          inputs:
-            command: 'build'
-            projects: |
-              $(projects)
-              Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
-            arguments: '--configuration $(buildConfiguration)'
-            feedsToUse: 'select'
-            vstsFeed: 'Authorization/authorizationFeed'
-
 
         - task: CopyFiles@2
           displayName: 'Copy Manifests'
@@ -52,6 +44,28 @@ stages:
             targetPath: $(build.artifactStagingDirectory)
             artifact: 'manifestDrop'
             publishLocation: 'pipeline'
+        
+        - task: NuGetToolInstaller@1
+        
+        - task: DotNetCoreCLI@2
+          displayName: 'Nuget restore'
+          condition: needToUpdateAppImage
+          inputs:
+            command: restore
+            projects: $(hostProject)
+            feedsToUse: 'select'
+            vstsFeed: 'Authorization/authorizationFeed'
+            includeNuGetOrg: true         
+        
+        - task: DotNetCoreCLI@2
+          displayName: 'Build'
+          condition: needToUpdateAppImage
+          inputs:
+            command: 'build'
+            projects: |
+              $(hostProject)
+              Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
+            arguments: '--configuration $(buildConfiguration)'
 
         - task: DotNetCoreCLI@2
           displayName: 'Dotnet publish'
