@@ -62,9 +62,7 @@ stages:
           condition: eq(variables.needToUpdateAppImage, 'true')
           inputs:
             command: 'build'
-            projects: |
-              $(hostProject)
-              Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
+            projects: $(hostProject)
             arguments: '--configuration $(buildConfiguration)'
 
         - task: DotNetCoreCLI@2
