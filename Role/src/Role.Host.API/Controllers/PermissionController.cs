@@ -5,12 +5,11 @@ using Role.SDK.DTO;
 using Role.Application.Features.Permission.Create;
 using Role.Application.Features.Permission.Delete;
 using Role.SDK.Features;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Role.Host.API.Controllers;
 
 [ApiController]
-[Authorize]
+//[Authorize]
 public class PermissionController : ControllerBase, IPermissionApi
 {
     private readonly IMediator _mediator;
