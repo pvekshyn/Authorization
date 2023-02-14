@@ -31,6 +31,7 @@ if (!string.IsNullOrEmpty(keyVaultName))
         new Uri(keyVaultEndpoint),
         new DefaultAzureCredential());
 }
+else throw new Exception("Cannot find KV name");
 
 builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>();
 builder.Services.AddInfrastructureDependencies(builder.Configuration);
