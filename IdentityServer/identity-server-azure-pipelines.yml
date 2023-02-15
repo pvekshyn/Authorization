@@ -1,8 +1,5 @@
 variables:
-  needToUnitTest: false
-  needToIntegrationTest: false
-  needToUpdateDatabase: false
-  needToUpdateAppImage: true
+  needToUpdateAppImage: false
 
 trigger:
   branches:
@@ -37,3 +34,19 @@ stages:
             hostProject: 'IdentityServer/src/IdentityServer/IdentityServer.csproj'
             hostName: 'IdentityServer'
             acrRepository: 'identity-server'
+
+  - stage: deploy_dev
+    displayName: 'Deploy DEV'
+    jobs:
+    - deployment: Deploy
+      displayName: Deploy
+      environment: 'DEV'
+      dependsOn: preDeploy
+      condition: in(dependencies.preDeploy.result, 'Succeeded', 'Skipped')
+      strategy: 
+        runOnce:
+          deploy:
+            steps:
+            - template: deploy-acr-image-to-aks.yml
+              parameters:
+                acrRepository: 'identity-server'
