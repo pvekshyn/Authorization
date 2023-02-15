@@ -9,12 +9,6 @@ parameters:
     type: boolean
     default: true
 
-variables:
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-  dotNetFramework: 'net6.0'
-  targetRuntime: 'linux-x64'
-
 steps:
 
   - task: NuGetToolInstaller@1
@@ -35,7 +29,7 @@ steps:
     inputs:
       command: 'build'
       projects: ${{ parameters.hostProject }}
-      arguments: '--configuration $(buildConfiguration)'
+      arguments: '--configuration Release'
   
   - task: DotNetCoreCLI@2
     displayName: 'Dotnet publish'
@@ -46,7 +40,7 @@ steps:
       projects: ${{ parameters.hostProject }}
       nobuild: true
       zipAfterPublish: false
-      arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+      arguments: '--configuration Release --framework net6.0 --runtime linux-x64 --self-contained --output $(Build.ArtifactStagingDirectory)'
   
   - task: Docker@2
     displayName: Build and push an image to container registry
