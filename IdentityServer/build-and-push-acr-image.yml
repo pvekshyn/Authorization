@@ -1,0 +1,60 @@
+parameters:
+  - name: hostProject
+    type: string
+  - name: hostName
+    type: string
+  - name: acrRepository
+    type: string
+  - name: needToUpdateAppImage
+    type: boolean
+    default: true
+
+variables:
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  dotNetFramework: 'net6.0'
+  targetRuntime: 'linux-x64'
+
+steps:
+
+  - task: NuGetToolInstaller@1
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Nuget restore'
+    condition: eq(parameters.needToUpdateAppImage, true)
+    inputs:
+      command: restore
+      projects: ${{ parameters.hostProject }}
+      feedsToUse: 'select'
+      vstsFeed: 'Authorization/authorizationFeed'
+      includeNuGetOrg: true         
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Build App Host'
+    condition: eq(parameters.needToUpdateAppImage, true)
+    inputs:
+      command: 'build'
+      projects: ${{ parameters.hostProject }}
+      arguments: '--configuration $(buildConfiguration)'
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Dotnet publish'
+    condition: eq(parameters.needToUpdateAppImage, true)
+    inputs:
+      command: 'publish'
+      publishWebProjects: false 
+      projects: ${{ parameters.hostProject }}
+      nobuild: true
+      zipAfterPublish: false
+      arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
+  
+  - task: Docker@2
+    displayName: Build and push an image to container registry
+    condition: eq(parameters.needToUpdateAppImage, true)
+    inputs:
+      command: buildAndPush
+      repository: ${{ parameters.acrRepository }}
+      Dockerfile: $(build.artifactStagingDirectory)/${{ parameters.hostName }}/Dockerfile
+      containerRegistry: pvauthorizationcr-sc
+      tags: |
+        1.0.0
