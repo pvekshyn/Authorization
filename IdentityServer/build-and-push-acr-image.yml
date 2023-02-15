@@ -15,7 +15,7 @@ steps:
   
   - task: DotNetCoreCLI@2
     displayName: 'Nuget restore'
-    condition: eq(parameters.needToUpdateAppImage, true)
+    condition: eq(variables.needToUpdateAppImage, true)
     inputs:
       command: restore
       projects: ${{ parameters.hostProject }}
@@ -25,7 +25,7 @@ steps:
   
   - task: DotNetCoreCLI@2
     displayName: 'Build App Host'
-    condition: eq(parameters.needToUpdateAppImage, true)
+    condition: eq(variables.needToUpdateAppImage, true)
     inputs:
       command: 'build'
       projects: ${{ parameters.hostProject }}
@@ -33,7 +33,7 @@ steps:
   
   - task: DotNetCoreCLI@2
     displayName: 'Dotnet publish'
-    condition: eq(parameters.needToUpdateAppImage, true)
+    condition: eq(variables.needToUpdateAppImage, true)
     inputs:
       command: 'publish'
       publishWebProjects: false 
@@ -44,7 +44,7 @@ steps:
   
   - task: Docker@2
     displayName: Build and push an image to container registry
-    condition: eq(parameters.needToUpdateAppImage, true)
+    condition: eq(variables.needToUpdateAppImage, true)
     inputs:
       command: buildAndPush
       repository: ${{ parameters.acrRepository }}
