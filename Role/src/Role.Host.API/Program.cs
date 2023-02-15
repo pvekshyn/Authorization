@@ -58,6 +58,8 @@ app.MapControllers();
 
 app.MapGrpcService<RoleService>();
 
+Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
+
 app.Run();
 
 public partial class Program { }
