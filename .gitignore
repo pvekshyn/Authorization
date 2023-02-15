@@ -80,3 +80,6 @@ orleans.codegen.cs
 *.ldf
 
 .tye/
+
+#identity server keys folder
+keys/
