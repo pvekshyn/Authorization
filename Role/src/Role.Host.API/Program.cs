@@ -43,6 +43,7 @@ var app = builder.Build();
 
 app.Logger.LogInformation($"KV name: {keyVaultName}");
 app.Logger.LogInformation(app.Configuration["SERVICE:identity-server:HOST"]);
+app.Logger.LogInformation(app.Configuration["identity-server_SERVICE_HOST"]);
 
 app.UseSwagger();
 app.UseSwaggerUI();
