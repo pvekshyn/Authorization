@@ -7,6 +7,7 @@ using Role.Application;
 using Role.Infrastructure;
 using Role.Infrastructure.Extensions;
 using Role.Infrastructure.Grpc;
+using System.Collections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +44,9 @@ var app = builder.Build();
 
 app.Logger.LogInformation($"KV name: {keyVaultName}");
 app.Logger.LogInformation(app.Configuration["SERVICE:identity-server:HOST"]);
-app.Logger.LogInformation(app.Configuration["IDENTITY_SERVER_SERVICE_HOST"]);
+
+foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
+    Console.WriteLine("  {0} = {1}", de.Key, de.Value);
 
 app.UseSwagger();
 app.UseSwaggerUI();
