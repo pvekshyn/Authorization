@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: identity-server
+  labels:
+    app.kubernetes.io/name: 'identity-server'
+    app.kubernetes.io/part-of: 'authorization'
+spec:
+  selector:
+    app.kubernetes.io/name: identity-server
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

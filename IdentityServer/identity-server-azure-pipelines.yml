@@ -20,62 +20,8 @@ stages:
       projects: 'IdentityServer/**/*.csproj'
     jobs:
       - job: Build
-        displayName: 'Build'
+        displayName: 'Build and publish artifacts'
         steps:
-        - task: NuGetToolInstaller@1
-        
-        - task: DotNetCoreCLI@2
-          displayName: 'Nuget restore'
-          inputs:
-            command: restore
-            projects: $(projects)
-            feedsToUse: 'select'
-            vstsFeed: 'Authorization/authorizationFeed'
-            includeNuGetOrg: true         
-        
-        - task: DotNetCoreCLI@2
-          displayName: 'Build'
-          inputs:
-            command: 'build'
-            projects: $(projects)
-            arguments: '--configuration $(buildConfiguration)'
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Dotnet publish'
-          inputs:
-            command: 'publish'
-            publishWebProjects: false 
-            projects: $(projects)
-            arguments: '--configuration $(BuildConfiguration) --framework $(dotNetFramework) --runtime $(targetRuntime) --self-contained --output $(Build.ArtifactStagingDirectory)'
-        
-        - task: PublishPipelineArtifact@1
-          displayName: 'Publish Project Artifact'
-          inputs:
-            targetPath: $(build.artifactStagingDirectory)
-            artifact: 'projectDrop'
-            publishLocation: 'pipeline'
-
-  - stage: deploy_dev
-    displayName: 'Deploy DEV'
-    jobs:
-    - deployment: Deploy
-      displayName: Deploy
-      environment: 'DEV'
-      strategy: 
-        runOnce:
-          deploy:
-            steps:
-              - task: DownloadPipelineArtifact@2
-                inputs:
-                  buildType: 'current'
-                  artifactName: 'projectDrop'
-                  targetPath: '$(Pipeline.Workspace)/drop'
-            
-              - task: AzureWebApp@1
-                inputs:
-                  azureSubscription: 'authorization_sc'
-                  appType: 'webAppLinux'
-                  appName: 'pv-identity-server'
-                  runtimeStack: 'DOTNETCORE|6.0'
-                  package: '$(Pipeline.Workspace)/drop/IdentityServer.zip'
-                  deploymentMethod: 'runFromPackage'
+        - template: publish-manifests-artifact.yml
+          parameters:
+            manifestsFolder: 'IdentityServer/src/IdentityServer/pipeline'
