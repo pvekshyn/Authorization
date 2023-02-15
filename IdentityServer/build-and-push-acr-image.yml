@@ -5,9 +5,6 @@ parameters:
     type: string
   - name: acrRepository
     type: string
-  - name: needToUpdateAppImage
-    type: boolean
-    default: true
 
 steps:
 

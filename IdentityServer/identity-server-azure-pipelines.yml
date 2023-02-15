@@ -1,3 +1,9 @@
+variables:
+  needToUnitTest: false
+  needToIntegrationTest: false
+  needToUpdateDatabase: false
+  needToUpdateAppImage: true
+
 trigger:
   branches:
     include:
