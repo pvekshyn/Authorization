@@ -41,8 +41,6 @@ stages:
     - deployment: Deploy
       displayName: Deploy
       environment: 'DEV'
-      dependsOn: preDeploy
-      condition: in(dependencies.preDeploy.result, 'Succeeded', 'Skipped')
       strategy: 
         runOnce:
           deploy:
