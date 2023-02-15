@@ -45,6 +45,8 @@ stages:
         runOnce:
           deploy:
             steps:
+            - download: none
+
             - template: deploy-acr-image-to-aks.yml
               parameters:
                 acrRepository: 'identity-server'
