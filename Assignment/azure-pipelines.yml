@@ -50,8 +50,8 @@ stages:
     displayName: 'Deploy DEV'
     jobs:
 
-    - job: preDeploy
-      displayName: 'Predeploy'
+    - job: publishDB
+      displayName: 'Publish Database'
       condition: and(succeeded(), eq(variables.needToUpdateDatabase, 'true'))
       pool: 
         vmImage: 'windows-latest'
@@ -65,6 +65,8 @@ stages:
     - deployment: Deploy
       displayName: Deploy
       environment: 'DEV'
+      dependsOn: publishDB
+      condition: and(succeeded(), in(dependencies.preDeploy.result, 'Succeeded', 'Skipped'))
       strategy: 
         runOnce:
           deploy:
