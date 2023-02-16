@@ -1,7 +1,9 @@
 parameters:
   - name: dbProjectPath
     type: string
-  - name: dacpacPath
+  - name: dacpacFolder
+    type: string
+  - name: dacpacName
     type: string
 
 steps:
@@ -16,7 +18,8 @@ steps:
   - task: CopyFiles@2
     displayName: 'Copy App Dacpac'
     inputs:
-      Contents: ${{ parameters.dacpacPath }}
+      SourceFolder: ${{ parameters.dacpacFolder }}
+      Contents: ${{ parameters.dacpacName }}
       TargetFolder: $(Build.ArtifactStagingDirectory)/db
 
   - task: DotNetCoreCLI@2
@@ -29,7 +32,8 @@ steps:
   - task: CopyFiles@2
     displayName: 'Copy Outbox Dacpac'
     inputs:
-      Contents: Outbox.Job/src/Outbox.Database/bin/Release/netstandard2.0/Build.Outbox.Database.dacpac
+      SourceFolder: Outbox.Job/src/Outbox.Database/bin/Release/netstandard2.0
+      Contents: Build.Outbox.Database.dacpac
       TargetFolder: $(Build.ArtifactStagingDirectory)/db
 
   - task: PublishPipelineArtifact@1

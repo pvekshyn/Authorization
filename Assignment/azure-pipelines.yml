@@ -17,12 +17,18 @@ stages:
   - stage: Build
     displayName: 'Build'
     jobs:
-      - job: BuildHost
-        displayName: 'Build and push image to ACR'
+
+      - job: Manifest
+        displayName: 'Publish Manifest Artifact'
         steps:
         - template: ../pipeline/publish-manifests-artifact.yml
           parameters:
             manifestsFolder: 'Assignment/src/Assignment.Host.API/pipeline'
+
+      - job: BuildHost
+        displayName: 'Build and push image to ACR'
+        condition: and(succeeded(), eq(variables.needToUpdateAppImage, 'true'))
+        steps:
 
         - template: ../pipeline/build-host-and-push-acr-image.yml
           parameters:
@@ -37,7 +43,8 @@ stages:
         - template: ../pipeline/build-database-and-publish-artifact.yml
           parameters:
             dbProjectPath: 'Assignment/src/Assignment.Database/Build.Assignment.Database.csproj'
-            dacpacPath: 'Assignment/src/Assignment.Database/bin/Release/netstandard2.0/Build.Assignment.Database.dacpac'
+            dacpacFolder: 'Assignment/src/Assignment.Database/bin/Release/netstandard2.0'
+            dacpacName: 'Build.Assignment.Database.dacpac'
 
   - stage: deploy_dev
     displayName: 'Deploy DEV'
