@@ -1,0 +1,40 @@
+parameters:
+  - name: dbProjectPath
+    type: string
+  - name: dacpacPath
+    type: string
+
+steps:
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build App Database'
+    inputs:
+      command: 'build'
+      projects: ${{ parameters.dbProjectPath }}
+      arguments: '--configuration Release'
+
+  - task: CopyFiles@2
+    displayName: 'Copy App Dacpac'
+    inputs:
+      Contents: ${{ parameters.dacpacPath }}
+      TargetFolder: $(Build.ArtifactStagingDirectory)/db
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build Outbox Database'
+    inputs:
+      command: 'build'
+      projects: Outbox.Job/src/Outbox.Database/Build.Outbox.Database.csproj
+      arguments: '--configuration Release'
+
+  - task: CopyFiles@2
+    displayName: 'Copy Outbox Dacpac'
+    inputs:
+      Contents: Outbox.Job/src/Outbox.Database/bin/Release/netstandard2.0/Build.Outbox.Database.dacpac
+      TargetFolder: $(Build.ArtifactStagingDirectory)/db
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Database Artifact'
+    inputs:
+      targetPath: $(Build.ArtifactStagingDirectory)/db
+      artifact: 'dbDrop'
+      publishLocation: 'pipeline'

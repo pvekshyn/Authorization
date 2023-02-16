@@ -1,6 +1,3 @@
-variables:
-  needToUpdateAppImage: true
-
 trigger:
   branches:
     include:
@@ -23,7 +20,6 @@ stages:
           parameters:
             hostProject: 'IdentityServer/src/IdentityServer/IdentityServer.csproj'
             hostName: 'IdentityServer'
-            acrRepository: 'identity-server'
 
   - stage: deploy_dev
     displayName: 'Deploy DEV'

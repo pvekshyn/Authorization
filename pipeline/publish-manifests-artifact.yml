@@ -11,11 +11,11 @@ steps:
       Contents: |
         service.yml
         deployment.yml
-      TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)/manifests'
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Manifest Artifact'
     inputs:
-      targetPath: $(build.artifactStagingDirectory)
+      targetPath: $(build.artifactStagingDirectory)/manifests
       artifact: 'manifestDrop'
       publishLocation: 'pipeline'

@@ -1,0 +1,32 @@
+parameters:
+  - name: dbName
+    type: string
+  - name: dacpacFileName
+    type: string
+
+steps:
+
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download Database Artifact'
+    inputs:
+      buildType: 'current'
+      artifactName: 'dbDrop'
+      targetPath: '$(Pipeline.Workspace)/drop'
+  
+  - task: SqlAzureDacpacDeployment@1
+    displayName: 'Publish App dacpac'
+    inputs:
+      azureSubscription: 'authorization_sc'
+      AuthenticationType: 'servicePrincipal'
+      ServerName: 'authorization-db.database.windows.net,1433'
+      DatabaseName: ${{ parameters.dbName }}
+      DacpacFile: '$(Pipeline.Workspace)/drop/${{ parameters.dacpacFileName }}'
+  
+  - task: SqlAzureDacpacDeployment@1
+    displayName: 'Publish Outbox dacpac'
+    inputs:
+      azureSubscription: 'authorization_sc'
+      AuthenticationType: 'servicePrincipal'
+      ServerName: 'authorization-db.database.windows.net,1433'
+      DatabaseName: ${{ parameters.dbName }}
+      DacpacFile: '$(Pipeline.Workspace)/drop/Build.Outbox.Database.dacpac'

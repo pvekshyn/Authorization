@@ -3,8 +3,6 @@ parameters:
     type: string
   - name: hostName
     type: string
-  - name: acrRepository
-    type: string
 
 steps:
 
@@ -34,11 +32,11 @@ steps:
       projects: ${{ parameters.hostProject }}
       nobuild: true
       zipAfterPublish: true
-      arguments: '--configuration Release --framework net6.0 --runtime linux-x64 --self-contained false --output $(Build.ArtifactStagingDirectory)'
+      arguments: '--configuration Release --framework net6.0 --runtime linux-x64 --self-contained false --output $(Build.ArtifactStagingDirectory)/host'
   
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Host Artifact'
     inputs:
-      targetPath: $(build.artifactStagingDirectory)
+      targetPath: $(build.artifactStagingDirectory)/host
       artifact: 'hostDrop'
       publishLocation: 'pipeline'
