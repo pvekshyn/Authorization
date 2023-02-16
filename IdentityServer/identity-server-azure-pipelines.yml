@@ -43,5 +43,5 @@ stages:
 
             - template: ../pipeline/deploy-host-artifact-to-app-service.yml
               parameters:
-                appServiceName: 'identity-server'
+                appServiceName: 'pv-identity-server'
                 hostName: 'IdentityServer'
