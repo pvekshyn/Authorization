@@ -19,11 +19,11 @@ stages:
       - job: Build
         displayName: 'Build and publish artifacts'
         steps:
-        - template: pipeline\publish-manifests-artifact.yml@authorization
+        - template: ../pipeline/publish-manifests-artifact.yml
           parameters:
             manifestsFolder: 'IdentityServer/src/IdentityServer/pipeline'
 
-        - template: pipeline\build-and-push-acr-image.yml@authorization
+        - template: ../pipeline/build-and-push-acr-image.yml
           parameters:
             hostProject: 'IdentityServer/src/IdentityServer/IdentityServer.csproj'
             hostName: 'IdentityServer'
@@ -41,6 +41,6 @@ stages:
             steps:
             - download: none
 
-            - template: pipeline\deploy-acr-image-to-aks.yml@authorization
+            - template: ../pipeline/deploy-acr-image-to-aks.yml
               parameters:
                 acrRepository: 'identity-server'
