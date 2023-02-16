@@ -19,10 +19,6 @@ stages:
       - job: Build
         displayName: 'Build and publish artifacts'
         steps:
-        - template: ../pipeline/publish-manifests-artifact.yml
-          parameters:
-            manifestsFolder: 'IdentityServer/src/IdentityServer/pipeline'
-
         - template: ../pipeline/build-host-and-publish-artifact.yml
           parameters:
             hostProject: 'IdentityServer/src/IdentityServer/IdentityServer.csproj'
