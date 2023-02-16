@@ -67,7 +67,7 @@ stages:
       displayName: Deploy
       environment: 'DEV'
       dependsOn: publishDB
-      condition: and(succeeded(), in(dependencies.publishDB.result, 'Succeeded', 'Skipped'))
+      condition: and(not(canceled()), in(dependencies.publishDB.result, 'Succeeded', 'Skipped'))
       strategy: 
         runOnce:
           deploy:
