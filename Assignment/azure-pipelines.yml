@@ -56,7 +56,7 @@ stages:
       pool: 
         vmImage: 'windows-latest'
       steps:
-      - checkout: none
+        - checkout: none
 
         - template: ../pipeline/deploy-database.yml
           parameters:
