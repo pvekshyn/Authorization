@@ -1,5 +1,5 @@
 variables:
-  needToUpdateAppImage: true
+  needToUpdateAppImage: false
   needToUpdateDatabase: true
 
 trigger:
@@ -56,6 +56,7 @@ stages:
       pool: 
         vmImage: 'windows-latest'
       steps:
+      - checkout: none
 
         - template: ../pipeline/deploy-database.yml
           parameters:

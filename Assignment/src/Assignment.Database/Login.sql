@@ -1,5 +1,5 @@
 ﻿CREATE LOGIN [assignment_service] 
-WITH PASSWORD = 'assignment_password',
+WITH PASSWORD = 'SecurePassword#123',
 DEFAULT_DATABASE = [Assignment],
 CHECK_POLICY     = OFF,
 CHECK_EXPIRATION = OFF;
