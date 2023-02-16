@@ -1,0 +1,44 @@
+parameters:
+  - name: hostProject
+    type: string
+  - name: hostName
+    type: string
+  - name: acrRepository
+    type: string
+
+steps:
+
+  - task: NuGetToolInstaller@1
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Nuget restore'
+    inputs:
+      command: restore
+      projects: ${{ parameters.hostProject }}
+      feedsToUse: 'select'
+      vstsFeed: 'Authorization/authorizationFeed'
+      includeNuGetOrg: true         
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Build App Host'
+    inputs:
+      command: 'build'
+      projects: ${{ parameters.hostProject }}
+      arguments: '--configuration Release'
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Dotnet publish'
+    inputs:
+      command: 'publish'
+      publishWebProjects: false 
+      projects: ${{ parameters.hostProject }}
+      nobuild: true
+      zipAfterPublish: false
+      arguments: '--configuration Release --framework net6.0 --runtime linux-x64 --self-contained --output $(Build.ArtifactStagingDirectory)'
+  
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Host Artifact'
+    inputs:
+      targetPath: $(build.artifactStagingDirectory)
+      artifact: 'hostDrop'
+      publishLocation: 'pipeline'

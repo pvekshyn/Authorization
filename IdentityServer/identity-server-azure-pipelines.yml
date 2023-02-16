@@ -23,7 +23,7 @@ stages:
           parameters:
             manifestsFolder: 'IdentityServer/src/IdentityServer/pipeline'
 
-        - template: ../pipeline/build-and-push-acr-image.yml
+        - template: ../pipeline/build-host-and-publish-artifact.yml
           parameters:
             hostProject: 'IdentityServer/src/IdentityServer/IdentityServer.csproj'
             hostName: 'IdentityServer'
@@ -41,6 +41,7 @@ stages:
             steps:
             - download: none
 
-            - template: ../pipeline/deploy-acr-image-to-aks.yml
+            - template: ../pipeline/deploy-host-artifact-to-app-service.yml
               parameters:
-                acrRepository: 'identity-server'
+                appServiceName: 'identity-server'
+                hostName: 'IdentityServer'

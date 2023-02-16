@@ -1,0 +1,21 @@
+parameters:
+  - name: appServiceName
+    type: string
+  - name: hostName
+    type: string
+
+steps:
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      buildType: 'current'
+      artifactName: 'hostDrop'
+      targetPath: '$(Pipeline.Workspace)/drop'
+ 
+  - task: AzureWebApp@1
+    inputs:
+      azureSubscription: 'authorization_sc'
+      appType: 'webAppLinux'
+      appName: ${{ parameters.appServiceName }}
+      runtimeStack: 'DOTNETCORE|6.0'
+      package: '$(Pipeline.Workspace)/drop/${{ parameters.hostName }}.zip'
+      deploymentMethod: 'runFromPackage'
