@@ -1,5 +1,5 @@
 variables:
-  needToUpdateAppImage: false
+  needToUpdateAppImage: true
   needToUpdateDatabase: false
 
 trigger:
@@ -34,7 +34,7 @@ stages:
           parameters:
             hostProject: 'Assignment/src/Assignment.Host.API/Assignment.Host.API.csproj'
             hostName: 'Assignment.Host.API'
-            acrRepository: 'assignment'
+            acrRepository: 'assignment-api'
 
       - job: BuildDatabase
         displayName: 'Build Database and publish artifact'
