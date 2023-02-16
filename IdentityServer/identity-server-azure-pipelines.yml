@@ -15,12 +15,6 @@ pool:
 stages:
   - stage: Build
     displayName: 'Build'
-    variables:
-      buildPlatform: 'Any CPU'
-      buildConfiguration: 'Release'
-      dotNetFramework: 'net6.0'
-      targetRuntime: 'linux-x64'
-      projects: 'IdentityServer/**/*.csproj'
     jobs:
       - job: Build
         displayName: 'Build and publish artifacts'
