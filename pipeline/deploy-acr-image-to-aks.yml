@@ -21,6 +21,7 @@ steps:
 
   - task: KubernetesManifest@0
     displayName: Scale to 0
+    continueOnError: 'true'
     inputs: 
       action: scale
       kind: deployment
