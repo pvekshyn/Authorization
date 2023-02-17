@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus.Administration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -11,6 +12,7 @@ namespace Inbox.Job.Infrastructure
         private readonly ILogger<InboxSubscriberAzure> _logger;
         private string _subscription;
         private List<string> _topics;
+        private readonly ServiceBusAdministrationClient _adminClient;
 
         public InboxSubscriberAzure(
             IInboxRepository inboxRepository,
@@ -21,19 +23,26 @@ namespace Inbox.Job.Infrastructure
             _logger = logger;
             _subscription = settings.Value.PubSub.EventProcessingServiceName;
             _topics = settings.Value.PubSub.Events;
+            _adminClient = new ServiceBusAdministrationClient(
+                "pv-authorization.servicebus.windows.net",
+                new DefaultAzureCredential());
         }
 
         public async Task SubscribeAsync()
         {
             var client = new ServiceBusClient(
-    "pv-authorization.servicebus.windows.net",
-    new DefaultAzureCredential());
+                "pv-authorization.servicebus.windows.net",
+                new DefaultAzureCredential());
 
             foreach (var topic in _topics)
             {
                 _logger.LogInformation($"Subscribing to {topic}");
 
+                if (!await _adminClient.TopicExistsAsync(topic))
+                    await _adminClient.CreateTopicAsync(topic);
 
+                if (!await _adminClient.SubscriptionExistsAsync(topic, _subscription))
+                    await _adminClient.CreateSubscriptionAsync(topic, _subscription);
 
                 var options = new ServiceBusProcessorOptions
                 {
