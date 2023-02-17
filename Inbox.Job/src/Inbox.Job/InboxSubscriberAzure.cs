@@ -25,6 +25,10 @@ namespace Inbox.Job.Infrastructure
 
         public async Task SubscribeAsync()
         {
+            var topic = _topics.First();
+
+            _logger.LogInformation($"Subscribing to {topic}");
+
             var client = new ServiceBusClient(
                 "pv-authorization.servicebus.windows.net",
                 new DefaultAzureCredential());
@@ -35,7 +39,7 @@ namespace Inbox.Job.Infrastructure
                 ReceiveMode = ServiceBusReceiveMode.PeekLock
             };
 
-            var processor = client.CreateProcessor(_topics.First(), _subscription, options);
+            var processor = client.CreateProcessor(topic, _subscription, options);
 
             try
             {
@@ -49,15 +53,12 @@ namespace Inbox.Job.Infrastructure
             {
                 _logger.LogError(e.Message);
             }
-            finally
-            {
-                await processor.DisposeAsync();
-                await client.DisposeAsync();
-            }
         }
 
         async Task MessageHandler(ProcessMessageEventArgs args)
         {
+            _logger.LogInformation($"Message received");
+
             string message = args.Message.Body.ToString();
 
             //ToDo pass create date
@@ -68,7 +69,7 @@ namespace Inbox.Job.Infrastructure
 
         Task ErrorHandler(ProcessErrorEventArgs args)
         {
-            Console.WriteLine(args.Exception.ToString());
+            _logger.LogError(args.Exception.ToString());
             return Task.CompletedTask;
         }
 
