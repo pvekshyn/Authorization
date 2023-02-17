@@ -1,5 +1,5 @@
 ﻿CREATE LOGIN [authorization_service] 
-WITH PASSWORD = 'authorization_password',
+WITH PASSWORD = 'SecurePassword#123',
 DEFAULT_DATABASE = [authorization],
 CHECK_POLICY     = OFF,
 CHECK_EXPIRATION = OFF;
