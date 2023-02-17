@@ -15,6 +15,8 @@
     <ProjectReference Include="..\Assignment.Infrastructure\Assignment.Infrastructure.csproj" />
     <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.10.0-alpha.21420.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.12" />
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2" />
+    <PackageReference Include="Azure.Identity" Version="1.8.1" />
   </ItemGroup>
 
   <ItemGroup>

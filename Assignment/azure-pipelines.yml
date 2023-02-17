@@ -1,5 +1,5 @@
 variables:
-  needToUpdateAppImage: true
+  needToUpdateAppImage: false
   needToUpdateDatabase: false
 
 trigger:
