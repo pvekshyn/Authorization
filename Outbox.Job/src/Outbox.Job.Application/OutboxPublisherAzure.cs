@@ -17,7 +17,7 @@ internal class OutboxPublisherAzure : IOutboxPublisher
             "pv-authorization.servicebus.windows.net",
             new DefaultAzureCredential());
 
-        sender = client.CreateSender("role.sdk.events.permissioncreatedevent");
+        sender = client.CreateSender("role.sdk.events.rolecreatedevent");
     }
 
     public async Task PublishAsync(OutboxMessage outboxMessage)

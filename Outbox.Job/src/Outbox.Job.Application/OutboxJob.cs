@@ -22,7 +22,6 @@ public class OutboxJob : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
-        _logger.LogInformation("Job execution started.");
         var outboxMessage = _outboxRepository.GetFirst();
 
         while (outboxMessage != null)
