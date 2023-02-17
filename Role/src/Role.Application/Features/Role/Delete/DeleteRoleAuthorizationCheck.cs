@@ -1,4 +1,5 @@
-﻿using Common.Application.Authorization;
+﻿/*
+using Common.Application.Authorization;
 using Common.Application.Dependencies;
 
 namespace Role.Application.Features.Role.Delete;
@@ -17,3 +18,4 @@ public class DeleteRoleAuthorizationCheck : IAuthorizationCheck<DeleteRole>
         return await _currentUserCheckAccessService.CheckAccessAsync(AuthorizationConstants.Permissions.DeleteRole);
     }
 }
+*/
