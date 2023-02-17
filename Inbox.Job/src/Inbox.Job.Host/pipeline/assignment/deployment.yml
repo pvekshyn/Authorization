@@ -31,5 +31,5 @@ spec:
           value: 'Role.SDK.Events.RoleDeletedEvent'
         - name: SERVICE__assignment-api__grpc__HOST
           value: 'assignment-api'
-        - name: SERVICE__assignment-api-grpc__PORT
+        - name: SERVICE__assignment-api__grpc__PORT
           value: '8080'
