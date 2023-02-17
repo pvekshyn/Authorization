@@ -1,0 +1,31 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: assignment-inbox-job
+  labels:
+    app.kubernetes.io/name: 'assignment-inbox-job'
+    app.kubernetes.io/part-of: 'authorization'
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: assignment-inbox-job
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: 'assignment-inbox-job'
+        app.kubernetes.io/part-of: 'authorization'
+    spec:
+      containers:
+      - name: assignment-inbox-job
+        image: pvauthorizationcr.azurecr.io/inbox-job:1.0.0
+        imagePullPolicy: Always
+        env:
+        - name: KeyVaultName
+          value: 'pv-assignment-kv'
+        - name: PubSub__EventProcessingServiceName
+          value: 'assignment-api'
+        - name: PubSub__Events__0
+          value: 'Role.SDK.Events.RoleCreatedEvent'
+        - name: PubSub__Events__1
+          value: 'Role.SDK.Events.RoleDeletedEvent'

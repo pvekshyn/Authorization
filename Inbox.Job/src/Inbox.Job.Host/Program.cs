@@ -1,12 +1,27 @@
-
+using Azure.Identity;
 using Inbox.Job.Infrastructure;
 using Inbox.Job.Infrastructure.Extensions;
 
-IHost host = Host.CreateDefaultBuilder(args)
+var builder = Host.CreateDefaultBuilder(args);
+
+builder.ConfigureAppConfiguration((context, config) =>
+{
+    var settings = config.Build();
+    var keyVaultName = settings.GetSection("KeyVaultName")?.Value;
+    if (!string.IsNullOrEmpty(keyVaultName))
+    {
+        var keyVaultEndpoint = $"https://{keyVaultName}.vault.azure.net";
+        config.AddAzureKeyVault(
+            new Uri(keyVaultEndpoint),
+            new DefaultAzureCredential());
+    }
+});
+
+var host = builder
     .ConfigureServices((context, services) =>
     {
         services.AddQuartzJob(context.Configuration)
-            .AddInboxSubscriberDependencies();
+            .AddInboxSubscriberDependencies(context.Configuration);
 
         services.Configure<InboxSettings>(context.Configuration);
 
@@ -17,21 +32,37 @@ IHost host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
+var logger = host.Services.GetRequiredService<ILogger<Program>>();
+var configuration = host.Services.GetService<IConfiguration>();
+LogConfiguration(logger, configuration);
+
 var subscriber = host.Services.GetRequiredService<IInboxSubscriber>();
 await subscriber.SubscribeAsync();
-
 
 await host.RunAsync();
 
 Uri? GetGrpcUri(IConfiguration configuration)
 {
-    var eventProcessingServiceName = configuration["EventProcessingServiceName"];
-    if (string.IsNullOrEmpty(eventProcessingServiceName))
-        throw new Exception("Cannot get EventProcessingServiceName from configuration");
+    var eventProcessingServiceName = configuration["PubSub:EventProcessingServiceName"];
 
     var grpcServiceUri = configuration.GetServiceUri(eventProcessingServiceName, "grpc");
-    if (grpcServiceUri is null)
-        throw new Exception("Cannot get Service Uri");
 
     return grpcServiceUri;
+}
+
+void LogConfiguration(ILogger logger, IConfiguration configuration)
+{
+    logger.LogInformation($"KeyVaultName = {configuration.GetSection("KeyVaultName")?.Value}");
+
+    var inboxSettings = new InboxSettings();
+    configuration.Bind(inboxSettings);
+
+    logger.LogInformation($"EventProcessingServiceName = {inboxSettings.PubSub.EventProcessingServiceName}");
+    var grpcServiceUri = GetGrpcUri(configuration);
+    logger.LogInformation($"GrpcServiceUri = {grpcServiceUri}");
+
+    foreach (var evnt in inboxSettings.PubSub.Events)
+    {
+        logger.LogInformation($"Event = {evnt}");
+    }
 }

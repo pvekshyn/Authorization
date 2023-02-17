@@ -6,21 +6,17 @@ using System.Text;
 
 namespace Inbox.Job.Infrastructure
 {
-    public interface IInboxSubscriber
-    {
-        Task SubscribeAsync();
-    }
 
-    public class InboxSubscriber : IInboxSubscriber
+    public class InboxSubscriberRabbit : IInboxSubscriber
     {
         private readonly IInboxRepository _inboxRepository;
         private string _queueName;
         private List<string> _subscriptions;
-        public InboxSubscriber(IInboxRepository inboxRepository, IOptions<InboxSettings> settings)
+        public InboxSubscriberRabbit(IInboxRepository inboxRepository, IOptions<InboxSettings> settings)
         {
             _inboxRepository = inboxRepository;
-            _queueName = settings.Value.PubSub.QueueName;
-            _subscriptions = settings.Value.PubSub.Subscriptions;
+            _queueName = settings.Value.PubSub.EventProcessingServiceName;
+            _subscriptions = settings.Value.PubSub.Events;
         }
 
         public async Task SubscribeAsync()

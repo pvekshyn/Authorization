@@ -30,10 +30,20 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddInboxSubscriberDependencies(this IServiceCollection services)
+    public static IServiceCollection AddInboxSubscriberDependencies(this IServiceCollection services, IConfiguration configuration)
     {
-        return services.AddSingleton<IInboxSubscriber, InboxSubscriber>()
-            .AddSingleton<IInboxRepository, InboxRepository>();
+        var transport = configuration["PubSub:Transport"];
+
+        if (transport == "rabbit")
+        {
+            services.AddSingleton<IInboxSubscriber, InboxSubscriberRabbit>();
+        }
+        else
+        {
+            services.AddSingleton<IInboxSubscriber, InboxSubscriberAzure>();
+        }
+
+        return services.AddSingleton<IInboxRepository, InboxRepository>();
     }
 
 }

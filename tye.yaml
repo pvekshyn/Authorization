@@ -47,13 +47,11 @@ services:
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=assignment_service;Password=assignment_password;Initial Catalog=Assignment;TrustServerCertificate=True
-  - name: EventProcessingServiceName
+  - name: PubSub__EventProcessingServiceName
     value: assignment-api
-  - name: PubSub__QueueName
-    value: assignmentQueue
-  - name: PubSub__Subscriptions__0
+  - name: PubSub__Events__0
     value: Role.SDK.Events.RoleCreatedEvent
-  - name: PubSub__Subscriptions__1
+  - name: PubSub__Events__1
     value: Role.SDK.Events.RoleDeletedEvent
 
 - name: authorization-api
@@ -72,25 +70,23 @@ services:
   env:
   - name: ConnectionStrings__Database
     value: Data Source=localhost\SQLEXPRESS;User Id=authorization_service;Password=authorization_password;Initial Catalog=Authorization;TrustServerCertificate=True
-  - name: EventProcessingServiceName
+  - name: PubSub__EventProcessingServiceName
     value: authorization-api
-  - name: PubSub__QueueName
-    value: authorizationQueue
-  - name: PubSub__Subscriptions__0
+  - name: PubSub__Events__0
     value: Role.SDK.Events.RoleCreatedEvent
-  - name: PubSub__Subscriptions__1
+  - name: PubSub__Events__1
     value: Role.SDK.Events.RoleRenamedEvent
-  - name: PubSub__Subscriptions__2
+  - name: PubSub__Events__2
     value: Role.SDK.Events.RolePermissionsChangedEvent
-  - name: PubSub__Subscriptions__3
+  - name: PubSub__Events__3
     value: Role.SDK.Events.RoleDeletedEvent
-  - name: PubSub__Subscriptions__4
+  - name: PubSub__Events__4
     value: Assignment.SDK.Events.AssignmentEvent
-  - name: PubSub__Subscriptions__5
+  - name: PubSub__Events__5
     value: Assignment.SDK.Events.DeassignmentEvent
-  - name: PubSub__Subscriptions__6
+  - name: PubSub__Events__6
     value: Role.SDK.Events.PermissionCreatedEvent
-  - name: PubSub__Subscriptions__7
+  - name: PubSub__Events__7
     value: Role.SDK.Events.PermissionDeletedEvent
 
 - name: authorization-blazor
