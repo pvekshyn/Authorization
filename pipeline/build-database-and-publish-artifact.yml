@@ -36,6 +36,20 @@ steps:
       Contents: Build.Outbox.Database.dacpac
       TargetFolder: $(Build.ArtifactStagingDirectory)/db
 
+  - task: DotNetCoreCLI@2
+    displayName: 'Build Inbox Database'
+    inputs:
+      command: 'build'
+      projects: Inbox.Job/src/Inbox.Database/Build.Inbox.Database.csproj
+      arguments: '--configuration Release'
+
+  - task: CopyFiles@2
+    displayName: 'Copy Inbox Dacpac'
+    inputs:
+      SourceFolder: Inbox.Job/src/Inbox.Database/bin/Release/netstandard2.0
+      Contents: Build.Inbox.Database.dacpac
+      TargetFolder: $(Build.ArtifactStagingDirectory)/db
+
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Database Artifact'
     inputs:
