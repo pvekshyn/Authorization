@@ -7,7 +7,7 @@ trigger:
     - main
   paths:
     include:
-    - Assignment
+    - Inbox.Job
 
 pool: 
   vmImage: ubuntu-latest
@@ -22,7 +22,7 @@ stages:
         steps:
         - template: ../pipeline/publish-manifests-artifact.yml
           parameters:
-            manifestsFolder: 'Assignment/src/Assignment.Host.API/pipeline'
+            manifestsFolder: 'Inbox.Job/src/Inbox.Job.Host/pipeline/assignment'
 
       - job: BuildHost
         displayName: 'Build and push image to ACR'
@@ -31,42 +31,17 @@ stages:
 
         - template: ../pipeline/build-host-and-push-acr-image.yml
           parameters:
-            hostProject: 'Assignment/src/Assignment.Host.API/Assignment.Host.API.csproj'
-            hostName: 'Assignment.Host.API'
-            acrRepository: 'assignment-api'
-
-      - job: BuildDatabase
-        displayName: 'Build Database and publish artifact'
-        condition: and(succeeded(), eq(variables.needToUpdateDatabase, 'true'))
-        steps:
-        - template: ../pipeline/build-database-and-publish-artifact.yml
-          parameters:
-            dbProjectPath: 'Assignment/src/Assignment.Database/Build.Assignment.Database.csproj'
-            dacpacFolder: 'Assignment/src/Assignment.Database/bin/Release/netstandard2.0'
-            dacpacName: 'Build.Assignment.Database.dacpac'
+            hostProject: 'Inbox.Job/src/Inbox.Job.Host/Inbox.Job.Host.csproj'
+            hostName: 'Inbox.Job.Host'
+            acrRepository: 'inbox-job'
 
   - stage: deploy_dev
     displayName: 'Deploy DEV'
     jobs:
 
-    - job: publishDB
-      displayName: 'Publish Database'
-      condition: and(succeeded(), eq(variables.needToUpdateDatabase, 'true'))
-      pool: 
-        vmImage: 'windows-latest'
-      steps:
-        - checkout: none
-
-        - template: ../pipeline/deploy-database.yml
-          parameters:
-            dbName: 'assignment'
-            dacpacFileName: 'Build.Assignment.Database.dacpac'
-    
     - deployment: Deploy
       displayName: Deploy
       environment: 'DEV'
-      dependsOn: publishDB
-      condition: and(not(canceled()), in(dependencies.publishDB.result, 'Succeeded', 'Skipped'))
       strategy: 
         runOnce:
           deploy:
@@ -75,4 +50,4 @@ stages:
 
             - template: ../pipeline/deploy-acr-image-to-aks.yml
               parameters:
-                acrRepository: 'assignment'
+                acrRepository: 'inbox-job'
