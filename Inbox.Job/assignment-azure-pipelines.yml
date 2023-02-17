@@ -51,3 +51,4 @@ stages:
             - template: ../pipeline/deploy-acr-image-to-aks.yml
               parameters:
                 acrRepository: 'inbox-job'
+                servicename: 'assignment-inbox-job'
