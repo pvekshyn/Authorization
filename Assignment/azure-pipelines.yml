@@ -1,6 +1,6 @@
 variables:
   needToUpdateAppImage: true
-  needToUpdateDatabase: false
+  needToUpdateDatabase: true
 
 trigger:
   branches:
