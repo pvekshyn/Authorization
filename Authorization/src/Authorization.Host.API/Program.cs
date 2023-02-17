@@ -2,6 +2,7 @@ using Assignment.Application;
 using Authorization.Infrastructure;
 using Authorization.Infrastructure.Extensions;
 using Authorization.Infrastructure.Grpc;
+using Azure.Identity;
 using Common.Application.Extensions;
 using Inbox.SDK.Extensions;
 using Inbox.SDK.Grpc;
@@ -15,6 +16,15 @@ builder.Services.AddMediatR(typeof(IApplicationAssemblyMarker), typeof(IInfrastr
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var keyVaultName = builder.Configuration.GetSection("KeyVaultName")?.Value;
+if (!string.IsNullOrEmpty(keyVaultName))
+{
+    var keyVaultEndpoint = $"https://{keyVaultName}.vault.azure.net";
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(keyVaultEndpoint),
+        new DefaultAzureCredential());
+}
 
 builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>()
     .AddInfrastructureDependencies(builder.Configuration)
