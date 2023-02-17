@@ -25,40 +25,41 @@ namespace Inbox.Job.Infrastructure
 
         public async Task SubscribeAsync()
         {
-            var topic = _topics.First();
-
-            _logger.LogInformation($"Subscribing to {topic}");
-
             var client = new ServiceBusClient(
-                "pv-authorization.servicebus.windows.net",
-                new DefaultAzureCredential());
+    "pv-authorization.servicebus.windows.net",
+    new DefaultAzureCredential());
 
-            var options = new ServiceBusProcessorOptions
+            foreach (var topic in _topics)
             {
-                AutoCompleteMessages = false,
-                ReceiveMode = ServiceBusReceiveMode.PeekLock
-            };
+                _logger.LogInformation($"Subscribing to {topic}");
 
-            var processor = client.CreateProcessor(topic, _subscription, options);
 
-            try
-            {
-                processor.ProcessMessageAsync += MessageHandler;
 
-                processor.ProcessErrorAsync += ErrorHandler;
+                var options = new ServiceBusProcessorOptions
+                {
+                    AutoCompleteMessages = false,
+                    ReceiveMode = ServiceBusReceiveMode.PeekLock
+                };
 
-                await processor.StartProcessingAsync();
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e.Message);
+                var processor = client.CreateProcessor(topic, _subscription, options);
+
+                try
+                {
+                    processor.ProcessMessageAsync += MessageHandler;
+
+                    processor.ProcessErrorAsync += ErrorHandler;
+
+                    await processor.StartProcessingAsync();
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e.Message);
+                }
             }
         }
 
         async Task MessageHandler(ProcessMessageEventArgs args)
         {
-            _logger.LogInformation($"Message received");
-
             string message = args.Message.Body.ToString();
 
             //ToDo pass create date
