@@ -7,7 +7,7 @@ trigger:
     - main
   paths:
     include:
-    - Inbox.Job
+    - Outbox.Job
 
 pool: 
   vmImage: ubuntu-latest
