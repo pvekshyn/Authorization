@@ -33,7 +33,8 @@ internal class OutboxPublisherAzure : IOutboxPublisher
             var type = json["$type"].ToString();
             var eventName = type.Split(",")[0];
 
-            await _senderFactory.GetSender(eventName).SendMessageAsync(message);
+            var sender = await _senderFactory.GetSenderAsync(eventName);
+            await sender.SendMessageAsync(message);
 
             _outboxRepository.Delete(outboxMessage.Id);
         }
