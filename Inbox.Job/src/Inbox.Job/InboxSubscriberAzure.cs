@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Inbox.Job.Infrastructure
@@ -7,12 +8,17 @@ namespace Inbox.Job.Infrastructure
     public class InboxSubscriberAzure : IInboxSubscriber
     {
         private readonly IInboxRepository _inboxRepository;
+        private readonly ILogger<InboxSubscriberAzure> _logger;
         private string _subscription;
         private List<string> _topics;
 
-        public InboxSubscriberAzure(IInboxRepository inboxRepository, IOptions<InboxSettings> settings)
+        public InboxSubscriberAzure(
+            IInboxRepository inboxRepository,
+            IOptions<InboxSettings> settings,
+            ILogger<InboxSubscriberAzure> logger)
         {
             _inboxRepository = inboxRepository;
+            _logger = logger;
             _subscription = settings.Value.PubSub.EventProcessingServiceName;
             _topics = settings.Value.PubSub.Events;
         }
@@ -38,6 +44,10 @@ namespace Inbox.Job.Infrastructure
                 processor.ProcessErrorAsync += ErrorHandler;
 
                 await processor.StartProcessingAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
             }
             finally
             {
