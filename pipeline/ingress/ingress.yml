@@ -3,9 +3,8 @@ kind: Ingress
 metadata:
   name: authorization-ingress
   annotations:
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
     kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/backend-path-prefix: "/"
     appgw.ingress.kubernetes.io/health-probe-status-codes: "200-500"
 spec:
   ingressClassName: nginx-authorization
@@ -13,7 +12,7 @@ spec:
   - host: pv-authorization.eastus.cloudapp.azure.com
   - http:
       paths:
-      - path: /role(/|$)(.*)
+      - path: /role/*
         pathType: Prefix
         backend:
           service:
