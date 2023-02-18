@@ -12,9 +12,6 @@ spec:
   - http:
       paths:
       - path: /role-api
-        pathType: Prefix
         backend:
-          service:
-            name: role-api
-            port:
-              number: 80
+          serviceName: role-api
+          servicePort: 80
