@@ -8,7 +8,7 @@ trigger:
     - main
   paths:
     include:
-    - Authorization
+    - pipeline/ingress
 
 pool: 
   vmImage: ubuntu-latest
