@@ -10,9 +10,10 @@ metadata:
 spec:
   ingressClassName: nginx-authorization
   rules:
+  - host: pv-authorization.eastus.cloudapp.azure.com
   - http:
       paths:
-      - path: role/(.+)
+      - path: /role(/|$)(.*)
         pathType: Prefix
         backend:
           service:
