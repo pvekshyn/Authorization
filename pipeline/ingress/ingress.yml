@@ -4,6 +4,7 @@ metadata:
   name: authorization-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: azure/application-gateway
 spec:
   ingressClassName: nginx-authorization
   rules:
