@@ -28,10 +28,12 @@ builder.Services.AddMediatR(
 var keyVaultName = builder.Configuration.GetSection("KeyVaultName")?.Value;
 if (!string.IsNullOrEmpty(keyVaultName))
 {
+    var managedIdentityClientId = builder.Configuration.GetSection("ManagedIdentityClientId")?.Value;
+    var options = new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentityClientId };
     var keyVaultEndpoint = $"https://{keyVaultName}.vault.azure.net";
     builder.Configuration.AddAzureKeyVault(
         new Uri(keyVaultEndpoint),
-        new DefaultAzureCredential());
+        new DefaultAzureCredential(options));
 }
 
 builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>()
