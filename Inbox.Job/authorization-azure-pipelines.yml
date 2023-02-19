@@ -15,4 +15,4 @@ pool:
 stages:
   - template: ../pipeline/inbox-job.yml
     parameters:
-      serviceName: 'assignment-inbox-job'
+      serviceName: 'authorization-inbox-job'

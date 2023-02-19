@@ -1,0 +1,44 @@
+parameters:
+  - name: serviceName
+    type: string
+
+stages:
+  - stage: Build
+    displayName: 'Build'
+    jobs:
+
+      - job: Manifest
+        displayName: 'Publish Manifest Artifact'
+        steps:
+        - template: ../pipeline/publish-manifests-artifact.yml
+          parameters:
+            manifestsFolder: 'Inbox.Job/src/Inbox.Job.Host/pipeline/${{ parameters.serviceName }}'
+
+      - job: BuildHost
+        displayName: 'Build and push image to ACR'
+        condition: and(succeeded(), eq(variables.needToUpdateAppImage, 'true'))
+        steps:
+
+        - template: ../pipeline/build-host-and-push-acr-image.yml
+          parameters:
+            hostProject: 'Inbox.Job/src/Inbox.Job.Host/Inbox.Job.Host.csproj'
+            hostName: 'Inbox.Job.Host'
+            acrRepository: 'inbox-job'
+
+  - stage: deploy_dev
+    displayName: 'Deploy DEV'
+    jobs:
+
+    - deployment: Deploy
+      displayName: Deploy
+      environment: 'DEV'
+      strategy: 
+        runOnce:
+          deploy:
+            steps:
+            - download: none
+
+            - template: ../pipeline/deploy-acr-image-to-aks.yml
+              parameters:
+                acrRepository: 'inbox-job'
+                servicename: '${{ parameters.serviceName }}'

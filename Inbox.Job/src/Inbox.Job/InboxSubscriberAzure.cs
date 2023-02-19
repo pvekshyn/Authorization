@@ -1,6 +1,7 @@
 ﻿using Azure.Identity;
 using Azure.Messaging.ServiceBus;
 using Azure.Messaging.ServiceBus.Administration;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -12,28 +13,34 @@ namespace Inbox.Job.Infrastructure
         private readonly ILogger<InboxSubscriberAzure> _logger;
         private string _subscription;
         private List<string> _topics;
+        private readonly ServiceBusClient _client;
         private readonly ServiceBusAdministrationClient _adminClient;
 
         public InboxSubscriberAzure(
             IInboxRepository inboxRepository,
             IOptions<InboxSettings> settings,
+            IConfiguration configuration,
             ILogger<InboxSubscriberAzure> logger)
         {
             _inboxRepository = inboxRepository;
             _logger = logger;
             _subscription = settings.Value.PubSub.EventProcessingServiceName;
             _topics = settings.Value.PubSub.Events;
+
+            var managedIdentityClientId = configuration.GetSection("ManagedIdentityClientId")?.Value;
+            var options = new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentityClientId };
+
+            _client = new ServiceBusClient(
+                "pv-authorization.servicebus.windows.net",
+                new DefaultAzureCredential(options));
+
             _adminClient = new ServiceBusAdministrationClient(
                 "pv-authorization.servicebus.windows.net",
-                new DefaultAzureCredential());
+                new DefaultAzureCredential(options));
         }
 
         public async Task SubscribeAsync()
         {
-            var client = new ServiceBusClient(
-                "pv-authorization.servicebus.windows.net",
-                new DefaultAzureCredential());
-
             foreach (var topic in _topics)
             {
                 _logger.LogInformation($"Subscribing to {topic}");
@@ -50,7 +57,7 @@ namespace Inbox.Job.Infrastructure
                     ReceiveMode = ServiceBusReceiveMode.PeekLock
                 };
 
-                var processor = client.CreateProcessor(topic, _subscription, options);
+                var processor = _client.CreateProcessor(topic, _subscription, options);
 
                 try
                 {
