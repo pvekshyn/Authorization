@@ -27,7 +27,8 @@ builder.Services.AddMediatR(
 var keyVaultName = builder.Configuration.GetSection("KeyVaultName")?.Value;
 if (!string.IsNullOrEmpty(keyVaultName))
 {
-    var options = new DefaultAzureCredentialOptions { ManagedIdentityClientId = "c5a97205-dd2f-42e6-9216-a8597947f0f8" };
+    var managedIdentityClientId = builder.Configuration.GetSection("ManagedIdentityClientId")?.Value;
+    var options = new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentityClientId };
     var keyVaultEndpoint = $"https://{keyVaultName}.vault.azure.net";
     builder.Configuration.AddAzureKeyVault(
         new Uri(keyVaultEndpoint),
