@@ -1,5 +1,6 @@
 ﻿using Azure.Identity;
 using Azure.Messaging.ServiceBus;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 using Outbox.Job.Infrastructure.Models;
 
@@ -10,13 +11,16 @@ internal class OutboxPublisherAzure : IOutboxPublisher
     private readonly ServiceBusClient _client;
     private readonly AzureSenderFactory _senderFactory;
 
-    public OutboxPublisherAzure(IOutboxRepository outboxRepository)
+    public OutboxPublisherAzure(IOutboxRepository outboxRepository, IConfiguration configuration)
     {
         _outboxRepository = outboxRepository;
 
+        var managedIdentityClientId = configuration.GetSection("ManagedIdentityClientId")?.Value;
+        var options = new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentityClientId };
+
         _client = new ServiceBusClient(
             "pv-authorization.servicebus.windows.net",
-            new DefaultAzureCredential());
+            new DefaultAzureCredential(options));
 
         _senderFactory = new AzureSenderFactory(_client);
     }

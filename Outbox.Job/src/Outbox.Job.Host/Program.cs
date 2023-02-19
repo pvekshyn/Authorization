@@ -9,10 +9,12 @@ builder.ConfigureAppConfiguration((context, config) =>
     var keyVaultName = settings.GetSection("KeyVaultName")?.Value;
     if (!string.IsNullOrEmpty(keyVaultName))
     {
+        var managedIdentityClientId = settings.GetSection("ManagedIdentityClientId")?.Value;
+        var options = new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentityClientId };
         var keyVaultEndpoint = $"https://{keyVaultName}.vault.azure.net";
         config.AddAzureKeyVault(
             new Uri(keyVaultEndpoint),
-            new DefaultAzureCredential());
+            new DefaultAzureCredential(options));
     }
 });
 
