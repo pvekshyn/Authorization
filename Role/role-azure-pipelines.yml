@@ -2,7 +2,7 @@ variables:
   needToUnitTest: false
   needToIntegrationTest: false
   needToUpdateDatabase: false
-  needToUpdateAppImage: true
+  needToUpdateAppImage: false
 
 trigger:
   branches:
