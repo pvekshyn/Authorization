@@ -28,4 +28,15 @@ var host = builder
     })
     .Build();
 
+var logger = host.Services.GetRequiredService<ILogger<Program>>();
+var configuration = host.Services.GetService<IConfiguration>();
+LogConfiguration(logger, configuration);
+
 await host.RunAsync();
+
+void LogConfiguration(ILogger logger, IConfiguration configuration)
+{
+    logger.LogInformation($"KeyVaultName = {configuration.GetSection("KeyVaultName")?.Value}");
+    logger.LogInformation($"ManagedIdentityClientId = {configuration.GetSection("ManagedIdentityClientId")?.Value}");
+    logger.LogInformation($"DBConnectionString = {configuration.GetConnectionString("Database")}");
+}
