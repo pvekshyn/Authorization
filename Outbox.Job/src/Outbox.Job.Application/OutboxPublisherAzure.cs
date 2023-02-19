@@ -11,7 +11,9 @@ internal class OutboxPublisherAzure : IOutboxPublisher
     private readonly ServiceBusClient _client;
     private readonly AzureSenderFactory _senderFactory;
 
-    public OutboxPublisherAzure(IOutboxRepository outboxRepository, IConfiguration configuration)
+    public OutboxPublisherAzure(
+        IOutboxRepository outboxRepository,
+        IConfiguration configuration)
     {
         _outboxRepository = outboxRepository;
 
@@ -22,7 +24,7 @@ internal class OutboxPublisherAzure : IOutboxPublisher
             "pv-authorization.servicebus.windows.net",
             new DefaultAzureCredential(options));
 
-        _senderFactory = new AzureSenderFactory(_client);
+        _senderFactory = new AzureSenderFactory(_client, options);
     }
 
     public async Task PublishAsync(OutboxMessage outboxMessage)

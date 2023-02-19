@@ -10,12 +10,13 @@ namespace Outbox.Job.Infrastructure
         private readonly ServiceBusClient _client;
         private readonly ServiceBusAdministrationClient _adminClient;
 
-        public AzureSenderFactory(ServiceBusClient client)
+        public AzureSenderFactory(ServiceBusClient client, DefaultAzureCredentialOptions options)
         {
             _client = client;
+
             _adminClient = new ServiceBusAdministrationClient(
                 "pv-authorization.servicebus.windows.net",
-                new DefaultAzureCredential());
+                new DefaultAzureCredential(options));
         }
 
         public async Task<ServiceBusSender> GetSenderAsync(string eventName)
