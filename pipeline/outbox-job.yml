@@ -1,5 +1,6 @@
-variables:
-  needToUpdateAppImage: true
+parameters:
+  - name: serviceName
+    type: string
 
 trigger:
   branches:
@@ -15,4 +16,4 @@ pool:
 stages:
   - template: ../pipeline/outbox.job.yml
     parameters:
-      serviceName: 'assignment-outbox-job'
+      serviceName: 'role-outbox-job'

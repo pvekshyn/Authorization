@@ -1,7 +1,6 @@
 parameters:
   - name: manifestsFolder
     type: string
-    default: 'world'
 
 steps:
   - task: CopyFiles@2
