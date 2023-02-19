@@ -1,7 +1,7 @@
 variables:
   needToUnitTest: false
   needToIntegrationTest: false
-  needToUpdateDatabase: false
+  needToUpdateDatabase: true
   needToUpdateAppImage: false
 
 trigger:
