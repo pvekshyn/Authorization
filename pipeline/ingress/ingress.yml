@@ -7,7 +7,6 @@ metadata:
     appgw.ingress.kubernetes.io/backend-path-prefix: "/"
     appgw.ingress.kubernetes.io/health-probe-status-codes: "200-500"
 spec:
-  ingressClassName: nginx-authorization
   rules:
   - host: pv-authorization.eastus.cloudapp.azure.com
   - http:
