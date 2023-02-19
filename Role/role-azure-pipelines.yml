@@ -120,6 +120,17 @@ stages:
             command: test
             projects: 'Role/tests/integration/*/*.csproj'
             arguments: '--configuration $(buildConfiguration)'
+      
+      - job: BuildDatabase
+        displayName: 'Build Database and publish artifact'
+        condition: and(succeeded(), eq(variables.needToUpdateDatabase, 'true'))
+        steps:
+        - template: ../pipeline/build-database-and-publish-artifact.yml
+          parameters:
+            dbProjectPath: 'Authorization/src/Authorization.Database/Build.Authorization.Database.csproj'
+            dacpacFolder: 'Authorization/src/Authorization.Database/bin/Release/netstandard2.0'
+            dacpacName: 'Build.Authorization.Database.dacpac'
+
 
   - stage: deploy_dev
     displayName: 'Deploy DEV'
