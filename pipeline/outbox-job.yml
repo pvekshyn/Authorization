@@ -2,17 +2,6 @@ parameters:
   - name: serviceName
     type: string
 
-trigger:
-  branches:
-    include:
-    - main
-  paths:
-    include:
-    - Outbox.Job
-
-pool: 
-  vmImage: ubuntu-latest
-
 stages:
   - stage: Build
     displayName: 'Build'
