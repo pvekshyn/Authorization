@@ -13,42 +13,6 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: Build
-    displayName: 'Build'
-    jobs:
-
-      - job: Manifest
-        displayName: 'Publish Manifest Artifact'
-        steps:
-        - template: ../pipeline/publish-manifests-artifact.yml
-          parameters:
-            manifestsFolder: 'Outbox.Job/src/Outbox.Job.Host/pipeline/role'
-
-      - job: BuildHost
-        displayName: 'Build and push image to ACR'
-        condition: and(succeeded(), eq(variables.needToUpdateAppImage, 'true'))
-        steps:
-
-        - template: ../pipeline/build-host-and-push-acr-image.yml
-          parameters:
-            hostProject: 'Outbox.Job/src/Outbox.Job.Host/Outbox.Job.Host.csproj'
-            hostName: 'Outbox.Job.Host'
-            acrRepository: 'outbox-job'
-
-  - stage: deploy_dev
-    displayName: 'Deploy DEV'
-    jobs:
-
-    - deployment: Deploy
-      displayName: Deploy
-      environment: 'DEV'
-      strategy: 
-        runOnce:
-          deploy:
-            steps:
-            - download: none
-
-            - template: ../pipeline/deploy-acr-image-to-aks.yml
-              parameters:
-                acrRepository: 'outbox-job'
-                servicename: 'role-outbox-job'
+  - template: ../pipeline/outbox-job.yml
+    parameters:
+      serviceName: 'role-outbox-job'

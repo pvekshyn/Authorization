@@ -13,6 +13,6 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - template: ../pipeline/outbox.job.yml
+  - template: ../pipeline/outbox-job.yml
     parameters:
       serviceName: 'assignment-outbox-job'
