@@ -77,3 +77,4 @@ stages:
             - template: ../pipeline/deploy-acr-image-to-aks.yml
               parameters:
                 acrRepository: 'assignment'
+                serviceName: 'assignment-api'
