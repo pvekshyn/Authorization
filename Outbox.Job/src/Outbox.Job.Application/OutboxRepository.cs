@@ -10,6 +10,7 @@ namespace Outbox.Job.Infrastructure
     {
         OutboxMessage GetFirst();
         void Delete(Guid id);
+        bool ErrorsAny(Guid outboxMessageId);
         void InsertError(Guid id, Exception e);
     }
 
@@ -43,7 +44,20 @@ namespace Outbox.Job.Infrastructure
 
             using (var connection = new SqlConnection(_connectionString))
             {
-                connection.Execute(sql, new { id, });
+                connection.Execute(sql, new { id });
+            }
+        }
+
+        public bool ErrorsAny(Guid outboxMessageId)
+        {
+            var sql = @"SELECT TOP 1 1
+                FROM OutboxMessageError
+                WHERE OutboxMessageId = @outboxMessageId";
+            _logger.LogDebug(sql);
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return connection.QueryFirstOrDefault<bool>(sql, new { outboxMessageId });
             }
         }
 

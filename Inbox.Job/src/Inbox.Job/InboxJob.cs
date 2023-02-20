@@ -28,6 +28,11 @@ namespace Inbox.Job.Infrastructure
 
                     if (!result.IsSuccess)
                     {
+                        if (_inboxRepository.ErrorsAny(inboxMessage.Id))
+                        {
+                            break;
+                        }
+
                         _inboxRepository.InsertError(inboxMessage.Id, result.ErrorMessage, result.StackTrace);
                         break;
                     }
@@ -36,6 +41,11 @@ namespace Inbox.Job.Infrastructure
                 }
                 catch (RpcException e)
                 {
+                    if (_inboxRepository.ErrorsAny(inboxMessage.Id))
+                    {
+                        break;
+                    }
+
                     _inboxRepository.InsertError(inboxMessage.Id, e);
                     break;
                 }

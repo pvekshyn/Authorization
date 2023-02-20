@@ -36,6 +36,7 @@ await host.RunAsync();
 
 void LogConfiguration(ILogger logger, IConfiguration configuration)
 {
+    logger.LogInformation($"PubSubTransport = {configuration.GetSection("PubSub:Transport")?.Value}");
     logger.LogInformation($"KeyVaultName = {configuration.GetSection("KeyVaultName")?.Value}");
     logger.LogInformation($"ManagedIdentityClientId = {configuration.GetSection("ManagedIdentityClientId")?.Value}");
     logger.LogInformation($"DBConnectionString = {configuration.GetConnectionString("Database")}");

@@ -46,6 +46,11 @@ internal class OutboxPublisherAzure : IOutboxPublisher
         }
         catch (Exception e)
         {
+            if (_outboxRepository.ErrorsAny(outboxMessage.Id))
+            {
+                return;
+            }
+
             _outboxRepository.InsertError(outboxMessage.Id, e);
         }
     }

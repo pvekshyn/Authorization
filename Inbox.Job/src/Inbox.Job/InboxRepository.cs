@@ -11,6 +11,7 @@ namespace Inbox.Job.Infrastructure
         InboxMessage? GetFirst();
         void Insert(string message, DateTime created);
         void Delete(Guid id);
+        bool ErrorsAny(Guid inboxMessageId);
         void InsertError(Guid id, Exception e);
         void InsertError(Guid inboxMessageId, string message, string stackTrace);
     }
@@ -61,6 +62,19 @@ namespace Inbox.Job.Infrastructure
         public void InsertError(Guid inboxMessageId, Exception e)
         {
             InsertError(inboxMessageId, e.Message, e.StackTrace);
+        }
+
+        public bool ErrorsAny(Guid inboxMessageId)
+        {
+            var sql = @"SELECT TOP 1 1
+                FROM InboxMessageError
+                WHERE InboxMessageId = @inboxMessageId";
+            _logger.LogDebug(sql);
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                return connection.QueryFirstOrDefault<bool>(sql, new { inboxMessageId });
+            }
         }
 
         public void InsertError(Guid inboxMessageId, string message, string stackTrace)
