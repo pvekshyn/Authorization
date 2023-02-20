@@ -25,5 +25,3 @@ spec:
         env:
         - name: "ASPNETCORE_ENVIRONMENT"
           value: "DEV"
-      restartPolicy: Always
-      dnsPolicy: Default
