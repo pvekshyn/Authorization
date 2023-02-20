@@ -49,7 +49,7 @@ stages:
       - job: UnitTests
         displayName: 'Unit tests'
         steps:
-         - template: ../pipeline/build-database-and-publish-artifact.yml
+         - template: ../pipeline/run-tests.yml
           parameters:
             testFolder: 'Assignment/tests/unit'
 
