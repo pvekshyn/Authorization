@@ -3,6 +3,7 @@ variables:
   needToUpdateDatabase: false
   needToRunUnitTests: false
   needToRunIntegrationTests: true
+  needToRunAcceptanceTests: true
 
 trigger:
   branches:
@@ -98,3 +99,12 @@ stages:
               parameters:
                 acrRepository: 'assignment'
                 serviceName: 'assignment-api'
+
+    - job: AcceptanceTests
+      displayName: 'Acceptance Tests'
+      dependsOn: Deploy
+      condition: and(succeeded(), eq(variables.needToRunAcceptanceTests, 'true'))
+      steps:
+        - template: ../pipeline/run-tests.yml
+          parameters:
+            testFolder: 'Tests/SpecFlow/SpecFlowTests/SpecFlowTests'
