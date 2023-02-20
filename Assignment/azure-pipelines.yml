@@ -47,6 +47,7 @@ stages:
             dacpacName: 'Build.Assignment.Database.dacpac'
 
       - job: UnitTests
+        steps:
         - task: NuGetToolInstaller@1
   
         - task: DotNetCoreCLI@2
