@@ -29,12 +29,12 @@ builder.Services.Configure<AuthorizationSettings>(builder.Configuration);
 
 builder.Services.AddGrpcClient<GrpcRoleService.GrpcRoleServiceClient>(o =>
 {
-    o.Address = GetGrpcUri(builder.Configuration, "role-grpc");
+    o.Address = GetGrpcUri(builder.Configuration, "role-api");
 });
 
 builder.Services.AddGrpcClient<GrpcAssignmentService.GrpcAssignmentServiceClient>(o =>
 {
-    o.Address = GetGrpcUri(builder.Configuration, "assignment-grpc");
+    o.Address = GetGrpcUri(builder.Configuration, "assignment-api");
 });
 
 var app = builder.Build();
