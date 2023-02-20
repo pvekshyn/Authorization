@@ -1,4 +1,5 @@
 ﻿using Common.SDK;
+using Microsoft.Extensions.Options;
 using Polly;
 using Refit;
 using Role.SDK.DTO;
@@ -13,9 +14,9 @@ namespace SpecFlowTests.Drivers
         private IReadRoleApi _roleApiClient;
         private ICheckAccessApi _checkAccessApiClient;
 
-        public AuthorizationDriver()
+        public AuthorizationDriver(IOptions<TestSettings> testSettings)
         {
-            var authorizationUrl = "http://localhost:8080/authorization";
+            var authorizationUrl = $"{testSettings.Value.IngressUrl}/authorization";
             _permissionApiClient = RestService.For<IReadPermissionApi>(authorizationUrl);
             _roleApiClient = RestService.For<IReadRoleApi>(authorizationUrl);
             _checkAccessApiClient = RestService.For<ICheckAccessApi>(authorizationUrl);

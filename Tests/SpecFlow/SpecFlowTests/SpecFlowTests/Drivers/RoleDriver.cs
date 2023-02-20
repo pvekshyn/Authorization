@@ -1,4 +1,5 @@
-﻿using Refit;
+﻿using Microsoft.Extensions.Options;
+using Refit;
 using Role.SDK.DTO;
 using Role.SDK.Features;
 
@@ -8,13 +9,11 @@ namespace SpecFlowTests.Drivers
     {
         private IRoleApi _roleApiClient;
         private IPermissionApi _permissionApiClient;
-
         private ScenarioContext _scenarioContext;
 
-
-        public RoleDriver(ScenarioContext scenarioContext)
+        public RoleDriver(ScenarioContext scenarioContext, IOptions<TestSettings> testSettings)
         {
-            var roleUrl = "http://localhost:8080/role";
+            var roleUrl = $"{testSettings.Value.IngressUrl}/role";
 
             _scenarioContext = scenarioContext;
 

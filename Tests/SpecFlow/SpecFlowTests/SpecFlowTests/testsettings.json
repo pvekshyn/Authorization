@@ -1,0 +1,4 @@
+{
+  "IdentityServerUrl": "http://localhost:8080/identity-server",
+  "IngressUrl": "http://localhost:8080"
+}

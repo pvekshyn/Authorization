@@ -1,6 +1,7 @@
 ﻿using Assignment.SDK.DTO;
 using Assignment.SDK.Features;
 using Common.SDK;
+using Microsoft.Extensions.Options;
 using NUnit.Framework;
 using Polly;
 using Refit;
@@ -11,15 +12,15 @@ namespace SpecFlowTests.Drivers
     public class AssignmentDriver
     {
         private IAssignmentApi _assignmentApiClient;
-
         private ScenarioContext _scenarioContext;
+        private string _ingressUrl;
 
-
-        public AssignmentDriver(ScenarioContext scenarioContext)
+        public AssignmentDriver(ScenarioContext scenarioContext, IOptions<TestSettings> testSettings)
         {
             _scenarioContext = scenarioContext;
+            _ingressUrl = testSettings.Value.IngressUrl;
 
-            var assignmentUrl = "http://localhost:8080/assignment";
+            var assignmentUrl = $"{_ingressUrl}/assignment";
 
             var token = (string)_scenarioContext["accessToken"];
 
