@@ -47,24 +47,11 @@ stages:
             dacpacName: 'Build.Assignment.Database.dacpac'
 
       - job: UnitTests
+        displayName: 'Unit tests'
         steps:
-        - task: NuGetToolInstaller@1
-  
-        - task: DotNetCoreCLI@2
-          displayName: 'Nuget restore'
-          inputs:
-            command: restore
-            projects: 'Assignment/tests/unit/Assignment.Application.Tests/Assignment.Application.Tests.csproj'
-            feedsToUse: 'select'
-            vstsFeed: 'Authorization/authorizationFeed'
-            includeNuGetOrg: true  
-
-        - task: DotNetCoreCLI@2
-          displayName: 'Run Tests'
-          inputs:
-            command: test
-            projects: 'Assignment/tests/unit/Assignment.Application.Tests/Assignment.Application.Tests.csproj'
-            arguments: '--configuration Release'
+         - template: ../pipeline/build-database-and-publish-artifact.yml
+          parameters:
+            testFolder: 'Assignment/tests/unit'
 
   - stage: deploy_dev
     displayName: 'Deploy DEV'

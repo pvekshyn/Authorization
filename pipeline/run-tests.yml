@@ -1,0 +1,23 @@
+parameters:
+  - name: testFolder
+    type: string
+
+steps:
+
+  - task: NuGetToolInstaller@1
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Nuget restore'
+    inputs:
+      command: restore
+      projects: '${{ parameters.testFolder }}/**/*.csproj'
+      feedsToUse: 'select'
+      vstsFeed: 'Authorization/authorizationFeed'
+      includeNuGetOrg: true  
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Run Tests'
+    inputs:
+      command: test
+      projects: '${{ parameters.hostProject }}/**/*.csproj'
+      arguments: '--configuration Release'
