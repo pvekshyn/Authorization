@@ -46,6 +46,22 @@ stages:
             dacpacFolder: 'Assignment/src/Assignment.Database/bin/Release/netstandard2.0'
             dacpacName: 'Build.Assignment.Database.dacpac'
 
+      - job: UnitTestsBuild
+        steps:
+        - task: DotNetCoreCLI@2
+          displayName: 'Build Tests'
+          inputs:
+            command: 'build'
+            projects: 'Assignment/tests/unit/Assignment.Application.Tests/Assignment.Application.Tests.csproj'
+            arguments: '--configuration Release'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Run Tests'
+          inputs:
+            command: test
+            projects: 'Assignment/tests/Assignment.Application.Tests/Assignment.Application.Tests.dll'
+            arguments: '--configuration Release'
+
   - stage: deploy_dev
     displayName: 'Deploy DEV'
     jobs:
