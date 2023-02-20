@@ -50,8 +50,8 @@ stages:
         displayName: 'Unit tests'
         steps:
          - template: ../pipeline/run-tests.yml
-          parameters:
-            testFolder: 'Assignment/tests/unit'
+            parameters:
+              testFolder: 'Assignment/tests/unit'
 
   - stage: deploy_dev
     displayName: 'Deploy DEV'
