@@ -53,6 +53,13 @@ stages:
            parameters:
              testFolder: 'Assignment/tests/unit'
 
+      - job: IntegrationTests
+        displayName: 'Integration tests'
+        steps:
+         - template: ../pipeline/run-tests.yml
+           parameters:
+             testFolder: 'Assignment/tests/integration'
+
   - stage: deploy_dev
     displayName: 'Deploy DEV'
     jobs:
