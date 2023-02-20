@@ -59,7 +59,7 @@ Uri? GetGrpcUri(IConfiguration configuration, string serviceName)
 {
     var grpcServiceUri = configuration.GetServiceUri(serviceName, "grpc");
     if (grpcServiceUri is null)
-        throw new Exception("Cannot get Service Uri");
+        throw new Exception($"Cannot get {serviceName} Uri");
 
     return grpcServiceUri;
 }
