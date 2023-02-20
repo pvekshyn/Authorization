@@ -46,20 +46,22 @@ stages:
             dacpacFolder: 'Assignment/src/Assignment.Database/bin/Release/netstandard2.0'
             dacpacName: 'Build.Assignment.Database.dacpac'
 
-      - job: UnitTestsBuild
-        steps:
+        - task: NuGetToolInstaller@1
+  
         - task: DotNetCoreCLI@2
-          displayName: 'Build Tests'
+          displayName: 'Nuget restore'
           inputs:
-            command: 'build'
+            command: restore
             projects: 'Assignment/tests/unit/Assignment.Application.Tests/Assignment.Application.Tests.csproj'
-            arguments: '--configuration Release'
+            feedsToUse: 'select'
+            vstsFeed: 'Authorization/authorizationFeed'
+            includeNuGetOrg: true  
 
         - task: DotNetCoreCLI@2
           displayName: 'Run Tests'
           inputs:
             command: test
-            projects: 'Assignment/tests/Assignment.Application.Tests/Assignment.Application.Tests.dll'
+            projects: 'Assignment/tests/unit/Assignment.Application.Tests/Assignment.Application.Tests.csproj'
             arguments: '--configuration Release'
 
   - stage: deploy_dev
