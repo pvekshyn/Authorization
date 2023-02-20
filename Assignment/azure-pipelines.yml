@@ -1,5 +1,5 @@
 variables:
-  needToUpdateAppImage: true
+  needToUpdateAppImage: false
   needToUpdateDatabase: false
 
 trigger:
@@ -46,6 +46,7 @@ stages:
             dacpacFolder: 'Assignment/src/Assignment.Database/bin/Release/netstandard2.0'
             dacpacName: 'Build.Assignment.Database.dacpac'
 
+      - job: UnitTests
         - task: NuGetToolInstaller@1
   
         - task: DotNetCoreCLI@2
