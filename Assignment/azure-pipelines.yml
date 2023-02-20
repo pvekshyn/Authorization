@@ -1,6 +1,7 @@
 variables:
   needToUpdateAppImage: false
   needToUpdateDatabase: false
+  needToRunIntegrationTests: true
 
 trigger:
   branches:
@@ -38,7 +39,9 @@ stages:
 
       - job: BuildDatabase
         displayName: 'Build Database and publish artifact'
-        condition: and(succeeded(), eq(variables.needToUpdateDatabase, 'true'))
+        condition: and(succeeded(), or (
+          eq(variables.needToUpdateDatabase, 'true'), 
+          eq(variables.needToRunIntegrationTests, 'true')))
         steps:
         - template: ../pipeline/build-database-and-publish-artifact.yml
           parameters:
@@ -56,9 +59,9 @@ stages:
       - job: IntegrationTests
         displayName: 'Integration tests'
         steps:
-         - template: ../pipeline/run-tests.yml
+         - template: ../pipeline/run-integration-tests.yml
            parameters:
-             testFolder: 'Assignment/tests/integration'
+             testFolder: 'Assignment/tests/integration/Assignment.Integration.Tests'
 
   - stage: deploy_dev
     displayName: 'Deploy DEV'

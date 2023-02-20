@@ -1,0 +1,37 @@
+parameters:
+  - name: testFolder
+    type: string
+
+steps:
+
+  - task: NuGetToolInstaller@1
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Nuget restore'
+    inputs:
+      command: restore
+      projects: '${{ parameters.testFolder }}/**/*.csproj'
+      feedsToUse: 'select'
+      vstsFeed: 'Authorization/authorizationFeed'
+      includeNuGetOrg: true  
+
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download Database Artifact'
+    inputs:
+      buildType: 'current'
+      artifactName: 'dbDrop'
+      targetPath: '$(Pipeline.Workspace)/drop'
+
+  - task: CopyFiles@2
+    displayName: 'Copy App Dacpac'
+    inputs:
+      SourceFolder: '$(Pipeline.Workspace)/drop'
+      Contents: '*'
+      TargetFolder: ${{ parameters.testFolder }}/bin/Release/net6.0
+  
+  - task: DotNetCoreCLI@2
+    displayName: 'Run Tests'
+    inputs:
+      command: test
+      projects: '${{ parameters.testFolder }}/*.csproj'
+      arguments: '--configuration Release'
