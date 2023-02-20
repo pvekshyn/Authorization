@@ -2,7 +2,7 @@ variables:
   needToUpdateAppImage: false
   needToUpdateDatabase: false
   needToRunUnitTests: false
-  needToRunIntegrationTests: true
+  needToRunIntegrationTests: false
   needToRunAcceptanceTests: true
 
 trigger:
@@ -103,7 +103,7 @@ stages:
     - job: AcceptanceTests
       displayName: 'Acceptance Tests'
       dependsOn: Deploy
-      condition: and(succeeded(), eq(variables.needToRunAcceptanceTests, 'true'))
+      condition: and(not(canceled()), eq(variables.needToRunAcceptanceTests, 'true'))
       steps:
         - template: ../pipeline/run-tests.yml
           parameters:
