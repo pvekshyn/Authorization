@@ -18,8 +18,8 @@ namespace Assignment.Integration.Tests
         protected override string DbName => "Assignment";
         protected override IEnumerable<string> DacPacPaths => new List<string>
         {
-            "Assignment.Database.dacpac",
-            "Outbox.Database.dacpac"
+            "Build.Assignment.Database.dacpac",
+            "Build.Outbox.Database.dacpac"
         };
 
         [OneTimeSetUp]

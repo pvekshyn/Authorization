@@ -1,6 +1,7 @@
 variables:
   needToUpdateAppImage: false
   needToUpdateDatabase: false
+  needToRunUnitTests: false
   needToRunIntegrationTests: true
 
 trigger:
@@ -51,6 +52,7 @@ stages:
 
       - job: UnitTests
         displayName: 'Unit tests'
+        condition: and(succeeded(), eq(variables.needToRunUnitTests, 'true'))
         steps:
          - template: ../pipeline/run-tests.yml
            parameters:
