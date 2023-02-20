@@ -58,6 +58,7 @@ stages:
 
       - job: IntegrationTests
         displayName: 'Integration tests'
+        dependsOn: BuildDatabase
         steps:
          - template: ../pipeline/run-integration-tests.yml
            parameters:
