@@ -1,5 +1,4 @@
-﻿/*
-using Common.Application.Authorization;
+﻿using Common.Application.Authorization;
 using Common.Application.Dependencies;
 
 namespace Role.Application.Features.Role.Create;
@@ -18,4 +17,3 @@ public class CreateRoleAuthorizationCheck : IAuthorizationCheck<CreateRole>
         return await _currentUserCheckAccessService.CheckAccessAsync(AuthorizationConstants.Permissions.CreateRole);
     }
 }
-*/
