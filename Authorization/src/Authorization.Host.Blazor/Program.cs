@@ -1,12 +1,24 @@
 using Authorization.Infrastructure;
 using Authorization.Infrastructure.Extensions;
 using Authorization.Infrastructure.Init;
+using Azure.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+var keyVaultName = builder.Configuration.GetSection("KeyVaultName")?.Value;
+if (!string.IsNullOrEmpty(keyVaultName))
+{
+    var managedIdentityClientId = builder.Configuration.GetSection("ManagedIdentityClientId")?.Value;
+    var options = new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentityClientId };
+    var keyVaultEndpoint = $"https://{keyVaultName}.vault.azure.net";
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(keyVaultEndpoint),
+        new DefaultAzureCredential(options));
+}
 
 builder.Services.AddInfrastructureDependencies(builder.Configuration)
     .AddTransient<IDatabaseInitializer, DatabaseInitializer>();

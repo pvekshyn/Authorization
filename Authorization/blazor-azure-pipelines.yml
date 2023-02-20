@@ -1,0 +1,54 @@
+variables:
+  needToUpdateAppImage: true
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - Authorization
+
+pool: 
+  vmImage: ubuntu-latest
+
+stages:
+  - stage: Build
+    displayName: 'Build'
+    jobs:
+
+      - job: Manifest
+        displayName: 'Publish Manifest Artifact'
+        steps:
+        - template: ../pipeline/publish-manifests-artifact.yml
+          parameters:
+            manifestsFolder: 'Authorization/src/Authorization.Host.Blazor/pipeline'
+
+      - job: BuildHost
+        displayName: 'Build and push image to ACR'
+        condition: and(succeeded(), eq(variables.needToUpdateAppImage, 'true'))
+        steps:
+
+        - template: ../pipeline/build-host-and-push-acr-image.yml
+          parameters:
+            hostProject: 'Authorization/src/Authorization.Host.Blazor/Authorization.Host.Blazor.csproj'
+            hostName: 'Authorization.Host.Blazor'
+            acrRepository: 'authorization-blazor'
+
+  - stage: deploy_dev
+    displayName: 'Deploy DEV'
+    jobs:
+    
+    - deployment: Deploy
+      displayName: Deploy
+      environment: 'DEV'
+      strategy: 
+        runOnce:
+          deploy:
+            steps:
+            - download: none
+
+            - template: ../pipeline/deploy-acr-image-to-aks.yml
+              parameters:
+                acrRepository: 'authorization'
+                serviceName: 'authorization-blazor'

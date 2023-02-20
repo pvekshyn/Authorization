@@ -1,0 +1,37 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: authorization-blazor
+  labels:
+    app.kubernetes.io/name: 'authorization-blazor'
+    app.kubernetes.io/part-of: 'authorization'
+spec:
+  selector:
+    app.kubernetes.io/name: authorization-blazor
+  type: ClusterIP
+  ports:
+  - name: api
+    protocol: TCP
+    port: 80
+    targetPort: 80
+   
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: authorization-blazor-ingress
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/backend-path-prefix: "/"
+    appgw.ingress.kubernetes.io/health-probe-path: "/"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /authorization-blazor/*
+        pathType: Prefix
+        backend:
+          service:
+            name: authorization-blazor
+            port:
+              number: 80
