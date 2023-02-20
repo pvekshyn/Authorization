@@ -27,7 +27,6 @@ builder.Services.AddQuickGridEntityFrameworkAdapter();
 
 builder.Services.Configure<AuthorizationSettings>(builder.Configuration);
 
-var a = GetGrpcUri(builder.Configuration, "role-api");
 builder.Services.AddGrpcClient<GrpcRoleService.GrpcRoleServiceClient>(o =>
 {
     o.Address = GetGrpcUri(builder.Configuration, "role-api");
