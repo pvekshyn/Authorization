@@ -19,5 +19,5 @@ steps:
     displayName: 'Run Tests'
     inputs:
       command: test
-      projects: '${{ parameters.hostProject }}/**/*.csproj'
+      projects: '${{ parameters.testFolder }}/**/*.csproj'
       arguments: '--configuration Release'
