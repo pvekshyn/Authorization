@@ -31,9 +31,8 @@ internal class OutboxPublisherAzure : IOutboxPublisher
     {
         try
         {
-            //properties.Headers.Add("Created", outboxMessage.Created.ToString("o"));
-
             var message = new ServiceBusMessage(outboxMessage.Message);
+            message.ApplicationProperties.Add("Created", outboxMessage.Created);
 
             JObject json = JObject.Parse(outboxMessage.Message);
             var type = json["$type"].ToString();

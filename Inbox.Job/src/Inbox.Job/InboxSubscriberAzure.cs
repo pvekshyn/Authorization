@@ -76,10 +76,10 @@ namespace Inbox.Job.Infrastructure
 
         async Task MessageHandler(ProcessMessageEventArgs args)
         {
-            string message = args.Message.Body.ToString();
+            var message = args.Message.Body.ToString();
+            var created = (DateTime)args.Message.ApplicationProperties["Created"];
 
-            //ToDo pass create date
-            _inboxRepository.Insert(message, DateTime.UtcNow);
+            _inboxRepository.Insert(message, created);
 
             await args.CompleteMessageAsync(args.Message);
         }
