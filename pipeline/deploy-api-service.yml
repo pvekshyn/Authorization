@@ -48,6 +48,7 @@ stages:
 
       - job: IntegrationTests
         displayName: 'Integration tests'
+        condition: and(succeeded(), eq(variables.needToRunIntegrationTests, 'true'))
         dependsOn: BuildDatabase
         steps:
          - template: ../pipeline/run-integration-tests.yml

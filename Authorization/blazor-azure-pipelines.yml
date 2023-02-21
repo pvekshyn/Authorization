@@ -7,7 +7,7 @@ trigger:
     - main
   paths:
     include:
-    - Authorization
+    - Authorization/src/Authorization.Host.Blazor
 
 pool: 
   vmImage: ubuntu-latest
