@@ -1,8 +1,6 @@
 variables:
   needToUpdateAppImage: true
   needToUpdateDatabase: true
-  needToRunUnitTests: true
-  needToRunIntegrationTests: true
   needToRunAcceptanceTests: true
 
 trigger:
