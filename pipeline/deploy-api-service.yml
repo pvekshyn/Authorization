@@ -1,0 +1,97 @@
+parameters:
+  - name: serviceName
+    type: string
+
+stages:
+
+  - stage: Build
+    displayName: 'Build'
+    jobs:
+
+      - job: Manifest
+        displayName: 'Publish Kubernetes Manifest Artifact'
+        steps:
+        - template: ../pipeline/publish-manifests-artifact.yml
+          parameters:
+            manifestsFolder: '${{ parameters.serviceName }}/src/${{ parameters.serviceName }}.Host.API/pipeline'
+
+      - job: BuildHost
+        displayName: 'Build and push image to ACR'
+        condition: and(succeeded(), eq(variables.needToUpdateAppImage, 'true'))
+        steps:
+
+        - template: ../pipeline/build-host-and-push-acr-image.yml
+          parameters:
+            hostProject: '${{ parameters.serviceName }}/src/${{ parameters.serviceName }}.Host.API/${{ parameters.serviceName }}.Host.API.csproj'
+            hostName: '${{ parameters.serviceName }}.Host.API'
+            acrRepository: '${{ lower(parameters.serviceName) }}-api'
+
+      - job: BuildDatabase
+        displayName: 'Build Database and publish artifact'
+        condition: and(succeeded(), or (
+          eq(variables.needToUpdateDatabase, 'true'), 
+          eq(variables.needToRunIntegrationTests, 'true')))
+        steps:
+        - template: ../pipeline/build-database-and-publish-artifact.yml
+          parameters:
+            dbProjectPath: '${{ parameters.serviceName }}/src/${{ parameters.serviceName }}.Database/Build.${{ parameters.serviceName }}.Database.csproj'
+            dacpacFolder: '${{ parameters.serviceName }}/src/${{ parameters.serviceName }}.Database/bin/Release/netstandard2.0'
+            dacpacName: 'Build.${{ parameters.serviceName }}.Database.dacpac'
+
+      - job: UnitTests
+        displayName: 'Unit tests'
+        condition: and(succeeded(), eq(variables.needToRunUnitTests, 'true'))
+        steps:
+         - template: ../pipeline/run-tests.yml
+           parameters:
+             testFolder: '${{ parameters.serviceName }}/tests/unit'
+
+      - job: IntegrationTests
+        displayName: 'Integration tests'
+        dependsOn: BuildDatabase
+        steps:
+         - template: ../pipeline/run-integration-tests.yml
+           parameters:
+             testFolder: '${{ parameters.serviceName }}/tests/integration/${{ parameters.serviceName }}.Integration.Tests'
+
+  - stage: deploy_dev
+    displayName: 'Deploy DEV'
+    jobs:
+
+    - job: publishDB
+      displayName: 'Publish Database'
+      condition: and(succeeded(), eq(variables.needToUpdateDatabase, 'true'))
+      pool: 
+        vmImage: 'windows-latest'
+      steps:
+        - checkout: none
+
+        - template: ../pipeline/deploy-database.yml
+          parameters:
+            dbName: '${{ lower(parameters.serviceName) }}'
+            dacpacFileName: 'Build.${{ parameters.serviceName }}.Database.dacpac'
+    
+    - deployment: Deploy
+      displayName: Deploy
+      environment: 'DEV'
+      dependsOn: publishDB
+      condition: and(not(canceled()), in(dependencies.publishDB.result, 'Succeeded', 'Skipped'))
+      strategy: 
+        runOnce:
+          deploy:
+            steps:
+            - download: none
+
+            - template: ../pipeline/deploy-acr-image-to-aks.yml
+              parameters:
+                acrRepository: '${{ lower(parameters.serviceName) }}'
+                serviceName: '${{ lower(parameters.serviceName) }}-api'
+
+    - job: AcceptanceTests
+      displayName: 'Acceptance Tests'
+      dependsOn: Deploy
+      condition: and(not(canceled()), eq(variables.needToRunAcceptanceTests, 'true'))
+      steps:
+        - template: ../pipeline/run-tests.yml
+          parameters:
+            testFolder: 'Tests/SpecFlow/SpecFlowTests/SpecFlowTests'
