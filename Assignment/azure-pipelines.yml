@@ -17,6 +17,6 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - template: deploy-api-service.yml
+  - template: ../pipeline/deploy-api-service.yml
     parameters:
       serviceName: 'Assignment'
