@@ -8,11 +8,11 @@ terraform {
 }
 
 resource "azuredevops_build_definition" "nuget_build" {
-  for_each = toset(var.nuget_names)
+  for_each = { for obj in var.nuget_name_yml_list : obj.name => obj }
 
   project_id = var.azure_project_id
-  name       = each.value
-  path       = var.pipelines_folder
+  name       = each.value.name
+  path       = var.azure_pipelines_folder
 
   ci_trigger {
     use_yaml = true
@@ -22,7 +22,7 @@ resource "azuredevops_build_definition" "nuget_build" {
     repo_type             = "GitHub"
     repo_id               = "pvekshyn/Authorization"
     branch_name           = "main"
-    yml_path              = "${var.pipelines_folder}/${each.value}.yml"
+    yml_path              = each.value.path
     service_connection_id = var.github_serviceconnection_id
   }
 }

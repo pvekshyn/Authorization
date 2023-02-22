@@ -6,23 +6,11 @@ variable "github_serviceconnection_id" {
   type        = string
 }
 
-variable "pipelines_folder" {
+variable "azure_pipelines_folder" {
   type        = string
-  default     = "\\nugets"
+  default = "\\"
 }
 
-variable "nuget_names" {
-  type        = list(string)
-  default     = [
-    "Common.Domain",
-    "Common.SDK",
-    "Common.Application",
-    "Common.Infrastructure",
-    "Common.SpecFlowTests",
-    "Inbox.SDK",
-    "Outbox.SDK",
-    "Role.SDK",
-    "Assignment.SDK",
-    "Authorization.SDK"
-  ]
+variable "nuget_name_yml_list" {
+  type        = list(map(string))
 }
