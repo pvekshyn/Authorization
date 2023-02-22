@@ -83,3 +83,10 @@ orleans.codegen.cs
 
 #identity server keys folder
 keys/
+
+#terraform
+.terraform/
+*.lock.hcl
+*.tfplan
+*.tfstate
+*.tfstate.backup

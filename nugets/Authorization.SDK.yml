@@ -1,40 +1,6 @@
 trigger: none
 
-pool: 
-  vmImage: ubuntu-latest
-
-variables:
-  buildConfiguration: 'Release'
-  project: 'Authorization/src/Authorization.SDK/Authorization.SDK.csproj'
-
-steps:
-- task: NuGetToolInstaller@1
-
-- task: DotNetCoreCLI@2
-  displayName: 'Nuget restore'
-  inputs:
-    command: restore
-    projects: $(project)
-    feedsToUse: 'select'
-    vstsFeed: 'Authorization/authorizationFeed'
-    includeNuGetOrg: true      
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build'
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(buildConfiguration)'
-    projects: $(project)
-
-- task: DotNetCoreCLI@2
-  displayName: "Pack" 
-  inputs:
-    command: 'pack'
-    packagesToPack : $(project)
-    nobuild: true
-
-- task: DotNetCoreCLI@2
-  displayName: "Push" 
-  inputs:
-    command: 'push'
-    publishVstsFeed: 'Authorization/authorizationFeed'
+jobs:
+- template: publishNuget.yml
+  parameters:
+    project: 'Authorization/src/Authorization.SDK/Authorization.SDK.csproj'

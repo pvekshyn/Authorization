@@ -1,41 +1,6 @@
 trigger: none
 
-pool: 
-  vmImage: ubuntu-latest
-
-variables:
-  buildConfiguration: 'Release'
-
-steps:
-- task: NuGetToolInstaller@1
-
-- task: DotNetCoreCLI@2
-  displayName: 'Nuget restore'
-  inputs:
-    command: restore
-    projects: 'Role/src/Role.SDK/Role.SDK.csproj'
-    feedsToUse: 'select'
-    vstsFeed: 'Authorization/authorizationFeed'
-    includeNuGetOrg: true      
-
-- task: DotNetCoreCLI@2
-  displayName: 'Build'
-  inputs:
-    command: 'build'
-    arguments: '--configuration $(buildConfiguration)'
-    projects: 'Role/src/Role.SDK/Role.SDK.csproj'
-
-- task: NuGetCommand@2
-  displayName: 'Nuget Pack'
-  inputs:
-    command: pack
-    packagesToPack: 'Role/src/Role.SDK/Role.SDK.csproj'
-
-- task: NuGetCommand@2
-  displayName: 'Nuget Push'
-  inputs:
-    command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-    publishVstsFeed: 'Authorization/authorizationFeed'
-    versioningScheme: 'off'
-    allowPackageConflicts: true
+jobs:
+- template: publishNuget.yml
+  parameters:
+    project: 'Role/src/Role.SDK/Role.SDK.csproj'
