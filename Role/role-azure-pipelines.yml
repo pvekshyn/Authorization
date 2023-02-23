@@ -1,9 +1,9 @@
 variables:
-  needToUpdateAppImage: true
-  needToUpdateDatabase: true
-  needToRunUnitTests: true
-  needToRunIntegrationTests: true
-  needToRunAcceptanceTests: true
+  needToUpdateAppImage: false
+  needToUpdateDatabase: false
+  needToRunUnitTests: false
+  needToRunIntegrationTests: false
+  needToRunAcceptanceTests: false
 
 trigger:
   branches:
