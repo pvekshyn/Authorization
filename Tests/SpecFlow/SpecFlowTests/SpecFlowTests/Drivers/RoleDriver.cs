@@ -13,7 +13,7 @@ namespace SpecFlowTests.Drivers
 
         public RoleDriver(ScenarioContext scenarioContext, IOptions<TestSettings> testSettings)
         {
-            var roleUrl = $"{testSettings.Value.IngressUrl}/role";
+            var roleUrl = $"{testSettings.Value.IngressUrl}/role-api";
 
             _scenarioContext = scenarioContext;
 

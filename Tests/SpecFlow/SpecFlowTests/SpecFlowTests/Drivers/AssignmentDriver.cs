@@ -20,7 +20,7 @@ namespace SpecFlowTests.Drivers
             _scenarioContext = scenarioContext;
             _ingressUrl = testSettings.Value.IngressUrl;
 
-            var assignmentUrl = $"{_ingressUrl}/assignment";
+            var assignmentUrl = $"{_ingressUrl}/assignment-api";
 
             var token = (string)_scenarioContext["accessToken"];
 

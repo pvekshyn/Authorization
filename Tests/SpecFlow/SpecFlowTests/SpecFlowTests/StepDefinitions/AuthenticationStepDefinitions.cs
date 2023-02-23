@@ -27,12 +27,12 @@ namespace SpecFlowTests.StepDefinitions
             _scenarioContext["accessToken"] = await GetAccessTokenAsync("user", _identityServerUrl);
         }
 
-        public static async Task<string> GetAccessTokenAsync(string clientId, string ingressUrl)
+        public static async Task<string> GetAccessTokenAsync(string clientId, string identityServerUrl)
         {
             var client = new HttpClient();
             var tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
             {
-                Address = $"{ingressUrl}/connect/token",
+                Address = $"{identityServerUrl}/connect/token",
                 ClientId = clientId,
                 ClientSecret = "secret",
                 Scope = "api"

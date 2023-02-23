@@ -16,7 +16,7 @@ namespace SpecFlowTests.Drivers
 
         public AuthorizationDriver(IOptions<TestSettings> testSettings)
         {
-            var authorizationUrl = $"{testSettings.Value.IngressUrl}/authorization";
+            var authorizationUrl = $"{testSettings.Value.IngressUrl}/authorization-api";
             _permissionApiClient = RestService.For<IReadPermissionApi>(authorizationUrl);
             _roleApiClient = RestService.For<IReadRoleApi>(authorizationUrl);
             _checkAccessApiClient = RestService.For<ICheckAccessApi>(authorizationUrl);
