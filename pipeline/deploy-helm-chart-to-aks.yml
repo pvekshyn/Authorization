@@ -1,0 +1,33 @@
+steps:
+  - task: KubernetesManifest@0
+    displayName: Scale to 0
+    continueOnError: 'true'
+    inputs: 
+      action: scale
+      kind: deployment
+      name: ${{ parameters.serviceName }}
+      replicas: 0
+      kubernetesServiceConnection: pvauthorizationaks-sc
+      namespace: default
+  
+  - task: HelmDeploy@0
+    displayName: Helm deploy
+    inputs:
+      connectionType: Kubernetes Service Connection
+      kubernetesServiceConnection: pvauthorizationaks-sc
+      command: upgrade
+      chartType: filepath
+      chartPath: pipeline/helm/role-api
+      releaseName: role-api-helm
+      install: true
+      waitForExecution: true
+
+  - task: KubernetesManifest@0
+    displayName: Scale to 1
+    inputs: 
+      action: scale
+      kind: deployment
+      name: ${{ parameters.serviceName }}
+      replicas: 1
+      kubernetesServiceConnection: pvauthorizationaks-sc
+      namespace: default

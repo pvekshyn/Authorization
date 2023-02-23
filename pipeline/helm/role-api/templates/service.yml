@@ -1,0 +1,41 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.serviceName }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.serviceName }}
+    app.kubernetes.io/part-of: 'authorization'
+spec:
+  selector:
+    app.kubernetes.io/name: {{ .Values.serviceName }}
+  type: ClusterIP
+  ports:
+  - name: api
+    protocol: TCP
+    port: 80
+    targetPort: 80
+  - name: grpc
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+    
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "{{ .Values.serviceName }}-ingress"
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/backend-path-prefix: "/"
+    appgw.ingress.kubernetes.io/health-probe-path: "/swagger"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /{{ .Values.serviceName }}/*
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.serviceName }}
+            port:
+              number: 80

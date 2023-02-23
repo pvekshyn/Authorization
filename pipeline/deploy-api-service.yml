@@ -8,13 +8,6 @@ stages:
     displayName: 'Build'
     jobs:
 
-      - job: Manifest
-        displayName: 'Publish Kubernetes Manifest Artifact'
-        steps:
-        - template: ../pipeline/publish-manifests-artifact.yml
-          parameters:
-            manifestsFolder: '${{ parameters.serviceName }}/src/${{ parameters.serviceName }}.Host.API/pipeline'
-
       - job: BuildHost
         displayName: 'Build and push image to ACR'
         condition: and(succeeded(), eq(variables.needToUpdateAppImage, 'true'))
