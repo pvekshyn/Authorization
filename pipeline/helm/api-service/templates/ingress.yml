@@ -1,25 +1,3 @@
-kind: Service
-apiVersion: v1
-metadata:
-  name: {{ .Values.serviceName }}
-  labels:
-    app.kubernetes.io/name: {{ .Values.serviceName }}
-    app.kubernetes.io/part-of: 'authorization'
-spec:
-  selector:
-    app.kubernetes.io/name: {{ .Values.serviceName }}
-  type: ClusterIP
-  ports:
-  - name: api
-    protocol: TCP
-    port: 80
-    targetPort: 80
-  - name: grpc
-    protocol: TCP
-    port: 8080
-    targetPort: 8080
-    
----
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
