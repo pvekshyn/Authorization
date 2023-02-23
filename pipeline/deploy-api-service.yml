@@ -75,7 +75,7 @@ stages:
           deploy:
             steps:
             - download: none
-            - checkout: pvekshyn/Authorization
+            - checkout: self
 
             - template: ../pipeline/deploy-helm-chart-to-aks.yml
               parameters:
