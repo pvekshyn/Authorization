@@ -75,10 +75,10 @@ stages:
           deploy:
             steps:
             - download: none
+            - checkout: pvekshyn/Authorization@main
 
-            - template: ../pipeline/deploy-acr-image-to-aks.yml
+            - template: ../pipeline/deploy-helm-chart-to-aks.yml
               parameters:
-                acrRepository: '${{ lower(parameters.serviceName) }}'
                 serviceName: '${{ lower(parameters.serviceName) }}-api'
 
     - job: AcceptanceTests
