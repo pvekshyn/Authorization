@@ -14,5 +14,7 @@ steps:
       connectionType: Kubernetes Service Connection
       kubernetesServiceConnection: pvauthorizationaks-sc
       azureSubscriptionForACR: authorization_sc
+      azureResourceGroupForACR: authorization-rg
+      azureContainerRegistry: pvauthorizationcr.azurecr.io
       command: push
       arguments: "$(Build.ArtifactStagingDirectory)/api-service-1.0.0.tgz oci://pvauthorizationcr.azurecr.io/helm"
