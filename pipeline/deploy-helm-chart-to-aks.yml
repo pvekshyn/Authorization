@@ -15,7 +15,7 @@ steps:
       kubernetesServiceConnection: pvauthorizationaks-sc
       command: upgrade
       chartType: filepath
-      chartPath: $(System.ArtifactsDirectory)/helm
+      chartPath: $(System.ArtifactsDirectory)
       releaseName: ${{ parameters.serviceName }}-helm
       valueFile: helm/${{ parameters.serviceName }}-values.yaml
       recreate: true
