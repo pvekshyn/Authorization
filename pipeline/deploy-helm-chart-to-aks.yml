@@ -6,7 +6,7 @@ steps:
   - task: DownloadPipelineArtifact@2
     inputs:
       artifactName: 'helm'
-      targetPath: '$(System.ArtifactsDirectory)/helm'
+      targetPath: '$(System.ArtifactsDirectory)'
 
   - task: HelmDeploy@0
     displayName: Helm deploy
@@ -15,9 +15,9 @@ steps:
       kubernetesServiceConnection: pvauthorizationaks-sc
       command: upgrade
       chartType: filepath
-      chartPath: $(System.ArtifactsDirectory)
+      chartPath: $(System.ArtifactsDirectory)/helm
       releaseName: ${{ parameters.serviceName }}-helm
-      valueFile: helm/${{ parameters.serviceName }}-values.yaml
+      valueFile: $(System.ArtifactsDirectory)/helm/${{ parameters.serviceName }}-values.yaml
       recreate: true
       install: true
       waitForExecution: true
