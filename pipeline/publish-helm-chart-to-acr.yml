@@ -6,4 +6,4 @@ steps:
       kubernetesServiceConnection: pvauthorizationaks-sc
       command: package
       chartPath: pipeline/helm/api-service
-      destination: pvauthorizationcr.azurecr.io/helm/api-service
+      destination: pvauthorizationcr.azurecr.io
