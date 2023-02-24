@@ -1,0 +1,9 @@
+steps:
+  - task: HelmDeploy@0
+    displayName: Publish Helm chart to ACR
+    inputs:
+      connectionType: Kubernetes Service Connection
+      kubernetesServiceConnection: pvauthorizationaks-sc
+      command: save
+      chartNameForACR: pvauthorizationcr.azurecr.io/helm/api-service:v1
+      chartPathForACR: pipeline/helm/api-service
