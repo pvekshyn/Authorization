@@ -10,7 +10,7 @@ steps:
     inputs:
       SourceFolder: ${{ parameters.sourceFolder }}
       Contents: '**'
-      TargetFolder: '$(Build.ArtifactStagingDirectory)/manifests'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)/${{ parameters.destination }}'
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Folder Artifact'
