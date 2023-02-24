@@ -17,7 +17,7 @@ steps:
       chartType: filepath
       chartPath: $(System.ArtifactsDirectory)/helm
       releaseName: ${{ parameters.serviceName }}-helm
-      valueFile: pipeline/helm/api-service/${{ parameters.serviceName }}-values.yaml
+      valueFile: helm/${{ parameters.serviceName }}-values.yaml
       recreate: true
       install: true
       waitForExecution: true
