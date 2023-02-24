@@ -1,0 +1,20 @@
+parameters:
+  - name: sourceFolder
+    type: string
+  - name: destination
+    type: string
+
+steps:
+  - task: CopyFiles@2
+    displayName: 'Copy Files'
+    inputs:
+      SourceFolder: ${{ parameters.sourceFolder }}
+      Contents: '**'
+      TargetFolder: '$(Build.ArtifactStagingDirectory)/manifests'
+
+  - task: PublishFolderArtifact@1
+    displayName: 'Publish Folder Artifact'
+    inputs:
+      targetPath: $(build.artifactStagingDirectory)/${{ parameters.destination }}
+      artifact: ${{ parameters.destination }}
+      publishLocation: 'pipeline'

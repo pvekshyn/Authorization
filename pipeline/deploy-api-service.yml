@@ -11,9 +11,10 @@ stages:
       - job: Helm
         displayName: 'Publish Helm Chart Artifact'
         steps:
-        - template: ../pipeline/publish-manifests-artifact.yml
+        - template: ../pipeline/publish-folder-artifact.yml
           parameters:
-            manifestsFolder: 'pipeline/helm/api-service'
+            sourceFolder: 'pipeline/helm/api-service'
+            destination: 'helm'
 
       - job: BuildHost
         displayName: 'Build and push image to ACR'
