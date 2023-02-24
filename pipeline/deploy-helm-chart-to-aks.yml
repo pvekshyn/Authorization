@@ -3,14 +3,19 @@ parameters:
     type: string
 
 steps:
+  - task: DownloadPipelineArtifact@2
+    inputs:
+      artifactName: 'manifestDrop'
+      targetPath: '$(System.ArtifactsDirectory)/helm'
+
   - task: HelmDeploy@0
     displayName: Helm deploy
     inputs:
       connectionType: Kubernetes Service Connection
       kubernetesServiceConnection: pvauthorizationaks-sc
       command: upgrade
-      chartType: 'Name'
-      chartName: 'pvauthorizationcr.azurecr.io/api-service:1.0.0'
+      chartType: filepath
+      chartPath: $(System.ArtifactsDirectory)/helm
       releaseName: ${{ parameters.serviceName }}-helm
       valueFile: pipeline/helm/api-service/${{ parameters.serviceName }}-values.yaml
       recreate: true

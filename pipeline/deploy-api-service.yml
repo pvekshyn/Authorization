@@ -8,6 +8,13 @@ stages:
     displayName: 'Build'
     jobs:
 
+      - job: Helm
+        displayName: 'Publish Helm Chart Artifact'
+        steps:
+        - template: ../pipeline/publish-manifests-artifact.yml
+          parameters:
+            manifestsFolder: 'pipeline/helm/api-service'
+
       - job: BuildHost
         displayName: 'Build and push image to ACR'
         condition: and(succeeded(), eq(variables.needToUpdateAppImage, 'true'))
@@ -80,7 +87,6 @@ stages:
           deploy:
             steps:
             - download: none
-            - checkout: self
 
             - template: ../pipeline/deploy-helm-chart-to-aks.yml
               parameters:
