@@ -18,6 +18,6 @@ steps:
       chartPath: $(System.ArtifactsDirectory)/helm
       releaseName: ${{ parameters.serviceName }}-helm
       valueFile: $(System.ArtifactsDirectory)/helm/${{ parameters.serviceName }}-values.yaml
-      recreate: true
+      force: true
       install: true
       waitForExecution: true
