@@ -4,6 +4,6 @@ steps:
     inputs:
       connectionType: Kubernetes Service Connection
       kubernetesServiceConnection: pvauthorizationaks-sc
-      command: package
+      command: push
       chartPath: pipeline/helm/api-service
       destination: pvauthorizationcr.azurecr.io
