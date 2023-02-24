@@ -9,8 +9,8 @@ steps:
       connectionType: Kubernetes Service Connection
       kubernetesServiceConnection: pvauthorizationaks-sc
       command: upgrade
-      chartType: filepath
-      chartPath: pipeline/helm/api-service
+      chartType: 'Name'
+      chartName: 'pvauthorizationcr.azurecr.io/api-service:1.0.0'
       releaseName: ${{ parameters.serviceName }}-helm
       valueFile: pipeline/helm/api-service/${{ parameters.serviceName }}-values.yaml
       recreate: true
