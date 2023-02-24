@@ -7,12 +7,13 @@ stages:
     displayName: 'Build'
     jobs:
 
-      - job: Manifest
-        displayName: 'Publish Manifest Artifact'
+      - job: Helm
+        displayName: 'Publish Helm Chart Artifact'
         steps:
-        - template: ../pipeline/publish-manifests-artifact.yml
+        - template: ../pipeline/publish-folder-artifact.yml
           parameters:
-            manifestsFolder: 'Outbox.Job/src/Outbox.Job.Host/pipeline/${{ parameters.serviceName }}'
+            sourceFolder: 'pipeline/helm/job-service'
+            destination: 'helm'
 
       - job: BuildHost
         displayName: 'Build and push image to ACR'
@@ -38,7 +39,6 @@ stages:
             steps:
             - download: none
 
-            - template: ../pipeline/deploy-acr-image-to-aks.yml
+            - template: ../pipeline/deploy-helm-chart-to-aks.yml
               parameters:
-                acrRepository: 'outbox-job'
-                servicename: '${{ parameters.serviceName }}'
+                serviceName: '${{ parameters.serviceName }}-api'
