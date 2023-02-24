@@ -55,11 +55,6 @@ stages:
            parameters:
              testFolder: '${{ parameters.serviceName }}/tests/integration/${{ parameters.serviceName }}.Integration.Tests'
 
-      - job: PublishHelm
-        displayName: 'Publish Helm Chart to ACR'
-        steps:
-         - template: ../pipeline/publish-helm-chart-to-acr.yml
-
   - stage: deploy_dev
     displayName: 'Deploy DEV'
     jobs:
