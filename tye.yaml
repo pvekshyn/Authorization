@@ -117,11 +117,11 @@ ingress:
     rules:
       - path: /identity-server
         service: identity-server
-      - path: /role
+      - path: /role-api
         service: role-api
-      - path: /assignment
+      - path: /assignment-api
         service: assignment-api
-      - path: /authorization
+      - path: /authorization-api
         service: authorization-api
       - path: /authorization-graphql
         service: authorization-graphql

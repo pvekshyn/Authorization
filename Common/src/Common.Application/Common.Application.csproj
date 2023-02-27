@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Common.Application</PackageId>
-    <Version>1.0.12</Version>
+    <Version>1.0.14</Version>
   </PropertyGroup>
   
   <PropertyGroup>

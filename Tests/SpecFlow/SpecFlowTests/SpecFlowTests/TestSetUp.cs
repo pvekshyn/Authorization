@@ -15,7 +15,7 @@ namespace SpecFlowTests
             var services = new ServiceCollection();
 
             var config = new ConfigurationBuilder()
-                .AddJsonFile("testsettings.DEV.json", optional: true)
+                .AddJsonFile("testsettings.json", optional: true)
                 .Build();
 
             services.Configure<TestSettings>(config);

@@ -7,12 +7,10 @@ using Role.Application.Features.Role.UpdatePermissions;
 using Role.Application.Features.Role.Rename;
 using Role.SDK.Features;
 using Role.Application.Features.Role.Delete;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Role.Host.API.Controllers;
 
 [ApiController]
-[Authorize]
 public class RoleController : ControllerBase, IRoleApi
 {
     private readonly IMediator _mediator;

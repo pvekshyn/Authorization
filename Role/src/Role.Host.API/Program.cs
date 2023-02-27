@@ -1,66 +1,79 @@
-using Azure.Identity;
 using Common.Application.Extensions;
+using Common.Infrastructure.Extensions;
 using MediatR;
 using Role.API;
 using Role.API.Filters;
 using Role.Application;
+using Role.Host.API;
 using Role.Infrastructure;
 using Role.Infrastructure.Extensions;
 using Role.Infrastructure.Grpc;
-using System.Collections;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<RoleSettings>(builder.Configuration);
+
+var startupSettings = new StartupSettings(builder.Configuration, builder.Environment);
 
 builder.Services.AddControllers(options =>
 {
     options.Filters.Add<StatusCodeFilter>();
 });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+if (startupSettings.NeedAuth())
+{
+    builder.Services.AddSwaggerWithAuthentication(startupSettings.IdentityServerUrl);
+}
+else
+{
+    builder.Services.AddSwaggerGen();
+}
 
 builder.Services.AddMediatR(
     typeof(IApiAssemblyMarker),
     typeof(IApplicationAssemblyMarker),
     typeof(IInfrastructureAssemblyMarker));
 
-var keyVaultName = builder.Configuration.GetSection("KeyVaultName")?.Value;
-if (!string.IsNullOrEmpty(keyVaultName))
+if (startupSettings.NeedKeyVault())
+    builder.Configuration.AddKeyVault(startupSettings.KeyVaultName, startupSettings.ManagedIdentityClientId);
+
+builder.Services.AddApplicationDependencies<IApplicationAssemblyMarker>();
+
+if (startupSettings.NeedAuth())
 {
-    var managedIdentityClientId = builder.Configuration.GetSection("ManagedIdentityClientId")?.Value;
-    var options = new DefaultAzureCredentialOptions { ManagedIdentityClientId = managedIdentityClientId };
-    var keyVaultEndpoint = $"https://{keyVaultName}.vault.azure.net";
-    builder.Configuration.AddAzureKeyVault(
-        new Uri(keyVaultEndpoint),
-        new DefaultAzureCredential(options));
+    builder.Services.AddAuthorizationChecks<IApplicationAssemblyMarker>();
+    builder.Services.AddBearerAuthentication(startupSettings.IdentityServerUrl);
+    builder.Services.AddAuthorization(startupSettings.AuthorizationUrl);
 }
 
-builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>();
-builder.Services.AddInfrastructureDependencies(builder.Configuration);
-
-builder.Services.Configure<RoleSettings>(builder.Configuration);
+builder.Services.AddDb(startupSettings.ConnectionString);
 
 builder.Services.AddGrpc();
 
+builder.Services.AddCors(p => p.AddPolicy("corsany", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
 var app = builder.Build();
 
-app.Logger.LogInformation($"KV name: {keyVaultName}");
-app.Logger.LogInformation(app.Configuration["SERVICE:identity-server:HOST"]);
+startupSettings.Log(app.Logger);
 
-foreach (DictionaryEntry de in Environment.GetEnvironmentVariables())
-    Console.WriteLine("  {0} = {1}", de.Key, de.Value);
+app.UseSwaggerWithBasePath("/role-api");
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.UseCors("corsany");
 
-app.UseAuthentication();
-app.UseAuthorization();
+var cb = app.MapControllers();
 
-app.MapControllers();
+if (startupSettings.NeedAuth())
+{
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    cb.RequireAuthorization();
+}
 
 app.MapGrpcService<RoleService>();
-
-Microsoft.IdentityModel.Logging.IdentityModelEventSource.ShowPII = true;
 
 app.Run();
 

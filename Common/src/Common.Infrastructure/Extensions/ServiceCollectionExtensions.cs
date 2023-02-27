@@ -1,20 +1,25 @@
 ﻿using Common.Application.Dependencies;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 
 namespace Common.Infrastructure.Extensions;
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAuthenticationAndAuthorization(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddBearerAuthentication(this IServiceCollection services, string identityServerUrl)
     {
         services.AddAuthentication("Bearer")
             .AddJwtBearer(options =>
             {
-                options.Authority = GetUri(configuration, "identity-server").ToString();
+                options.Authority = identityServerUrl;
                 options.TokenValidationParameters.ValidateAudience = false;
                 options.RequireHttpsMetadata = false;
             });
 
+        return services;
+    }
+
+    public static IServiceCollection AddAuthorization(this IServiceCollection services, string authorizationUrl)
+    {
         services.AddHttpContextAccessor();
 
         services.AddSingleton<ICurrentContext, CurrentContext>()
@@ -22,18 +27,43 @@ public static class ServiceCollectionExtensions
 
         services.AddGrpcClient<GrpcCheckAccessService.GrpcCheckAccessServiceClient>(o =>
         {
-            o.Address = GetUri(configuration, "authorization-api", "grpc");
+            o.Address = new Uri(authorizationUrl);
         });
 
         return services;
     }
 
-    public static Uri? GetUri(IConfiguration configuration, string serviceName, string? binding = null)
+    public static IServiceCollection AddSwaggerWithAuthentication(this IServiceCollection services, string identityServerUrl)
     {
-        var serviceUri = configuration.GetServiceUri(serviceName, binding);
-        if (serviceUri is null)
-            throw new Exception($"Cannot get {serviceName} Service Uri");
+        return services.AddSwaggerGen(c =>
+        {
+            var requiredScope = "api";
+            var securityDefinitionId = "oath2ClientCredentials";
 
-        return serviceUri;
+            var securityScheme = new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = securityDefinitionId },
+                Type = SecuritySchemeType.OAuth2,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Flows = new OpenApiOAuthFlows
+                {
+                    ClientCredentials = new OpenApiOAuthFlow
+                    {
+                        TokenUrl = new Uri($"{identityServerUrl}connect/token"),
+                        Scopes = new Dictionary<string, string>
+                    {
+                        { requiredScope, "For accessing all API" }
+                    }
+                    }
+                }
+            };
+
+            c.AddSecurityDefinition(securityDefinitionId, securityScheme);
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {securityScheme, new string[] { requiredScope }}
+            });
+        });
     }
 }

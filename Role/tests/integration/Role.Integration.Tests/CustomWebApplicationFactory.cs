@@ -1,9 +1,7 @@
-﻿using Common.SpecFlowTests;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Role.Infrastructure;
 using Role.Infrastructure.Extensions;
@@ -15,21 +13,9 @@ namespace Role.Integration.Tests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            var inMemorySettings = new Dictionary<string, string> {
-                {"SERVICE:authorization-grpc:HOST", "http://localhost"},
-                {"SERVICE:authorization-grpc:PORT", "5000"},
-            };
-
-            builder.ConfigureAppConfiguration((context, builder) =>
-            {
-                builder.AddInMemoryCollection(inMemorySettings);
-            });
 
             builder.ConfigureTestServices(services =>
             {
-                services.TurnOffAuthentication();
-                services.TurnOffAuthorization();
-
                 ReplaceDbContext(services);
             });
         }

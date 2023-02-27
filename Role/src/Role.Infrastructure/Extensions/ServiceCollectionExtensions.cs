@@ -1,6 +1,4 @@
-﻿using Common.Infrastructure.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Role.Application.Dependencies;
 using Role.Infrastructure.Repositories;
@@ -8,16 +6,11 @@ using Role.Infrastructure.Repositories;
 namespace Role.Infrastructure.Extensions;
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDb(this IServiceCollection services, string connectionString)
     {
-        return services.AddAuthenticationAndAuthorization(configuration)
-            .AddDbContext(configuration)
-            .AddRepositories();
-    }
-    public static IServiceCollection AddDbContext(this IServiceCollection services, IConfiguration configuration)
-    {
-        var connectionString = configuration.GetConnectionString("Database");
-        return services.AddDbContext(connectionString);
+        return services.AddDbContext(connectionString)
+            .AddTransient<IPermissionRepository, PermissionRepository>()
+            .AddTransient<IRoleRepository, RoleRepository>();
     }
 
     public static IServiceCollection AddDbContext(this IServiceCollection services, string connectionString)
@@ -26,9 +19,4 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services)
-    {
-        return services.AddTransient<IPermissionRepository, PermissionRepository>()
-            .AddTransient<IRoleRepository, RoleRepository>();
-    }
 }
