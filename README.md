@@ -3,4 +3,5 @@ Sample application illustrating microservices communication using event carried 
 
 ![alt text](Overview.png)
 
+Outbox and Inbox architecture
 ![alt text](OutboxInbox.png)
