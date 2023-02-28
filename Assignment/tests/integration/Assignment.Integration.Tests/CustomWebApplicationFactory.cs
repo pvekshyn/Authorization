@@ -1,6 +1,5 @@
 ﻿using Assignment.Infrastructure;
 using Assignment.Infrastructure.Extensions;
-using Common.SpecFlowTests;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +14,6 @@ namespace Assignment.Integration.Tests
         {
             builder.ConfigureServices(services =>
             {
-                services.TurnOffAuthentication();
-                services.TurnOffAuthorization();
-
                 ReplaceDbContext(services);
             });
         }
