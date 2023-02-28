@@ -5,3 +5,6 @@ Sample application illustrating microservices communication using event carried 
 
 Outbox and Inbox architecture
 ![alt text](OutboxInbox.png)
+
+testing approach
+![alt text](Tests.png)
