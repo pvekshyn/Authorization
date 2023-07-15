@@ -11,4 +11,3 @@ Scenario: Delete existing role success
 	When Role deleted
 	Then Success result
 	And Role not in database
-	And Outbox message in database

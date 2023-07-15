@@ -1,14 +1,12 @@
 using Assignment.Application;
-using Assignment.Infrastructure.Extensions;
-using Common.Application.Extensions;
-using MediatR;
-using Assignment.Infrastructure;
-using Assignment.Host.API.Filters;
 using Assignment.Host.API;
-using Inbox.SDK.Extensions;
+using Assignment.Host.API.Filters;
+using Assignment.Infrastructure;
+using Assignment.Infrastructure.Extensions;
 using Assignment.Infrastructure.Grpc;
-using Inbox.SDK.Grpc;
+using Common.Application.Extensions;
 using Common.Infrastructure.Extensions;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,14 +47,18 @@ if (startupSettings.NeedAuth())
 
 builder.Services.AddDb(startupSettings.ConnectionString);
 
-builder.Services.AddEventToRequestMappers<IInfrastructureAssemblyMarker>();
-
 builder.Services.AddGrpc();
 
 builder.Services.AddCors(p => p.AddPolicy("corsany", builder =>
 {
     builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
+
+builder.Services.AddCap(x =>
+{
+    x.UseEntityFramework<AssignmentDbContext>();
+    x.UseRabbitMQ("localhost");
+});
 
 var app = builder.Build();
 
@@ -77,7 +79,6 @@ if (startupSettings.NeedAuth())
 }
 
 app.MapGrpcService<AssignmentService>();
-app.MapGrpcService<EventProcessingService>();
 
 app.Run();
 

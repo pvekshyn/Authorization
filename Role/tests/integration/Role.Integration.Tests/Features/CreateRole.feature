@@ -13,7 +13,6 @@ Scenario: Create role success
 	When Role created
 	Then Success result
 	And Role in database
-	And Outbox message in database
 
 Scenario: Concurrent create same role twice
 	Given Permission exist

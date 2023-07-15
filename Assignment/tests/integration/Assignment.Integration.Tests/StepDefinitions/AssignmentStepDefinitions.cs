@@ -1,9 +1,5 @@
 using Assignment.SDK.DTO;
 using Assignment.SDK.Features;
-using Dapper;
-using Microsoft.Data.SqlClient;
-using Newtonsoft.Json;
-using NUnit.Framework;
 using Role.SDK.DTO;
 using Role.SDK.Events;
 using TechTalk.SpecFlow;
@@ -15,18 +11,18 @@ namespace Assignment.Integration.Tests.StepDefinitions
     {
         private ScenarioContext _scenarioContext;
         protected readonly IAssignmentApi _apiClient;
-        protected readonly GrpcEventProcessingService.GrpcEventProcessingServiceClient _grpcClient;
+        protected readonly IEventProcessingApi _eventProcessingClient;
 
         public AssignmentStepDefinitions(
             ScenarioContext scenarioContext,
             IAssignmentApi apiClient,
-            GrpcEventProcessingService.GrpcEventProcessingServiceClient grpcClient)
+            IEventProcessingApi eventProcessingClient)
         {
             _scenarioContext = scenarioContext;
-
             _scenarioContext["userId"] = Guid.NewGuid();
+
             _apiClient = apiClient;
-            _grpcClient = grpcClient;
+            _eventProcessingClient = eventProcessingClient;
         }
 
         [Given(@"role not exist")]
@@ -42,18 +38,15 @@ namespace Assignment.Integration.Tests.StepDefinitions
         }
 
         [Given(@"role created")]
-        public void GivenRoleCreated()
+        public async Task GivenRoleCreated()
         {
             var roleId = Guid.NewGuid();
             var roleCreatedEvent = new RoleCreatedEvent
             {
-                Role = new CreateRoleDto { Id = roleId }
+                Role = new CreateRoleDto { Id = roleId, Name = "r", PermissionIds = new List<Guid> { Guid.NewGuid() } }
             };
 
-            var settings = new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All };
-            var roleCreatedEventString = JsonConvert.SerializeObject(roleCreatedEvent, settings);
-
-            _grpcClient.ProcessEvent(new GrpcEventRequest() { Event = roleCreatedEventString });
+            await _eventProcessingClient.RoleCreated(roleCreatedEvent);
 
             _scenarioContext["roleId"] = roleId;
         }
@@ -83,23 +76,6 @@ namespace Assignment.Integration.Tests.StepDefinitions
 
             var result = await _apiClient.DeassignAsync(userId, roleId);
             _scenarioContext["result"] = result;
-        }
-
-        [Then(@"outbox message in database")]
-        public void ThenOutboxMessageInDatabase()
-        {
-            var entityId = (Guid)_scenarioContext["entityId"];
-
-            var sql = @"SELECT TOP 1 1 
-                FROM OutboxMessage
-                WHERE EntityId = @entityId";
-
-            using (var connection = new SqlConnection(TestSetUp.ConnectionString))
-            {
-                var outboxMessageExists = connection.QueryFirstOrDefault<bool>(sql, new { entityId });
-
-                Assert.True(outboxMessageExists);
-            }
         }
     }
 }

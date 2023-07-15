@@ -1,11 +1,10 @@
 using Assignment.Application;
 using Authorization.Infrastructure;
+using Authorization.Infrastructure.DataAccess.Read;
 using Authorization.Infrastructure.Extensions;
 using Authorization.Infrastructure.Grpc;
 using Azure.Identity;
 using Common.Application.Extensions;
-using Inbox.SDK.Extensions;
-using Inbox.SDK.Grpc;
 using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,12 +28,18 @@ if (!string.IsNullOrEmpty(keyVaultName))
 }
 
 builder.Services.AddApiApplicationDependencies<IApplicationAssemblyMarker>()
-    .AddInfrastructureDependencies(builder.Configuration)
-    .AddEventToRequestMappers<IInfrastructureAssemblyMarker>();
+    .AddInfrastructureDependencies(builder.Configuration);
 
 builder.Services.Configure<AuthorizationSettings>(builder.Configuration);
 
 builder.Services.AddGrpc();
+
+builder.Services.AddCap(x =>
+{
+    x.UseEntityFramework<AuthorizationDbContext>();
+    x.UseRabbitMQ("localhost");
+});
+
 
 var app = builder.Build();
 
@@ -43,7 +48,6 @@ app.UseSwaggerUI();
 
 app.MapControllers();
 
-app.MapGrpcService<EventProcessingService>();
 app.MapGrpcService<CheckAccessService>();
 
 app.Run();

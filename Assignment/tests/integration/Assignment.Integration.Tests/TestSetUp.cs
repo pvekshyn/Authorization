@@ -6,7 +6,7 @@ using Refit;
 using Assignment.Infrastructure;
 using SolidToken.SpecFlow.DependencyInjection;
 using Assignment.SDK.Features;
-using Grpc.Net.Client;
+using Assignment.Host.API.Controllers;
 
 namespace Assignment.Integration.Tests
 {
@@ -18,8 +18,7 @@ namespace Assignment.Integration.Tests
         protected override string DbName => "Assignment";
         protected override IEnumerable<string> DacPacPaths => new List<string>
         {
-            "Build.Assignment.Database.dacpac",
-            "Build.Outbox.Database.dacpac"
+            "Build.Assignment.Database.dacpac"
         };
 
         [OneTimeSetUp]
@@ -41,17 +40,6 @@ namespace Assignment.Integration.Tests
 
             services.AddDbContext<AssignmentDbContext>(x => x.UseSqlServer(ConnectionString));
 
-            var apiClient = CreateApiClient();
-            services.AddSingleton(apiClient);
-
-            var grpcClient = CreateGrpcClient();
-            services.AddSingleton(grpcClient);
-
-            return services;
-        }
-
-        private static IAssignmentApi CreateApiClient()
-        {
             var apiFactory = new CustomWebApplicationFactory<Program>();
             var httpClient = apiFactory.CreateClient();
 
@@ -60,19 +48,13 @@ namespace Assignment.Integration.Tests
                 ExceptionFactory = httpResponse => Task.FromResult<Exception>(null)
             };
 
-            return RestService.For<IAssignmentApi>(httpClient, settings);
-        }
+            var apiClient = RestService.For<IAssignmentApi>(httpClient, settings);
+            services.AddSingleton(apiClient);
 
-        private static GrpcEventProcessingService.GrpcEventProcessingServiceClient CreateGrpcClient()
-        {
-            var grpcFactory = new CustomWebApplicationFactory<Program>();
+            var eventProcessingClient = RestService.For<IEventProcessingApi>(httpClient, settings);
+            services.AddSingleton(eventProcessingClient);
 
-            var channel = GrpcChannel.ForAddress("http://localhost", new GrpcChannelOptions
-            {
-                HttpClient = grpcFactory.CreateClient()
-            });
-
-            return new GrpcEventProcessingService.GrpcEventProcessingServiceClient(channel);
+            return services;
         }
     }
 }

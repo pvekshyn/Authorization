@@ -155,9 +155,6 @@ this.ScenarioInitialize(scenarioInfo);
 #line 13
  testRunner.And("Role not in database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 14
- testRunner.And("Outbox message in database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
             }
             this.ScenarioCleanup();
         }

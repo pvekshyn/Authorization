@@ -9,8 +9,10 @@
   <ItemGroup>
     <PackageReference Include="Common.Infrastructure" Version="1.0.27" />
     <PackageReference Include="Dapper" Version="2.0.123" />
-    <PackageReference Include="Inbox.SDK" Version="1.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
+    <PackageReference Include="DotNetCore.CAP" Version="7.1.0" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="7.1.0" />
+    <PackageReference Include="DotNetCore.CAP.SqlServer" Version="7.1.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -164,9 +164,6 @@ this.ScenarioInitialize(scenarioInfo);
 #line 16
  testRunner.And("Role permissions changed in database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 17
- testRunner.And("Outbox message in database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
             }
             this.ScenarioCleanup();
         }

@@ -1,17 +1,21 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DotNetCore.CAP;
+using Microsoft.EntityFrameworkCore;
+using Role.Application.Dependencies;
 using Role.SDK.DTO;
 using Role.SDK.Events;
-using Role.Application.Dependencies;
 
 namespace Role.Infrastructure.Repositories
 {
     internal class RoleRepository : IRoleRepository
     {
         private readonly RoleDbContext _dbContext;
+        private readonly ICapPublisher _capBus;
 
-        public RoleRepository(RoleDbContext dbContext)
+
+        public RoleRepository(RoleDbContext dbContext, ICapPublisher capBus)
         {
             _dbContext = dbContext;
+            _capBus = capBus;
         }
 
         public async Task<Domain.Role?> GetAsync(Guid id, CancellationToken cancellationToken)
@@ -40,34 +44,50 @@ namespace Role.Infrastructure.Repositories
         {
             var pubsubEvent = MapToCreatedEvent(role);
 
-            await _dbContext.AddPubSubOutboxMessageAsync(role.Id, pubsubEvent, cancellationToken);
-            await _dbContext.Roles.AddAsync(role, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            using (var trans = _dbContext.Database.BeginTransaction(_capBus, autoCommit: true))
+            {
+                await _dbContext.Roles.AddAsync(role, cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                _capBus.Publish(typeof(RoleCreatedEvent).FullName, pubsubEvent);
+            }
         }
 
         public async Task RenameAsync(Domain.Role role, CancellationToken cancellationToken)
         {
             var pubsubEvent = MapToRenamedEvent(role);
 
-            await _dbContext.AddPubSubOutboxMessageAsync(role.Id, pubsubEvent, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            using (var trans = _dbContext.Database.BeginTransaction(_capBus, autoCommit: true))
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                _capBus.Publish(typeof(RoleRenamedEvent).FullName, pubsubEvent);
+            }
         }
 
         public async Task UpdatePermissionsAsync(Domain.Role role, CancellationToken cancellationToken)
         {
             var pubsubEvent = MapToPermissionsUpdatedEvent(role);
 
-            await _dbContext.AddPubSubOutboxMessageAsync(role.Id, pubsubEvent, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            using (var trans = _dbContext.Database.BeginTransaction(_capBus, autoCommit: true))
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                _capBus.Publish(typeof(RolePermissionsChangedEvent).FullName, pubsubEvent);
+            }
         }
 
         public async Task DeleteAsync(Domain.Role role, CancellationToken cancellationToken)
         {
             var pubsubEvent = MapToDeletedEvent(role);
 
-            await _dbContext.AddPubSubOutboxMessageAsync(role.Id, pubsubEvent, cancellationToken);
-            _dbContext.Roles.Remove(role);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            using (var trans = _dbContext.Database.BeginTransaction(_capBus, autoCommit: true))
+            {
+                _dbContext.Roles.Remove(role);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                _capBus.Publish(typeof(RoleDeletedEvent).FullName, pubsubEvent);
+            }
         }
 
         private static RoleCreatedEvent MapToCreatedEvent(Domain.Role role)

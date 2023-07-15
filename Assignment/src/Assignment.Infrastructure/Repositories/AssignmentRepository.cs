@@ -1,6 +1,7 @@
 ﻿using Assignment.Application.Dependencies;
 using Assignment.SDK.DTO;
 using Assignment.SDK.Events;
+using DotNetCore.CAP;
 using Microsoft.EntityFrameworkCore;
 
 namespace Assignment.Infrastructure.Repositories
@@ -8,10 +9,12 @@ namespace Assignment.Infrastructure.Repositories
     internal class AssignmentRepository : IAssignmentRepository
     {
         private readonly AssignmentDbContext _dbContext;
+        private readonly ICapPublisher _capBus;
 
-        public AssignmentRepository(AssignmentDbContext dbContext)
+        public AssignmentRepository(AssignmentDbContext dbContext, ICapPublisher capBus)
         {
             _dbContext = dbContext;
+            _capBus = capBus;
         }
 
         public async Task<bool> AnyAsync(Guid userId, Guid roleId, CancellationToken cancellationToken)
@@ -24,9 +27,13 @@ namespace Assignment.Infrastructure.Repositories
         {
             var assignmentEvent = MapToAssignmentEvent(assignment);
 
-            await _dbContext.Assignments.AddAsync(assignment, cancellationToken);
-            await _dbContext.AddPubSubOutboxMessageAsync(assignment.Id, assignmentEvent, cancellationToken);
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            using (var trans = _dbContext.Database.BeginTransaction(_capBus, autoCommit: true))
+            {
+                await _dbContext.Assignments.AddAsync(assignment, cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
+
+                _capBus.Publish(typeof(AssignmentEvent).FullName, assignmentEvent);
+            }
         }
 
         public async Task DeassignAsync(Guid userId, Guid roleId, CancellationToken cancellationToken)
@@ -38,9 +45,13 @@ namespace Assignment.Infrastructure.Repositories
             {
                 var deassignmentEvent = MapToDeassignmentEvent(assignment);
 
-                _dbContext.Assignments.Remove(assignment);
-                await _dbContext.AddPubSubOutboxMessageAsync(assignment.Id, deassignmentEvent, cancellationToken);
-                await _dbContext.SaveChangesAsync(cancellationToken);
+                using (var trans = _dbContext.Database.BeginTransaction(_capBus, autoCommit: true))
+                {
+                    _dbContext.Assignments.Remove(assignment);
+                    await _dbContext.SaveChangesAsync(cancellationToken);
+
+                    _capBus.Publish(typeof(DeassignmentEvent).FullName, deassignmentEvent);
+                }
             }
         }
 

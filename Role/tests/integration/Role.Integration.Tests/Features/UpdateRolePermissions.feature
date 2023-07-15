@@ -14,4 +14,3 @@ Scenario:  Update role permissions success
 	When Role permissions updated
 	Then Success result
 	And Role permissions changed in database
-	And Outbox message in database

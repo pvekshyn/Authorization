@@ -1,18 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DotNetCore.CAP;
+using Microsoft.EntityFrameworkCore;
+using Role.Application.Dependencies;
 using Role.Domain;
 using Role.SDK.DTO;
 using Role.SDK.Events;
-using Role.Application.Dependencies;
+using System.Data;
 
 namespace Role.Infrastructure.Repositories
 {
     internal class PermissionRepository : IPermissionRepository
     {
         private readonly RoleDbContext _dbContext;
+        private readonly ICapPublisher _capBus;
 
-        public PermissionRepository(RoleDbContext dbContext)
+        public PermissionRepository(RoleDbContext dbContext, ICapPublisher capBus)
         {
             _dbContext = dbContext;
+            _capBus = capBus;
         }
 
         public async Task<ICollection<Permission>> GetAsync(IReadOnlyCollection<Guid> ids, CancellationToken cancellationToken)
@@ -44,10 +48,13 @@ namespace Role.Infrastructure.Repositories
         {
             var pubsubEvent = MapToCreatedEvent(permission);
 
-            await _dbContext.AddPubSubOutboxMessageAsync(permission.Id, pubsubEvent, cancellationToken);
-            await _dbContext.Permissions.AddAsync(permission, cancellationToken);
+            using (var trans = _dbContext.Database.BeginTransaction(_capBus, autoCommit: true))
+            {
+                await _dbContext.Permissions.AddAsync(permission, cancellationToken);
+                await _dbContext.SaveChangesAsync(cancellationToken);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+                _capBus.Publish(typeof(PermissionCreatedEvent).FullName, pubsubEvent);
+            }
         }
 
         public async Task DeleteAsync(Guid permissionId, CancellationToken cancellationToken)
@@ -58,10 +65,13 @@ namespace Role.Infrastructure.Repositories
             {
                 var pubsubEvent = MapToDeletedEvent(permission);
 
-                await _dbContext.AddPubSubOutboxMessageAsync(permission.Id, pubsubEvent, cancellationToken);
+                using (var trans = _dbContext.Database.BeginTransaction(_capBus, autoCommit: true))
+                {
+                    _dbContext.Permissions.Remove(permission);
+                    await _dbContext.SaveChangesAsync(cancellationToken);
 
-                _dbContext.Permissions.Remove(permission);
-                await _dbContext.SaveChangesAsync(cancellationToken);
+                    _capBus.Publish(typeof(PermissionDeletedEvent).FullName, pubsubEvent);
+                }
             }
         }
 

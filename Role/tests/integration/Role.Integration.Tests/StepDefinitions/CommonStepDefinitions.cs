@@ -1,6 +1,4 @@
 using Common.SDK;
-using Dapper;
-using Microsoft.Data.SqlClient;
 using NUnit.Framework;
 using TechTalk.SpecFlow;
 
@@ -55,23 +53,6 @@ namespace Role.Integration.Tests.StepDefinitions
         {
             var results = (Result[])_scenarioContext["results"];
             Assert.AreEqual(1, results.Where(x => x.Status == 422).Count());
-        }
-
-        [Then(@"Outbox message in database")]
-        public void ThenOutboxMessageInDatabase()
-        {
-            var entityId = (Guid)_scenarioContext["entityId"];
-
-            var sql = @"SELECT TOP 1 1 
-                FROM OutboxMessage
-                WHERE EntityId = @entityId";
-
-            using (var connection = new SqlConnection(TestSetUp.ConnectionString))
-            {
-                var outboxMessageExists = connection.QueryFirstOrDefault<bool>(sql, new { entityId });
-
-                Assert.True(outboxMessageExists);
-            }
         }
     }
 }

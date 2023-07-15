@@ -158,9 +158,6 @@ this.ScenarioInitialize(scenarioInfo);
 #line 14
  testRunner.And("Role name changed in database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 15
- testRunner.And("Outbox message in database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
             }
             this.ScenarioCleanup();
         }

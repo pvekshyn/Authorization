@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Role.Domain;
-using Role.Domain.ValueObjects.Role;
 using Role.Domain.ValueObjects.Permission;
-using Outbox.SDK.Models;
+using Role.Domain.ValueObjects.Role;
 
 namespace Role.Infrastructure;
 
@@ -50,20 +49,7 @@ public class RoleDbContext : DbContext
             entity.HasMany(p => p.Roles)
             .WithMany(b => b.Permissions);
         });
-
-        builder.Entity<OutboxMessage>(entity =>
-        {
-            entity.ToTable("OutboxMessage");
-            entity.HasKey(x => x.Id);
-        });
     }
-
-    public async Task AddPubSubOutboxMessageAsync(Guid entityId, object pubSubEvent, CancellationToken cancellationToken)
-    {
-        var pubSubOutboxMessage = OutboxMessage.CreatePubSubMessage(entityId, pubSubEvent);
-        await AddAsync(pubSubOutboxMessage, cancellationToken);
-    }
-
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder

@@ -9,7 +9,6 @@ Scenario: Assign user success
 	Given role created
 	When user assigned to this role
 	Then success result
-	And outbox message in database
 
 Scenario: Assign already assigned user idempotent
 	Given role created
@@ -27,4 +26,3 @@ Scenario: Deassign user success
 	And user assigned to this role
 	When user deassigned from this role
 	Then success result
-	And outbox message in database

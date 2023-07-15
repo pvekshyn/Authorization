@@ -11,7 +11,6 @@ Scenario: Create permission success
 	When Permission created
 	Then Success result
 	And Permission in database
-	And Outbox message in database
 
 Scenario: Concurrent create same permission twice
 	Given Two permissions with same id and name

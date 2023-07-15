@@ -12,4 +12,3 @@ Scenario: Rename role success
 	When Role renamed
 	Then Success result
 	And Role name changed in database
-	And Outbox message in database

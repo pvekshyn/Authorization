@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Authorization.Infrastructure.DataAccess.Read;
 
-internal class AuthorizationDbContext : DbContext, IAuthorizationDbContext
+public class AuthorizationDbContext : DbContext, IAuthorizationDbContext
 {
 
     public AuthorizationDbContext(DbContextOptions<AuthorizationDbContext> options) : base(options) { }

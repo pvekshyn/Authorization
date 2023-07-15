@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Assignment.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Assignment.Domain.ValueObjects;
-using Outbox.SDK.Models;
 
 namespace Assignment.Infrastructure;
 
@@ -26,18 +25,6 @@ public class AssignmentDbContext : DbContext
             entity.ToTable("Assignment");
             entity.HasKey(x => x.Id);
         });
-
-        builder.Entity<OutboxMessage>(entity =>
-        {
-            entity.ToTable("OutboxMessage");
-            entity.HasKey(x => x.Id);
-        });
-    }
-
-    public async Task AddPubSubOutboxMessageAsync(Guid entityId, object pubSubEvent, CancellationToken cancellationToken)
-    {
-        var pubSubOutboxMessage = OutboxMessage.CreatePubSubMessage(entityId, pubSubEvent);
-        await AddAsync(pubSubOutboxMessage, cancellationToken);
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

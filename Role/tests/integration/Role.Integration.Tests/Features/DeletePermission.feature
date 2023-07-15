@@ -10,4 +10,3 @@ Scenario: Delete existing permission success
 	When Permission deleted
 	Then Success result
 	And Permission not in database
-	And Outbox message in database

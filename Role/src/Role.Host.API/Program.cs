@@ -55,6 +55,12 @@ builder.Services.AddCors(p => p.AddPolicy("corsany", builder =>
     builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
 }));
 
+builder.Services.AddCap(x =>
+{
+    x.UseEntityFramework<RoleDbContext>();
+    x.UseRabbitMQ("localhost");
+});
+
 var app = builder.Build();
 
 startupSettings.Log(app.Logger);

@@ -152,9 +152,6 @@ this.ScenarioInitialize(scenarioInfo);
 #line 12
  testRunner.And("Permission not in database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 13
- testRunner.And("Outbox message in database", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
             }
             this.ScenarioCleanup();
         }
